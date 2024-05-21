@@ -1,0 +1,4 @@
+#ignore binary and blueJ files
+*.ctxt
+*.class
+*.greenfoot
