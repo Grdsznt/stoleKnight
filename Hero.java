@@ -3,7 +3,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 /**
  * Write a description of class MainCharacter here.
  * 
- * @author Andy Feng
+ * @author Andy Feng, Jean Pan
  * @version 1.0
  * 
  * This is the main character of the game, the player can control control this character to pass the game
@@ -14,23 +14,21 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public abstract class Hero extends SuperSmoothMover
 {
-    /**
-     * Act - do whatever the MainCharacter wants to do. This method is called whenever
-     * the 'Act' or 'Run' button gets pressed in the environment.
-     */
     private int Hp;
     private int shield;
     private int speed;
     protected int energy;
     protected boolean attack;
+    protected GreenfootImage[] frames;
     //protected Weapon;
     
-    public Hero(int Hp, int shieldValue, int speed, int initialEnergy) {
+    public Hero(int Hp, int shieldValue, int speed, int initialEnergy, GreenfootImage[] frames) {
         this.Hp = Hp;
         this.shield = shieldValue;
         this.speed = speed;
         this.energy = initialEnergy;
         attack = false;
+        this.frames = frames;
     }
     
     public void act()
