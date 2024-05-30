@@ -3,7 +3,7 @@ import java.util.ArrayList;
 /**
  * Write a description of class MainCharacter here.
  * 
- * @author Andy Feng
+ * @author Andy Feng, Felix Zhao
  * @version 1.0
  * Edited by Jean Pan
  * 
