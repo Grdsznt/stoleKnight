@@ -80,6 +80,7 @@ public abstract class Hero extends SuperSmoothMover
             yAddedVel = Math.min(yAddedVel, 0);
         }
         MouseInfo mouse = Greenfoot.getMouseInfo();
+        // CHANGE THIS TO ONLY SIDE TO SIDE
         if (mouse != null) {
             turnTowards(mouse.getX(), mouse.getY());
         }
@@ -163,16 +164,16 @@ public abstract class Hero extends SuperSmoothMover
         double xDistance = (xMoveVel+xAddedVel)/times;
         double yDistance = (yMoveVel+yAddedVel)/times;
         for (int i = 0; i < times; i++) {
-            setLocation(getX()+xDistance, getY());
+            setLocation(getPreciseX()+xDistance, getPreciseY());
             for (Wall wall : getIntersectingObjects(Wall.class)) {
-                int left = wall.getX()-wall.getImage().getWidth()/2-getX();
-                int right = wall.getX()+wall.getImage().getWidth()/2-getX();
-                int top = wall.getY()-wall.getImage().getHeight()/2-getY();
-                int bottom = wall.getY()+wall.getImage().getHeight()/2-getY();
-                int count = 0;
+                double left = wall.getX()-wall.getImage().getWidth()/2-getPreciseX();
+                double right = wall.getX()+wall.getImage().getWidth()/2-getPreciseX();
+                double top = wall.getY()-wall.getImage().getHeight()/2-getPreciseY();
+                double bottom = wall.getY()+wall.getImage().getHeight()/2-getPreciseY();
                 
-                int edgeX = 0;
-                int edgeY = 0;
+                double edgeX = 0;
+                double edgeY = 0;
+                
                 
                 if (0 <left) {
                     edgeX = left;
@@ -189,16 +190,16 @@ public abstract class Hero extends SuperSmoothMover
                 if (edgeX*edgeX + edgeY*edgeY <= radius*radius) {
                     if (top <= 0 && 0 <= bottom) {
                         if (Math.abs(left) < Math.abs(right)) {
-                            setLocation(getX()+left-1-getImage().getWidth()/2, getY());
+                            setLocation(getPreciseX()+left-1-getImage().getWidth()/2, getPreciseY());
                         } else {
-                            setLocation(getX()+right+1+getImage().getWidth()/2, getY());
+                            setLocation(getPreciseX()+right+1+getImage().getWidth()/2, getPreciseY());
                         }
                         xMoveVel = 0;
                         xAddedVel = 0;
                         break;
                     } else {
-                        double yDiff = getY()-wall.getY();
-                        double xDiff = getX()-wall.getX();
+                        double yDiff = getPreciseY()-wall.getY();
+                        double xDiff = getPreciseX()-wall.getX();
                         double halfLength = wall.getImage().getWidth()/2.0;
                         double ratioXY = Math.abs(xDiff) / Math.abs(yDiff);
                         double squareX = 0;
@@ -230,15 +231,15 @@ public abstract class Hero extends SuperSmoothMover
                 }
             }
             
-            setLocation(getX(), getY()+yDistance);
+            setLocation(getPreciseX(), getPreciseY()+yDistance);
             for (Wall wall : getObjectsInRange(100, Wall.class)) {
-                int left = wall.getX()-wall.getImage().getWidth()/2-getX();
-                int right = wall.getX()+wall.getImage().getWidth()/2-getX();
-                int top = wall.getY()-wall.getImage().getHeight()/2-getY();
-                int bottom = wall.getY()+wall.getImage().getHeight()/2-getY();
+                double left = wall.getX()-wall.getImage().getWidth()/2-getPreciseX();
+                double right = wall.getX()+wall.getImage().getWidth()/2-getPreciseX();
+                double top = wall.getY()-wall.getImage().getHeight()/2-getPreciseY();
+                double bottom = wall.getY()+wall.getImage().getHeight()/2-getPreciseY();
                 
-                int edgeX = 0;
-                int edgeY = 0;
+                double edgeX = 0;
+                double edgeY = 0;
                 
                 if (0 <left) {
                     edgeX = left;
@@ -255,16 +256,16 @@ public abstract class Hero extends SuperSmoothMover
                 if (edgeX*edgeX + edgeY*edgeY <= radius*radius) {
                     if (left <= 0 && 0 <= right) {
                         if (Math.abs(top) < Math.abs(bottom)) {
-                            setLocation(getX(), getY()+top-1-getImage().getHeight()/2);
+                            setLocation(getPreciseX(), getPreciseY()+top-1-getImage().getHeight()/2);
                         } else {
-                            setLocation(getX(), getY()+bottom+1+getImage().getHeight()/2);
+                            setLocation(getPreciseX(), getPreciseY()+bottom+1+getImage().getHeight()/2);
                         }
                         yMoveVel = 0;
                         yAddedVel = 0;
                         break;
                     } else {
-                        double yDiff = getY()-wall.getY();
-                        double xDiff = getX()-wall.getX();
+                        double yDiff = getPreciseY()-wall.getY();
+                        double xDiff = getPreciseX()-wall.getX();
                         double halfLength = wall.getImage().getWidth()/2.0;
                         
                         double ratioXY = Math.abs(xDiff) / Math.abs(yDiff);

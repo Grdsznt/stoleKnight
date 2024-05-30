@@ -17,7 +17,7 @@ public class Hero1 extends Hero
     protected static GreenfootImage[] idleFrames = new GreenfootImage[11];
     
     public Hero1() {
-        super(Hp, shield, speed, energy, idleFrames);
+        super(Hp, shield, speed, energy, new Weapon());
     }
     
     /**
@@ -32,6 +32,7 @@ public class Hero1 extends Hero
     public void act()
     {
         // Add your action code here.
+        super.act();
     }
     
     public void ability() {
