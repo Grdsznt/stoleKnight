@@ -3,14 +3,15 @@ import java.util.ArrayList;
 /**
  * Write a description of class MainCharacter here.
  * 
- * @author Andy Feng, Jean Pan
+ * @author Andy Feng
  * @version 1.0
+ * Edited by Jean Pan
  * 
  * This is the main character of the game, the player can control control this character to pass the game
  * The main character will have various actions:
  * <ul>
  * <li> 
- * <ul>
+ * <ul>'
  */
 public abstract class Hero extends SuperSmoothMover
 {
