@@ -1,4 +1,5 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import java.util.ArrayList;
 
 /**
  * Write a description of class Ogre here.
@@ -23,11 +24,28 @@ public class Ogre extends Enemy
     
     private int frameNum, actNum;
     public Ogre() {
-        super(1000, 3);
+        super(1000, 3, 50);
         
     }
     public void act()
     {
+        if (!pursuing) {
+            Pair p = getRandomPositionWithinRadius(targetRadius);
+            // pathfind to this random position in radius
+            if (actNum % 20 == 0) h = getHeroInRadius();
+        }
+    
+        if (h != null && hasLineOfSight(new Pair(getX(), getY()), new Pair(h.getX(), h.getY()), getWorld().getObstacles())) {
+            pursuing = true;
+            // chase the hero
+            turnTowards(h.getX(), h.getY());
+            move(speed);
+            // if the hero is no longer in the radius do not pursue
+            if (calculateDistance(getX(), getY(), h.getX(), h.getY()) > targetRadius) {
+                pursuing = false;
+                h = null;
+            }
+        }
         animate();
     }
     
