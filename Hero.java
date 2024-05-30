@@ -20,7 +20,7 @@ public abstract class Hero extends SuperSmoothMover
      */
     
     //ArrayList<Power> powerList;
-    ArrayList<Weapon> weaponInInventory = new ArrayList<Weapon>();
+    protected ArrayList<Weapon> weaponInInventory = new ArrayList<Weapon>();
     private int Hp;
     private int shield;
     private double speed;
@@ -35,13 +35,15 @@ public abstract class Hero extends SuperSmoothMover
     private int radius;
     //protected Weapon;
     protected Weapon currentWeapon;
+    protected GreenfootImage[] frames;
     
-    public Hero(int Hp, int shieldValue, int speed, int initialEnergy, Weapon initialWeapon) {
+    public Hero(int Hp, int shieldValue, int speed, int initialEnergy, Weapon initialWeapon, GreenfootImage[] frames) {
         weaponInInventory.add(initialWeapon);
         this.Hp = Hp;
         this.shield = shieldValue;
         this.speed = speed;
         this.energy = initialEnergy;
+        this.frames = frames;
         
         attack = false;
         
@@ -53,6 +55,7 @@ public abstract class Hero extends SuperSmoothMover
         image.drawRect(0, 0, 49, 49);
         setImage(image);
         radius = getImage().getHeight()/2;
+        currentWeapon = initialWeapon;
     }
     
     public void act()
@@ -292,6 +295,17 @@ public abstract class Hero extends SuperSmoothMover
                     
                 }
             }
+        if(Greenfoot.isKeyDown("w")) {
+            setLocation(getX(), getY() - speed);
+        }
+        if(Greenfoot.isKeyDown("a")) {
+            move(-speed);
+        }
+        if(Greenfoot.isKeyDown("s")) {
+            setLocation(getX(), getY() + speed);
+        }
+        if(Greenfoot.isKeyDown("d")) {
+            move(speed);
         }
     }
     

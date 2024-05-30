@@ -17,10 +17,10 @@ public class Hero1 extends Hero
     protected static GreenfootImage[] idleFrames = new GreenfootImage[11];
     
     public Hero1() {
-        super(Hp, shield, speed, energy, new Weapon());
+        super(Hp, shield, speed, energy, new Weapon(), idleFrames);
     }
     
-    /**
+    /**r
      * Load all idle frames of this Hero1. Should be called before initializing any Hero1 objects.
      */
     private static void loadIdleFrames(){
