@@ -35,18 +35,18 @@ public class Ogre extends Enemy
             if (actNum % 20 == 0) h = getHeroInRadius();
         }
     
-        if (h != null && hasLineOfSight(new Pair(getX(), getY()), new Pair(h.getX(), h.getY()), getWorld().getObstacles())) {
-            pursuing = true;
-            // chase the hero
-            turnTowards(h.getX(), h.getY());
-            move(speed);
-            // if the hero is no longer in the radius do not pursue
-            if (calculateDistance(getX(), getY(), h.getX(), h.getY()) > targetRadius) {
-                pursuing = false;
-                h = null;
-            }
-        }
-        animate();
+        // if (h != null && hasLineOfSight(new Pair(getX(), getY()), new Pair(h.getX(), h.getY()), getWorld().getObstacles())) {
+            // pursuing = true;
+            // // chase the hero
+            // turnTowards(h.getX(), h.getY());
+            // move(speed);
+            // // if the hero is no longer in the radius do not pursue
+            // if (calculateDistance(getX(), getY(), h.getX(), h.getY()) > targetRadius) {
+                // pursuing = false;
+                // h = null;
+            // }
+        // }
+        // animate();
     }
     
     public void animate() {
