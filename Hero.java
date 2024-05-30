@@ -295,17 +295,18 @@ public abstract class Hero extends SuperSmoothMover
                     
                 }
             }
-        if(Greenfoot.isKeyDown("w")) {
-            setLocation(getX(), getY() - speed);
-        }
-        if(Greenfoot.isKeyDown("a")) {
-            move(-speed);
-        }
-        if(Greenfoot.isKeyDown("s")) {
-            setLocation(getX(), getY() + speed);
-        }
-        if(Greenfoot.isKeyDown("d")) {
-            move(speed);
+            if(Greenfoot.isKeyDown("w")) {
+                setLocation(getX(), getY() - speed);
+            }
+            if(Greenfoot.isKeyDown("a")) {
+                move(-speed);
+            }
+            if(Greenfoot.isKeyDown("s")) {
+                setLocation(getX(), getY() + speed);
+            }
+            if(Greenfoot.isKeyDown("d")) {
+                move(speed);
+            }
         }
     }
     
