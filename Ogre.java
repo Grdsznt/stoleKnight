@@ -20,16 +20,29 @@ public class Ogre extends Enemy
         new GreenfootImage("Ogre/ogre_run_anim_f0"),new GreenfootImage("Ogre/ogre_run_anim_f1"),new GreenfootImage("Ogre/ogre_run_anim_f2"),
         new GreenfootImage("Ogre/ogre_run_anim_f3")
     };
+    
+    private int frameNum, actNum;
     public Ogre() {
         super(1000, 3);
         
     }
     public void act()
     {
-        // Add your action code here.
+        animate();
     }
     
     public void animate() {
-        
+        if (actNum % (speed !=0 ? (int) (-6 * speed + 20) : 10) == 0) {
+            if (frameNum >= 4) {
+            frameNum = 0;
+            } else {
+                frameNum++;
+            }
+            if (pursuing) {
+                setImage(runFrames[frameNum]);
+            } else {
+                setImage(idleFrames[frameNum]);
+            }
+        }
     }
 }
