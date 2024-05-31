@@ -21,5 +21,5 @@ public abstract class Weapon extends Actor
         // Add your action code here.
     }
     
-     
+    public abstract void attack();
 }

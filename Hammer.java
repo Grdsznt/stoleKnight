@@ -21,4 +21,8 @@ public class Hammer extends Weapon
     {
         // Add your action code here.
     }
+    
+    public void attack(){
+        
+    }
 }
