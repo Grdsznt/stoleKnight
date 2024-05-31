@@ -2,6 +2,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Arrays;
 
 /**
  * Write a description of class MyWorld here.
@@ -28,27 +29,55 @@ public class GameWorld extends World
         // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
         super(1200, 720, 1); 
         level = 1;
-        String[][] tempGrid = new String[4][4];
         int spawnRow = Greenfoot.getRandomNumber(2)+1;
         int spawnCol = Greenfoot.getRandomNumber(2)+1;
-        int direction = Greenfoot.getRandomNumber(4);
-        String directions = "";
-        for (int i = 0; i < 4; i++) {
-            if (i == direction) {
-                directions += "1";
-            } else {
-                directions += "0";
-            }
-        }
-        tempGrid[spawnRow][spawnCol] = directions;
-        System.out.println(tempGrid[spawnRow][spawnCol]);
-        mainPathDone = false;
-        
+        generateRooms(spawnRow, spawnCol);
     }
     
-    private void generateRooms(int startRow, int startCol, String[][] grid) {
-        Queue<int[]> queue = new LinkedList<int[]>();
-        queue.add(new int[]{startRow, startCol});
+    private void generateRooms(int startRow, int startCol) {
+        int currRow = startRow;
+        int currCol = startCol;
+        for (int i = 0; i < 4; i++) {
+            boolean valid = false;
+            while (!valid) {
+                int direction = Greenfoot.getRandomNumber(4);
+                if (direction == 0) {
+                    if (currRow-1 >= 0 && worldGrid[currRow-1][currCol] == 0) {
+                        worldGrid[currRow][currCol] += 8;
+                        worldGrid[currRow-1][currCol] += 4;
+                        currRow--;
+                        valid = true;
+                    }
+                } else if (direction == 1) {
+                    if (currRow+1 < 4 && worldGrid[currRow+1][currCol] == 0) {
+                        worldGrid[currRow][currCol] += 4;
+                        worldGrid[currRow+1][currCol] += 8;
+                        currRow++;
+                        valid = true;
+                    }
+                } else if (direction == 2) {
+                    if (currCol-1 >= 0 && worldGrid[currRow][currCol-1] == 0) {
+                        worldGrid[currRow][currCol] += 2;
+                        worldGrid[currRow][currCol-1] += 1;
+                        currCol-=1;
+                        valid = true;
+                    }
+                } else if (direction == 3) {
+                    if (currCol+1 < 4 && worldGrid[currRow][currCol+1] == 0) {
+                        worldGrid[currRow][currCol] += 1;
+                        worldGrid[currRow][currCol+1] += 2;
+                        currCol++;
+                        valid = true;
+                    }
+                }
+            }
+        }
+        
+        for (int[] a : worldGrid) {
+            System.out.println(Arrays.toString(a));
+        }
+        System.out.println();
+        
     }
     
     public void act() {
