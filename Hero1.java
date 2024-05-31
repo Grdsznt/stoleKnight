@@ -18,7 +18,7 @@ public class Hero1 extends Hero
     private SimpleTimer animationTimer = new SimpleTimer();
     
     public Hero1() {
-        super(Hp, shield, speed, energy, new Hammer());
+        super(Hp, shield, speed, energy, new Sword());
         loadIdleFrames();
         setImage(idleFramesRight[0]);
     }
