@@ -4,15 +4,11 @@ import java.util.ArrayList;
 /**
  * Write a description of class Ogre here.
  * 
- * @author (your name) 
- * @version (a version number or a date)
+ * @author Edwin
+ * @version 31.5.24
  */
 public class Ogre extends Enemy
 {
-    /**
-     * Act - do whatever the Ogre wants to do. This method is called whenever
-     * the 'Act' or 'Run' button gets pressed in the environment.
-     */
     private static GreenfootImage[] idleFrames = {
         new GreenfootImage("Ogre/ogre_idle_anim_f0"),new GreenfootImage("Ogre/ogre_idle_anim_f1"),new GreenfootImage("Ogre/ogre_idle_anim_f2"),
         new GreenfootImage("Ogre/ogre_idle_anim_f3")

@@ -10,6 +10,7 @@ public class GameWorld extends World
 {
     
     ArrayList<Tile> grid;
+    ArrayList<Wall> obstacles;
     /**
      * Constructor for objects of class MyWorld.
      * 
@@ -18,6 +19,10 @@ public class GameWorld extends World
     {    
         // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
         super(1280, 720, 1); 
-        
+        // every time add a wall pls add it to obstacles
+    }
+    
+    public ArrayList<Wall> getObstacles() {
+        return obstacles;
     }
 }
