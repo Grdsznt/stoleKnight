@@ -16,10 +16,13 @@ public class GameWorld extends World
     int[][] worldGrid = new int[4][4];
     private int level;
     private boolean mainPathDone;
+    
+    MouseInfo mouse;
     /**
      * Constructor for objects of class MyWorld.
      * 
      */
+    
     public GameWorld()
     {    
         // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
@@ -48,4 +51,31 @@ public class GameWorld extends World
         queue.add(new int[]{startRow, startCol});
     }
     
+    public void act() {
+        mouse = Greenfoot.getMouseInfo();
+    }
+    
+    public int getMouseX() {
+        return mouse.getX();
+    }
+    
+    public int getMouseY() {
+        return mouse.getY();
+    }
+    
+    public boolean isMousePressed(Actor obj) {
+        return Greenfoot.mousePressed(obj);
+    }
+    
+    public boolean isMouseDragged(Actor obj) {
+        return Greenfoot.mouseDragged(obj);
+    }
+    
+    public boolean hasMouseDragEnded(Actor obj) {
+        return Greenfoot.mouseDragEnded(obj);
+    }
+    
+    public boolean isMouseClicked(Actor obj) {
+        return Greenfoot.mouseClicked(obj);
+    }
 }
