@@ -13,14 +13,17 @@ import java.util.Arrays;
 public class GameWorld extends World
 {
     // The number represents the openings. 0000 - up, down, left, rigth - 1-15
+    // 0000 0000 - special rooms | directions
+    // 0001 - start | 0010 - end | 0100 - shop/loot | 1000 - special place
     // 4x4 max
-    int[][] worldGrid = new int[4][4];
+    int[][] worldGrid = new int[5][5];
     private int level;
     private boolean mainPathDone;
     
     MouseInfo mouse;
     /**
      * Constructor for objects of class MyWorld.
+     * Constructor for objects of class GameWorld.
      * 
      */
     
@@ -29,12 +32,15 @@ public class GameWorld extends World
         // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
         super(1200, 720, 1); 
         level = 1;
-        int spawnRow = Greenfoot.getRandomNumber(2)+1;
-        int spawnCol = Greenfoot.getRandomNumber(2)+1;
-        generateRooms(spawnRow, spawnCol);
+        // int spawnRow = Greenfoot.getRandomNumber(2)+1;
+        // int spawnCol = Greenfoot.getRandomNumber(2)+1;
+        generateRooms(2, 2);
     }
     
     private void generateRooms(int startRow, int startCol) {
+        worldGrid[startRow][startCol] += 16;
+        ArrayList<int[]> path = new ArrayList<int[]>();
+        path.add(new int[]{startRow, startCol});
         int currRow = startRow;
         int currCol = startCol;
         for (int i = 0; i < 4; i++) {
@@ -71,13 +77,76 @@ public class GameWorld extends World
                     }
                 }
             }
+            
+            path.add(new int[]{currRow, currCol});
         }
-        
+        worldGrid[currRow][currCol] += 32;
+        System.out.println("before");
         for (int[] a : worldGrid) {
             System.out.println(Arrays.toString(a));
         }
+        
         System.out.println();
         
+        boolean hasShop = false;
+        boolean hasSpecial = false;
+        for (int i = 1; i < path.size()-1; i++) {
+            int row = path.get(i)[0];
+            int col = path.get(i)[1];
+            if (row != 0 && (worldGrid[row][col] & 8) == 0 && (worldGrid[row-1][col] & 48) == 0) {
+                worldGrid[row][col] += 8;
+                if (worldGrid[row-1][col] == 0 && !hasShop && Greenfoot.getRandomNumber(2) == 0) {
+                    worldGrid[row-1][col] += 64;
+                    hasShop = true;
+                } else if (worldGrid[row-1][col] == 0 && !hasSpecial && Greenfoot.getRandomNumber(2) == 0) {
+                    worldGrid[row-1][col] += 128;
+                    hasSpecial = true;
+                }
+                worldGrid[row-1][col] += 4;
+            }
+            
+            if (row < 3 && (worldGrid[row][col] & 4) == 0 && (worldGrid[row+1][col] & 48) == 0) {
+                worldGrid[row][col] += 4;
+                if (worldGrid[row+1][col] == 0 && !hasShop && Greenfoot.getRandomNumber(2) == 0) {
+                    worldGrid[row+1][col] += 64;
+                    hasShop = true;
+                } else if (worldGrid[row-1][col] == 0 && !hasSpecial && Greenfoot.getRandomNumber(2) == 0) {
+                    worldGrid[row+1][col] += 128;
+                    hasSpecial = true;
+                }
+                worldGrid[row+1][col] += 8;
+            }
+            
+            if (col != 0 && (worldGrid[row][col] & 2) == 0 && (worldGrid[row][col-1] & 48) == 0) {
+                worldGrid[row][col] += 2;
+                if (worldGrid[row][col-1] == 0 && !hasShop && Greenfoot.getRandomNumber(2) == 0) {
+                    worldGrid[row][col-1] += 64;
+                    hasShop = true;
+                } else if (worldGrid[row][col-1] == 0 && !hasSpecial && Greenfoot.getRandomNumber(2) == 0) {
+                    worldGrid[row][col-1] += 128;
+                    hasSpecial = true;
+                }
+                worldGrid[row][col-1] += 1;
+            }
+            
+            if (col < 3 && (worldGrid[row][col] & 1) == 0 && (worldGrid[row][col+1] & 48) == 0) {
+                worldGrid[row][col] += 1;
+                if (worldGrid[row][col+1] == 0 && !hasShop && Greenfoot.getRandomNumber(2) == 0) {
+                    worldGrid[row][col+1] += 64;
+                    hasShop = true;
+                } else if (worldGrid[row][col+1] == 0 && !hasSpecial && Greenfoot.getRandomNumber(2) == 0) {
+                    worldGrid[row][col+1] += 128;
+                    hasSpecial = true;
+                }
+                worldGrid[row][col+1] += 2;
+            }
+        }
+        System.out.println(startRow + " " + startCol);
+        for (int[] a : worldGrid) {
+            System.out.println(Arrays.toString(a));
+        }
+        
+        System.out.println();
     }
     
     public void act() {
