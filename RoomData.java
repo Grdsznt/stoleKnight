@@ -6,6 +6,10 @@
  */
 public class RoomData  
 {
+    public RoomData(int roomType) {
+        
+    }
+    
     public static Tile[][] getRoom() {
         
         return null;
