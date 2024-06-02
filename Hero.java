@@ -56,15 +56,14 @@ public abstract class Hero extends SuperSmoothMover
         image.drawOval(0, 0, 49, 49);
         image.drawOval(30, 16, 18, 18);
         image.drawRect(0, 0, 49, 49);
-        setImage(image);
-        radius = getImage().getHeight()/2;*/
+        setImage(image);*/
+        radius = getImage().getHeight()/2;
         
         currentWeapon = initialWeapon;
     }
     
     public void act()
     {
-        // Add your action code here.
         control();
         takeDamage();
 
@@ -195,9 +194,9 @@ public abstract class Hero extends SuperSmoothMover
                 if (edgeX*edgeX + edgeY*edgeY <= radius*radius) {
                     if (top <= 0 && 0 <= bottom) {
                         if (Math.abs(left) < Math.abs(right)) {
-                            setLocation(getPreciseX()+left-1-getImage().getWidth()/2, getPreciseY());
+                            setLocation(getPreciseX()+left-1-radius, getPreciseY());
                         } else {
-                            setLocation(getPreciseX()+right+1+getImage().getWidth()/2, getPreciseY());
+                            setLocation(getPreciseX()+right+1+radius, getPreciseY());
                         }
                         xMoveVel = 0;
                         xAddedVel = 0;
@@ -261,9 +260,9 @@ public abstract class Hero extends SuperSmoothMover
                 if (edgeX*edgeX + edgeY*edgeY <= radius*radius) {
                     if (left <= 0 && 0 <= right) {
                         if (Math.abs(top) < Math.abs(bottom)) {
-                            setLocation(getPreciseX(), getPreciseY()+top-1-getImage().getHeight()/2);
+                            setLocation(getPreciseX(), getPreciseY()+top-1-radius);
                         } else {
-                            setLocation(getPreciseX(), getPreciseY()+bottom+1+getImage().getHeight()/2);
+                            setLocation(getPreciseX(), getPreciseY()+bottom+1+radius);
                         }
                         yMoveVel = 0;
                         yAddedVel = 0;
