@@ -22,7 +22,6 @@ public class GameWorld extends World
     
     MouseInfo mouse;
     /**
-     * Constructor for objects of class MyWorld.
      * Constructor for objects of class GameWorld.
      * 
      */
@@ -35,6 +34,7 @@ public class GameWorld extends World
         // int spawnRow = Greenfoot.getRandomNumber(2)+1;
         // int spawnCol = Greenfoot.getRandomNumber(2)+1;
         generateRooms(2, 2);
+        setActOrder(Hero.class);
     }
     
     private void generateRooms(int startRow, int startCol) {
@@ -105,12 +105,12 @@ public class GameWorld extends World
                 worldGrid[row-1][col] += 4;
             }
             
-            if (row < 3 && (worldGrid[row][col] & 4) == 0 && (worldGrid[row+1][col] & 48) == 0) {
+            if (row < 4 && (worldGrid[row][col] & 4) == 0 && (worldGrid[row+1][col] & 48) == 0) {
                 worldGrid[row][col] += 4;
                 if (worldGrid[row+1][col] == 0 && !hasShop && Greenfoot.getRandomNumber(2) == 0) {
                     worldGrid[row+1][col] += 64;
                     hasShop = true;
-                } else if (worldGrid[row-1][col] == 0 && !hasSpecial && Greenfoot.getRandomNumber(2) == 0) {
+                } else if (worldGrid[row+1][col] == 0 && !hasSpecial && Greenfoot.getRandomNumber(2) == 0) {
                     worldGrid[row+1][col] += 128;
                     hasSpecial = true;
                 }
@@ -129,7 +129,7 @@ public class GameWorld extends World
                 worldGrid[row][col-1] += 1;
             }
             
-            if (col < 3 && (worldGrid[row][col] & 1) == 0 && (worldGrid[row][col+1] & 48) == 0) {
+            if (col < 4 && (worldGrid[row][col] & 1) == 0 && (worldGrid[row][col+1] & 48) == 0) {
                 worldGrid[row][col] += 1;
                 if (worldGrid[row][col+1] == 0 && !hasShop && Greenfoot.getRandomNumber(2) == 0) {
                     worldGrid[row][col+1] += 64;
