@@ -1,22 +1,17 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class Sword here.
+ * Write a description of class Projectile here.
  * 
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class Hammer extends Weapon
+public class Projectile extends Actor
 {
     /**
-     * Act - do whatever the Sword wants to do. This method is called whenever
+     * Act - do whatever the Projectile wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.
      */
-    
-    public Hammer() {
-        
-    }
-    
     public void act()
     {
         // Add your action code here.

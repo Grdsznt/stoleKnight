@@ -11,14 +11,14 @@ public class Hero1 extends Hero
 {
     private static int Hp = 100; //To test
     private static int shield = 0; //To test
-    private static int speed = 2; //To test
+    private static int speed = 5; //To test
     protected static int energy = 200; //To test
     protected static GreenfootImage[] idleFramesRight = new GreenfootImage[11];
     protected static GreenfootImage[] idleFramesLeft = new GreenfootImage[11];
     private SimpleTimer animationTimer = new SimpleTimer();
     
     public Hero1() {
-        super(Hp, shield, speed, energy, new Hammer());
+        super(Hp, shield, speed, energy, new Sword());
         loadIdleFrames();
         setImage(idleFramesRight[0]);
     }
