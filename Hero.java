@@ -25,6 +25,8 @@ public abstract class Hero extends SuperSmoothMover
     private int Hp;
     private int shield;
     private double speed;
+    private boolean mouseHold;
+    protected boolean right;
     protected int energy;
     protected boolean attack;
     private double xMoveVel = 0;
@@ -36,35 +38,40 @@ public abstract class Hero extends SuperSmoothMover
     private int radius;
     //protected Weapon;
     protected Weapon currentWeapon;
-    protected GreenfootImage[] frames;
+    private MouseInfo mouse;
     
-    public Hero(int Hp, int shieldValue, int speed, int initialEnergy, Weapon initialWeapon, GreenfootImage[] frames) {
+    public Hero(int Hp, int shieldValue, int speed, int initialEnergy, Weapon initialWeapon) {
         weaponInInventory.add(initialWeapon);
         this.Hp = Hp;
         this.shield = shieldValue;
         this.speed = speed;
         this.energy = initialEnergy;
-        this.frames = frames;
         
         attack = false;
+        right = true;
+        mouseHold = false;
         
-        
-        GreenfootImage image = new GreenfootImage(50, 50);
+        /*GreenfootImage image = new GreenfootImage(50, 50);
         image.setColor(new Color(0, 0, 0));
         image.drawOval(0, 0, 49, 49);
         image.drawOval(30, 16, 18, 18);
         image.drawRect(0, 0, 49, 49);
-        setImage(image);
+        setImage(image);*/
         radius = getImage().getHeight()/2;
+        
         currentWeapon = initialWeapon;
     }
     
     public void act()
     {
-        // Add your action code here.
         control();
         takeDamage();
-        if(weaponInInventory.size() < 2) pickUpWeapon();
+
+        Weapon weaponOnGround = (Weapon) getOneIntersectingObject(Weapon.class);
+        if(weaponInInventory.size() < 2 && weaponOnGround != null) pickUpWeapon(weaponOnGround);
+        else if(weaponInInventory.size() >= 2 && weaponOnGround != null) switchWeapon(weaponOnGround);
+        
+        updateFacingDirection();
     }
     
     private void control() {
@@ -82,11 +89,6 @@ public abstract class Hero extends SuperSmoothMover
         } else if (yAddedVel < 0) {
             yAddedVel += friction*5;
             yAddedVel = Math.min(yAddedVel, 0);
-        }
-        MouseInfo mouse = Greenfoot.getMouseInfo();
-        // CHANGE THIS TO ONLY SIDE TO SIDE
-        if (mouse != null) {
-            turnTowards(mouse.getX(), mouse.getY());
         }
         
         int directionX = 0;
@@ -139,15 +141,13 @@ public abstract class Hero extends SuperSmoothMover
             xMoveVel = Math.max(xMoveVel, 0);
         }
         
-        
-        
         if (Greenfoot.isKeyDown("space") && dashCooldown == 0) {
             
             if (directionX != 0 && directionY == 0) {
-                xAddedVel = directionX*50;
+                xAddedVel = directionX*30;
                 dashCooldown = 30;
             } else if (directionY != 0 && directionX == 0) {
-                yAddedVel = directionY*50;
+                yAddedVel = directionY*30;
                 dashCooldown = 30;
             } else if (directionY != 0 && directionX != 0) {
                 xAddedVel = directionX*50*Math.sqrt(2)/2;
@@ -162,7 +162,7 @@ public abstract class Hero extends SuperSmoothMover
         
         double totalMovement = Math.pow(xMoveVel+xAddedVel, 2) + Math.pow(yMoveVel+yAddedVel, 2);
         
-        double xRatio = Math.abs(xMoveVel+xAddedVel) / (Math.abs(xMoveVel+xAddedVel)+Math.abs(yMoveVel+yAddedVel));
+        
         //System.out.println(xRatio);
         int times = (int)(totalMovement / 400)+1;
         double xDistance = (xMoveVel+xAddedVel)/times;
@@ -194,9 +194,9 @@ public abstract class Hero extends SuperSmoothMover
                 if (edgeX*edgeX + edgeY*edgeY <= radius*radius) {
                     if (top <= 0 && 0 <= bottom) {
                         if (Math.abs(left) < Math.abs(right)) {
-                            setLocation(getPreciseX()+left-1-getImage().getWidth()/2, getPreciseY());
+                            setLocation(getPreciseX()+left-1-radius, getPreciseY());
                         } else {
-                            setLocation(getPreciseX()+right+1+getImage().getWidth()/2, getPreciseY());
+                            setLocation(getPreciseX()+right+1+radius, getPreciseY());
                         }
                         xMoveVel = 0;
                         xAddedVel = 0;
@@ -236,7 +236,7 @@ public abstract class Hero extends SuperSmoothMover
             }
             
             setLocation(getPreciseX(), getPreciseY()+yDistance);
-            for (Wall wall : getObjectsInRange(100, Wall.class)) {
+            for (Wall wall : getIntersectingObjects(Wall.class)) {
                 double left = wall.getX()-wall.getImage().getWidth()/2-getPreciseX();
                 double right = wall.getX()+wall.getImage().getWidth()/2-getPreciseX();
                 double top = wall.getY()-wall.getImage().getHeight()/2-getPreciseY();
@@ -260,9 +260,9 @@ public abstract class Hero extends SuperSmoothMover
                 if (edgeX*edgeX + edgeY*edgeY <= radius*radius) {
                     if (left <= 0 && 0 <= right) {
                         if (Math.abs(top) < Math.abs(bottom)) {
-                            setLocation(getPreciseX(), getPreciseY()+top-1-getImage().getHeight()/2);
+                            setLocation(getPreciseX(), getPreciseY()+top-1-radius);
                         } else {
-                            setLocation(getPreciseX(), getPreciseY()+bottom+1+getImage().getHeight()/2);
+                            setLocation(getPreciseX(), getPreciseY()+bottom+1+radius);
                         }
                         yMoveVel = 0;
                         yAddedVel = 0;
@@ -307,21 +307,48 @@ public abstract class Hero extends SuperSmoothMover
         }
     }
     
-    private void pickUpWeapon() {
+    private void pickUpWeapon(Weapon newWeapon) {
         //pick up a new weapon if the Hero only has 1 weapon
-        // action
-        
+        weaponInInventory.add(newWeapon);
     }
     
     private boolean switchWeapon(Weapon newWeapon) {
         //switch the current weapon the hero is using with another weapon
-        
+        weaponInInventory.remove(currentWeapon);
+        weaponInInventory.add(newWeapon);
+        currentWeapon = newWeapon;
         return true;
     }
     
     public abstract void ability();
     
     public abstract void animation();
+
+    private boolean updateMouseHold() {
+        GameWorld world = (GameWorld) getWorld();
+        if(mouseHold && (world.hasMouseDragEnded(null) || world.isMouseClicked(null))) mouseHold = false;
+        if(!mouseHold && world.isMousePressed(null)) mouseHold = true;
+        return mouseHold;
+    }
     
-    // public abstract 
+    private void updateFacingDirection(){
+        GameWorld world = (GameWorld) getWorld();
+        if (updateMouseHold()) {
+            if(world.getMouseX() < getX()) right = false;
+            else right = true;
+        } else {
+            if(Greenfoot.isKeyDown("a")) right = false;
+            else right = true;
+        }
+    }
+    
+    public void resetXVelocity() {
+        xMoveVel = 0;
+        xAddedVel = 0;
+    }
+    
+    public void resetYVelocity() {
+        yMoveVel = 0;
+        yAddedVel = 0;
+    }
 }
