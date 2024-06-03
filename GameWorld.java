@@ -23,6 +23,8 @@ public class GameWorld extends World
     private int currentRoomCol = -1;
     private boolean canChangeRooms = true;
     
+    ArrayList<Tile> grid;
+    ArrayList<Wall> obstacles;
     MouseInfo mouse;
     /**
      * Constructor for objects of class GameWorld.
@@ -38,6 +40,11 @@ public class GameWorld extends World
         // int spawnCol = Greenfoot.getRandomNumber(2)+1;
         generateRooms(2, 2);
         setActOrder(Hero.class);
+        // every time add a wall pls add it to obstacles
+    }
+    
+    public ArrayList<Wall> getObstacles() {
+        return obstacles;
     }
     
     private void generateRooms(int startRow, int startCol) {
