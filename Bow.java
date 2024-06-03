@@ -17,7 +17,8 @@ public class Bow extends Weapon
     /**
      * Constructor of Bow to set its original image.
      */
-    public Bow(){
+    public Bow(int damage){
+        super(damage);
         setImage(bowFrames[0]);
     }
     
