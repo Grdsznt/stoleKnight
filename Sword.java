@@ -27,8 +27,5 @@ public class Sword extends Weapon
     public void attack() {
         
     }
-    
-    public void attack(){
-        
-    }
+
 }

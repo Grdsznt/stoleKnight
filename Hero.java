@@ -150,8 +150,8 @@ public abstract class Hero extends SuperSmoothMover
                 yAddedVel = directionY*30;
                 dashCooldown = 30;
             } else if (directionY != 0 && directionX != 0) {
-                xAddedVel = directionX*50*Math.sqrt(2)/2;
-                yAddedVel = directionY*50*Math.sqrt(2)/2;
+                xAddedVel = directionX*30*Math.sqrt(2)/2;
+                yAddedVel = directionY*30*Math.sqrt(2)/2;
                 dashCooldown = 30;
             }
             
@@ -290,13 +290,13 @@ public abstract class Hero extends SuperSmoothMover
                         double radiusY = Math.signum(yDiff)*multiplier*(1-ratioXY) + Math.signum(yDiff);
                         
                         setLocation(wall.getX()+squareX+radiusX, wall.getY()+radiusY+squareY);
-                        
-                        
                     }
                     
                 }
             }
         }
+        
+        
     }
     
     private void takeDamage() {

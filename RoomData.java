@@ -43,9 +43,11 @@ public class RoomData
             roomGrid[i][24] = new Wall();
         }
         
-        for (Tile[] tiles : roomGrid) {
-            System.out.println(Arrays.toString(tiles));
-        }
+       
+    }
+    
+    public Tile[][] getTileData() {
+        return roomGrid;
     }
     // 0000 - special rooms - start - end - loot/shop - special
     public static Tile[][] getRandomRoom(int type) {

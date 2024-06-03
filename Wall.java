@@ -37,10 +37,10 @@ public class Wall extends Tile
     Line topBoundary, leftBoundary, rightBoundary, bottomBoundary;
     
     
-    Wall() {
-         GreenfootImage image = new GreenfootImage(75, 75);
+    public Wall() {
+         GreenfootImage image = new GreenfootImage(48, 48);
        image.setColor(new Color(0, 0, 0));
-       image.drawRect(0, 0, 74, 74);
+       image.drawRect(0, 0, 47, 47);
 
        setImage(image);
        

@@ -1,7 +1,5 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.Arrays;
 
 /**
@@ -12,13 +10,18 @@ import java.util.Arrays;
  */
 public class GameWorld extends World
 {
+    // for testing purposes
+    public final static int BLOCK_SIZE = 48;
     // The number represents the openings. 0000 - up, down, left, rigth - 1-15
     // 0000 0000 - special rooms | directions
     // 0001 - start | 0010 - end | 0100 - shop/loot | 1000 - special place
     // 4x4 max
     int[][] worldGrid = new int[5][5];
+    RoomData[][] roomGrid = new RoomData[5][5];
     private int level;
-    private boolean mainPathDone;
+    private int currentRoomRow = -1;
+    private int currentRoomCol = -1;
+    private boolean canChangeRooms = true;
     
     MouseInfo mouse;
     /**
@@ -81,12 +84,7 @@ public class GameWorld extends World
             path.add(new int[]{currRow, currCol});
         }
         worldGrid[currRow][currCol] += 32;
-        System.out.println("before");
-        for (int[] a : worldGrid) {
-            System.out.println(Arrays.toString(a));
-        }
         
-        System.out.println();
         
         boolean hasShop = false;
         boolean hasSpecial = false;
@@ -141,12 +139,90 @@ public class GameWorld extends World
                 worldGrid[row][col+1] += 2;
             }
         }
+        
+        
+        for (int i = 0; i < 5; i++) {
+            for (int j  = 0; j < 5; j++) {
+                if (worldGrid[i][j] == 0) {
+                    continue;
+                }
+                
+                roomGrid[i][j] = new RoomData(worldGrid[i][j]);
+            }
+        }
+        
+        for (RoomData[] a : roomGrid) {
+            System.out.println(Arrays.toString(a));
+        }
+        
         System.out.println(startRow + " " + startCol);
         for (int[] a : worldGrid) {
             System.out.println(Arrays.toString(a));
         }
         
-        System.out.println();
+        System.out.println("");
+        
+        loadRoom(startRow, startCol);
+    }
+    
+    // Loads the room at the specific place
+    private void loadRoom(int row, int col) {
+        if (currentRoomRow >= 0 && currentRoomCol >= 0) {
+            unloadRoom(currentRoomRow, currentRoomCol);
+        }
+        currentRoomRow = row;
+        currentRoomCol = col;
+        Tile[][] room = roomGrid[row][col].getTileData();
+        // The world is 25x15 - 48 pixels per block - adjust properly
+        for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 25; j++) {
+                if (room[i][j] == null) {
+                    continue;
+                }
+                addObject(room[i][j], j*BLOCK_SIZE+BLOCK_SIZE/2, i*BLOCK_SIZE+BLOCK_SIZE/2);
+            }
+        }
+    }
+    
+    private void unloadRoom(int row, int col) {
+        Tile[][] room = roomGrid[row][col].getTileData();
+        // The world is 25x15 - 48 pixels per block - adjust properly
+        for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 25; j++) {
+                if (room[i][j] == null) {
+                    continue;
+                }
+                removeObject(room[i][j]);
+            }
+        }
+    }
+
+    /**
+     * Switches to a different room
+     *
+     * @param row The row
+     * @param col The column
+     */
+    public void changeRooms(int row, int col) {
+        // checks if it's in bound of the 5x5 thing or if changing rooms is valid
+        // should probably check if the room actually exsits
+        if (!canChangeRooms || row < 0 || row > 4 || col < 0 || col > 4) {
+            return;
+        }
+        loadRoom(row, col);
+    }
+    
+    /**
+     * Switches to a different room
+     *
+     * @param pos The position of the new room (row, col)
+     */
+    public void changeRooms(int[] pos) {
+        changeRooms(pos[0], pos[1]);
+    }
+    
+    public int[] getRoomPosition() {
+        return new int[]{currentRoomRow, currentRoomCol};
     }
     
     public void act() {
