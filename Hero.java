@@ -162,7 +162,7 @@ public abstract class Hero extends SuperSmoothMover
         
         double totalMovement = Math.pow(xMoveVel+xAddedVel, 2) + Math.pow(yMoveVel+yAddedVel, 2);
         
-        double xRatio = Math.abs(xMoveVel+xAddedVel) / (Math.abs(xMoveVel+xAddedVel)+Math.abs(yMoveVel+yAddedVel));
+        
         //System.out.println(xRatio);
         int times = (int)(totalMovement / 400)+1;
         double xDistance = (xMoveVel+xAddedVel)/times;
@@ -236,7 +236,7 @@ public abstract class Hero extends SuperSmoothMover
             }
             
             setLocation(getPreciseX(), getPreciseY()+yDistance);
-            for (Wall wall : getObjectsInRange(100, Wall.class)) {
+            for (Wall wall : getIntersectingObjects(Wall.class)) {
                 double left = wall.getX()-wall.getImage().getWidth()/2-getPreciseX();
                 double right = wall.getX()+wall.getImage().getWidth()/2-getPreciseX();
                 double top = wall.getY()-wall.getImage().getHeight()/2-getPreciseY();
@@ -340,5 +340,15 @@ public abstract class Hero extends SuperSmoothMover
             if(Greenfoot.isKeyDown("a")) right = false;
             else right = true;
         }
+    }
+    
+    public void resetXVelocity() {
+        xMoveVel = 0;
+        xAddedVel = 0;
+    }
+    
+    public void resetYVelocity() {
+        yMoveVel = 0;
+        yAddedVel = 0;
     }
 }
