@@ -9,34 +9,8 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 public class Wall extends Tile
 {
     
-    /**
-     * Pair is a utility class that stores 2 numbers. 
-     * <p>
-     * Used for coordinates in the world's tile system.
-     */
-    protected class Pair {
-        int f, s;
-        public Pair(int first, int second) {
-           f = first; s = second; // stores 2 numbers
-        } 
-    }
-    
-     /**
-     * Line is a utility class that stores 2 pairs. 
-     * <p>
-     * Used for Line of sight.
-     */
-    protected class Line {
-        Pair start, end;
-        Line(Pair start, Pair end) {
-            this.start = start;
-            this.end = end;
-        }
-    }
-    
     Line topBoundary, leftBoundary, rightBoundary, bottomBoundary;
-    
-    
+        
     Wall() {
          GreenfootImage image = new GreenfootImage(75, 75);
        image.setColor(new Color(0, 0, 0));
@@ -55,7 +29,25 @@ public class Wall extends Tile
     }
     
     public void addedToWorld() {
+        int centerX = getX(), centerY = getY();
+        topBoundary = new Line(new Pair(centerX-75, centerY+75), new Pair(centerX+75, centerY+75));
+        bottomBoundary = new Line(new Pair(centerX-75, centerY-75), new Pair(centerX+75, centerY-75));
+        leftBoundary = new Line(new Pair(centerX-75, centerY-75), new Pair(centerX-75, centerY+75));
+        rightBoundary = new Line(new Pair(centerX+75, centerY-75), new Pair(centerX+75, centerY+75));
         
+
+    }
+    public Line getTopBoundary() {
+        return topBoundary;
+    }
+    public Line getBottomBoundary() {
+        return bottomBoundary;
+    }
+    public Line getLeftBoundary() {
+        return leftBoundary;
+    }
+    public Line getRightBoundary() {
+        return rightBoundary;
     }
 }
 
