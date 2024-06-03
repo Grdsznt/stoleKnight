@@ -32,10 +32,11 @@ public class Enemy extends SuperSmoothMover
     protected Deque<int[]> currentPath;
     public static int GRID_CHECK = 16;
     
-    public Enemy(int health, int speed, double targetRadius) {
+    public Enemy(int health, int speed, double targetRadius, int centerX, int centerY) {
         this.health = health;
         this.speed = speed;
         this.targetRadius = targetRadius;
+        this.centerX = centerX; this.centerY = centerY;
     }
     
     class Cell {
@@ -135,7 +136,11 @@ public class Enemy extends SuperSmoothMover
     }
     
     protected Hero getHeroInRadius() {
-        return getObjectsInRange((int)targetRadius, Hero.class).get(0);
+        ArrayList<Hero> hero = (ArrayList<Hero>) getObjectsInRange((int)targetRadius, Hero.class);
+        if (hero.size() != 0) {
+            return hero.get(0);
+        }
+        return null;
     }
     
     /**

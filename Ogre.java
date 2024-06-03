@@ -10,12 +10,12 @@ import java.util.ArrayList;
 public class Ogre extends Enemy
 {
     private static GreenfootImage[] idleFrames = {
-        new GreenfootImage("Ogre/ogre_idle_anim_f0"),new GreenfootImage("Ogre/ogre_idle_anim_f1"),new GreenfootImage("Ogre/ogre_idle_anim_f2"),
-        new GreenfootImage("Ogre/ogre_idle_anim_f3")
+        new GreenfootImage("Ogre/ogre_idle_anim_f0.png"),new GreenfootImage("Ogre/ogre_idle_anim_f1.png"),new GreenfootImage("Ogre/ogre_idle_anim_f2.png"),
+        new GreenfootImage("Ogre/ogre_idle_anim_f3.png")
     };
     private static GreenfootImage[] runFrames = {
-        new GreenfootImage("Ogre/ogre_run_anim_f0"),new GreenfootImage("Ogre/ogre_run_anim_f1"),new GreenfootImage("Ogre/ogre_run_anim_f2"),
-        new GreenfootImage("Ogre/ogre_run_anim_f3")
+        new GreenfootImage("Ogre/ogre_run_anim_f0.png"),new GreenfootImage("Ogre/ogre_run_anim_f1.png"),new GreenfootImage("Ogre/ogre_run_anim_f2.png"),
+        new GreenfootImage("Ogre/ogre_run_anim_f3.png")
     };
     
     private int frameNum, actNum;
@@ -23,8 +23,15 @@ public class Ogre extends Enemy
     private int homeRadius;
     Pair target;
     public Ogre() {
-        super(1000, 3, 50);
-        homeRadius = 30;
+        super(1000, 3, 100, 450, 450);
+        setImage(idleFrames[0]);
+        homeRadius = 60;
+        for (GreenfootImage img: idleFrames) {
+            img.scale(80, 80);
+        }
+        for (GreenfootImage img: runFrames) {
+            img.scale(80, 80);
+        }
     }
     public void act()
     {
@@ -80,9 +87,9 @@ public class Ogre extends Enemy
     }
     
     private void animate() {
-        if (actNum % (speed !=0 ? (int) (-6 * speed + 20) : 10) == 0) {
-            if (frameNum >= 4) {
-            frameNum = 0;
+        if (actNum % (speed !=0 ? (int) (-6 * speed + 25) : 10) == 0) {
+            if (frameNum >= 3) {
+                frameNum = 0;
             } else {
                 frameNum++;
             }
