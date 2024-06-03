@@ -58,7 +58,7 @@ public abstract class Hero extends SuperSmoothMover
         image.drawRect(0, 0, 49, 49);
         setImage(image);*/
         radius = getImage().getHeight()/2;
-        
+        radius = 24;
         currentWeapon = initialWeapon;
     }
     
@@ -150,8 +150,8 @@ public abstract class Hero extends SuperSmoothMover
                 yAddedVel = directionY*30;
                 dashCooldown = 30;
             } else if (directionY != 0 && directionX != 0) {
-                xAddedVel = directionX*50*Math.sqrt(2)/2;
-                yAddedVel = directionY*50*Math.sqrt(2)/2;
+                xAddedVel = directionX*30*Math.sqrt(2)/2;
+                yAddedVel = directionY*30*Math.sqrt(2)/2;
                 dashCooldown = 30;
             }
             
@@ -290,10 +290,24 @@ public abstract class Hero extends SuperSmoothMover
                         double radiusY = Math.signum(yDiff)*multiplier*(1-ratioXY) + Math.signum(yDiff);
                         
                         setLocation(wall.getX()+squareX+radiusX, wall.getY()+radiusY+squareY);
-                        
-                        
                     }
-                    
+                }
+            }
+        }
+        
+        ArrayList<RoomExit> exits = (ArrayList<RoomExit>)getObjectsInRange(radius, RoomExit.class);
+        if (exits.size() > 0) {
+            String direction = exits.get(0).activate();
+            if (direction != null) {
+                System.out.println("yeah");
+                if (direction.equals("up")) {
+                    setLocation(getPreciseX(), 570);
+                } else if (direction.equals("down")) {
+                    setLocation(getPreciseX(), 150);
+                } else if (direction.equals("left")) {
+                    setLocation(1050, getPreciseY());
+                } else if (direction.equals("right")) {
+                    setLocation(150, getPreciseY());
                 }
             }
         }

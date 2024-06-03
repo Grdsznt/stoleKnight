@@ -10,13 +10,16 @@ public class Wall extends Tile
 {
     
     Line topBoundary, leftBoundary, rightBoundary, bottomBoundary;
+    
+    
+    public Wall(RoomData parent, int row, int col) {
+        super(parent, row, col);
+         GreenfootImage image = new GreenfootImage(48, 48);
         
-    Wall() {
-         GreenfootImage image = new GreenfootImage(75, 75);
-       image.setColor(new Color(0, 0, 0));
-       image.drawRect(0, 0, 74, 74);
-
-       setImage(image);
+         image.setColor(new Color(0, 0, 0));
+         image.drawRect(0, 0, 47, 47);
+  
+         setImage(image);
        
     }
     /**
