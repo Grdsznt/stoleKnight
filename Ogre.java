@@ -32,6 +32,8 @@ public class Ogre extends Enemy
         for (GreenfootImage img: runFrames) {
             img.scale(80, 80);
         }
+        actNum = 0;
+        frameNum = 0;
     }
     public void act()
     {
