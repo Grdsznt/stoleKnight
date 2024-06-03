@@ -202,23 +202,26 @@ public class GameWorld extends World
      *
      * @param row The row
      * @param col The column
+     * @return Returns if the changing the rooms worked
      */
-    public void changeRooms(int row, int col) {
+    public boolean changeRooms(int row, int col) {
         // checks if it's in bound of the 5x5 thing or if changing rooms is valid
         // should probably check if the room actually exsits
         if (!canChangeRooms || row < 0 || row > 4 || col < 0 || col > 4) {
-            return;
+            return false;
         }
         loadRoom(row, col);
+        return true;
     }
     
     /**
      * Switches to a different room
      *
      * @param pos The position of the new room (row, col)
+     * @return Returns if the changing the rooms worked
      */
-    public void changeRooms(int[] pos) {
-        changeRooms(pos[0], pos[1]);
+    public boolean changeRooms(int[] pos) {
+        return changeRooms(pos[0], pos[1]);
     }
     
     public int[] getRoomPosition() {

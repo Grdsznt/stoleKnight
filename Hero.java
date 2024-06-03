@@ -58,7 +58,7 @@ public abstract class Hero extends SuperSmoothMover
         image.drawRect(0, 0, 49, 49);
         setImage(image);*/
         radius = getImage().getHeight()/2;
-        
+        radius = 24;
         currentWeapon = initialWeapon;
     }
     
@@ -291,12 +291,26 @@ public abstract class Hero extends SuperSmoothMover
                         
                         setLocation(wall.getX()+squareX+radiusX, wall.getY()+radiusY+squareY);
                     }
-                    
                 }
             }
         }
         
-        
+        ArrayList<RoomExit> exits = (ArrayList<RoomExit>)getObjectsInRange(radius, RoomExit.class);
+        if (exits.size() > 0) {
+            String direction = exits.get(0).activate();
+            if (direction != null) {
+                System.out.println("yeah");
+                if (direction.equals("up")) {
+                    setLocation(getPreciseX(), 570);
+                } else if (direction.equals("down")) {
+                    setLocation(getPreciseX(), 150);
+                } else if (direction.equals("left")) {
+                    setLocation(1050, getPreciseY());
+                } else if (direction.equals("right")) {
+                    setLocation(150, getPreciseY());
+                }
+            }
+        }
     }
     
     private void takeDamage() {
