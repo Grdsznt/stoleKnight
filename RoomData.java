@@ -1,4 +1,6 @@
 import java.util.Arrays;
+import java.util.ArrayList;
+import greenfoot.*;
 /**
  * This class is used to store all the rooms
  * 
@@ -11,6 +13,10 @@ public class RoomData
     // 0000 - up, down, left, right
     // add unique room shapes later - special rooms e.x chest/shop/special room should be all the same
     public RoomData(int roomType) {
+        if (Greenfoot.getRandomNumber(4) == 0) {
+            // special room stuff
+            
+        }
         roomGrid = new Tile[15][25]; 
         for (int i = 0; i < 25; i++) {
             if (i > 10 && i < 14) {
@@ -51,15 +57,68 @@ public class RoomData
             roomGrid[i][24] = new Wall(this, i, 24);
         }
         
-       
+        if ((roomType & 16) != 0) {
+            
+            roomGrid[5][5] = new Wall(this, 5, 5);
+        } else if ((roomType & 32) != 0) {
+            roomGrid[5][5] = new Wall(this, 5, 5);
+            roomGrid[6][5] = new Wall(this, 6, 5);
+        } else if ((roomType & 64) != 0) {
+            roomGrid[7][12] = new Chest(this, 12, 7);
+        }
+        String[][] innerTiles = getRandomRoom(roomType);
+        if (innerTiles == null) {
+            return;
+        }
+        for (int i = 0; i < innerTiles.length; i++) {
+            for (int j = 0; j < innerTiles[i].length; j++) {
+                if (innerTiles[i][j] == null) {
+                    continue;
+                }
+                switch (innerTiles[i][j]) {
+                    case "Wall":
+                        roomGrid[i+3][j+3] = new Wall(this, i+3, j+3);
+                        break;
+                }
+                
+                
+            }
+        }
+        
+        
+        
     }
     
     public Tile[][] getTileData() {
         return roomGrid;
     }
     // 0000 - special rooms - start - end - loot/shop - special
-    public static Tile[][] getRandomRoom(int type) {
-        
-        return null;
+    public static String[][] getRandomRoom(int type) {
+        if (type >= 16) {
+            return null;
+        }
+        return innerRooms[Greenfoot.getRandomNumber(innerRooms.length)];
     }
+    
+    
+    // for the non-special shapes
+    // 1-15 - 16 start - 32 end -64 chest - 128 - special
+    // 19*9 (25-5, 15-4)
+    // start from (3,3) end at (21, 11) 0-indexed
+    private static String[][][] innerRooms = new String[][][] {
+        {
+            {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+            {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+            {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+            {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+            {null, null, null, null, null, null, null, null, null, "Wall", null, null, null, null, null, null, null, null, null},
+            {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+            {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+            {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+            {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+            
+            
+            
+        }
+    };
 }
