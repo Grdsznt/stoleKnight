@@ -13,9 +13,11 @@ public class Sword extends Weapon
      * the 'Act' or 'Run' button gets pressed in the environment.
      */
     private GreenfootImage rustySword = new GreenfootImage("images/0x72_DungeonTilesetII_v1.7/frames/weapon_rusty_sword.png"); 
+    private static int damage = 1;
+    private int range;
     
     public Sword() {
-        
+        super(damage);
     }
     
     public void act()

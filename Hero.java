@@ -36,9 +36,8 @@ public abstract class Hero extends SuperSmoothMover
     private double friction = 1;
     private int dashCooldown = 40;
     private int radius;
-    //protected Weapon;
     protected Weapon currentWeapon;
-    private MouseInfo mouse;
+    
     
     public Hero(int Hp, int shieldValue, int speed, int initialEnergy, Weapon initialWeapon) {
         weaponInInventory.add(initialWeapon);
@@ -69,9 +68,10 @@ public abstract class Hero extends SuperSmoothMover
 
         Weapon weaponOnGround = (Weapon) getOneIntersectingObject(Weapon.class);
         if(weaponInInventory.size() < 2 && weaponOnGround != null) pickUpWeapon(weaponOnGround);
-        else if(weaponInInventory.size() >= 2 && weaponOnGround != null) switchWeapon(weaponOnGround);
+        else if(weaponInInventory.size() >= 2 && weaponOnGround != null) switchWeaponOnGround(weaponOnGround);
         
         updateFacingDirection();
+        updateWeaponPosition();
     }
     
     private void control() {
@@ -323,10 +323,10 @@ public abstract class Hero extends SuperSmoothMover
     
     private void pickUpWeapon(Weapon newWeapon) {
         //pick up a new weapon if the Hero only has 1 weapon
-        weaponInInventory.add(newWeapon);
+        if(Greenfoot.isKeyDown("e")) weaponInInventory.add(newWeapon);
     }
     
-    private boolean switchWeapon(Weapon newWeapon) {
+    private boolean switchWeaponOnGround(Weapon newWeapon) {
         //switch the current weapon the hero is using with another weapon
         weaponInInventory.remove(currentWeapon);
         weaponInInventory.add(newWeapon);
@@ -337,23 +337,26 @@ public abstract class Hero extends SuperSmoothMover
     public abstract void ability();
     
     public abstract void animation();
-
-    private boolean updateMouseHold() {
-        GameWorld world = (GameWorld) getWorld();
-        if(mouseHold && (world.hasMouseDragEnded(null) || world.isMouseClicked(null))) mouseHold = false;
-        if(!mouseHold && world.isMousePressed(null)) mouseHold = true;
-        return mouseHold;
-    }
     
     private void updateFacingDirection(){
-        GameWorld world = (GameWorld) getWorld();
-        if (updateMouseHold()) {
-            if(world.getMouseX() < getX()) right = false;
+        if (GameWorld.isMouseHolding()) {
+            if(GameWorld.getMouseX() < getX()) right = false;
             else right = true;
         } else {
             if(Greenfoot.isKeyDown("a")) right = false;
-            else right = true;
+            if(Greenfoot.isKeyDown("d")) right = true;
         }
+    }
+    
+    private void updateWeaponPosition() {
+        if (currentWeapon != null) {
+            int offsetX = right ? 3 : -3;
+            currentWeapon.setLocation(getX() + offsetX, getY() + 5);
+        }
+    }
+    
+    private void switchCurrentWeapon() {
+        
     }
     
     public void resetXVelocity() {
