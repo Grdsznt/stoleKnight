@@ -9,6 +9,8 @@ import java.util.Arrays;
  * 
  * @author Felix Zhao 
  * @version (a version number or a date)
+ * 
+ * Edited by Andy Feng
  */
 public class GameWorld extends World
 {
@@ -19,8 +21,9 @@ public class GameWorld extends World
     int[][] worldGrid = new int[5][5];
     private int level;
     private boolean mainPathDone;
+    private static boolean mouseHold;
     
-    MouseInfo mouse;
+    private static MouseInfo mouse;
     /**
      * Constructor for objects of class GameWorld.
      * 
@@ -35,6 +38,7 @@ public class GameWorld extends World
         // int spawnCol = Greenfoot.getRandomNumber(2)+1;
         generateRooms(2, 2);
         setActOrder(Hero.class);
+        mouseHold = false;
     }
     
     private void generateRooms(int startRow, int startCol) {
@@ -153,27 +157,39 @@ public class GameWorld extends World
         mouse = Greenfoot.getMouseInfo();
     }
     
-    public int getMouseX() {
-        return mouse.getX();
+    public static int getMouseX() {
+        if(mouse != null) return mouse.getX();
+        return -1;
     }
     
-    public int getMouseY() {
-        return mouse.getY();
+    public static int getMouseY() {
+        if(mouse != null) return mouse.getY();
+        return -1;
     }
     
-    public boolean isMousePressed(Actor obj) {
-        return Greenfoot.mousePressed(obj);
+    public static boolean isMousePressed(Actor obj) {
+        if(mouse != null) return Greenfoot.mousePressed(obj);
+        return false;
     }
     
-    public boolean isMouseDragged(Actor obj) {
-        return Greenfoot.mouseDragged(obj);
+    public static boolean isMouseDragged(Actor obj) {
+        if(mouse != null) return Greenfoot.mouseDragged(obj);
+        return false;
     }
     
-    public boolean hasMouseDragEnded(Actor obj) {
-        return Greenfoot.mouseDragEnded(obj);
+    public static boolean hasMouseDragEnded(Actor obj) {
+        if(mouse != null) return Greenfoot.mouseDragEnded(obj);
+        return false;
     }
     
-    public boolean isMouseClicked(Actor obj) {
-        return Greenfoot.mouseClicked(obj);
+    public static boolean isMouseClicked(Actor obj) {
+        if(mouse != null) return Greenfoot.mouseClicked(obj);
+        return false;
+    }
+    
+    public static boolean isMouseHolding(){
+        if(mouseHold && (hasMouseDragEnded(null) || isMouseClicked(null))) mouseHold = false;
+        if(!mouseHold && isMousePressed(null)) mouseHold = true;
+        return mouseHold;
     }
 }

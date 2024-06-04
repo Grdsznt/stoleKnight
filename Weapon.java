@@ -24,14 +24,9 @@ public abstract class Weapon extends Actor
     public void act()
     {
         // Add your action code here.
-        updateAttack();
+        isAttacking = GameWorld.isMouseHolding();
         causeDamage();
-    }
-    
-    private void updateAttack() {
-        GameWorld world = (GameWorld) getWorld();
-        if(isAttacking && (world.hasMouseDragEnded(null) || world.isMouseClicked(null))) isAttacking = false;
-        if(!isAttacking && world.isMousePressed(null)) isAttacking = true;
+        System.out.println(isAttacking);
     }
     
     public abstract void attack();

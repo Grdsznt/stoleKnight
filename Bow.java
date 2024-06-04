@@ -5,14 +5,15 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * 
  * @author Jean Pan
  * @version May 2024
+ * 
+ * Edited by Andy Feng
  */
 public class Bow extends Weapon
 {
-    //Attacking variables
-    private boolean isAttacking = false;
     private int actCount = 0;
     //Attacking frames
     private static GreenfootImage[] bowFrames = {new GreenfootImage("weapon_bow0.png"), new GreenfootImage("weapon_bow1.png")};
+    private boolean shootOneArrow;
     
     /**
      * Constructor of Bow to set its original image.
@@ -20,17 +21,15 @@ public class Bow extends Weapon
     public Bow(int damage){
         super(damage);
         setImage(bowFrames[0]);
+        shootOneArrow = true;
     }
     
     public void act()
     {
-        if(isAttacking){
-            //Animate it
-            attack();
-            actCount++;
-        } else {
-            actCount = 0;
-        }
+        super.act();
+        animation();
+        //turnTowards(GameWorld.getMouseX(), GameWorld.getMouseY());
+        attack();
     }
     
     /**
@@ -38,16 +37,16 @@ public class Bow extends Weapon
      */
     public void attack(){
         //Attack by pulling the bow
-        if(actCount==0){
-            setImage(bowFrames[1]);
-            return;
+        if(isAttacking && shootOneArrow){
+            getWorld().addObject(new Projectile(GameWorld.getMouseX(), GameWorld.getMouseY(), damage), getX(), getY());
+            shootOneArrow = false;
+        } else if(!isAttacking) {
+            shootOneArrow = true;
         }
-        
-        //If pass 0.5 s, finish attacking by releasing
-        if(actCount==30){
-            setImage(bowFrames[0]);
-            isAttacking = false;
-            return;
-        }
+    }
+    
+    private void animation(){
+        if(isAttacking) setImage(bowFrames[1]);
+        else setImage(bowFrames[0]);
     }
 }

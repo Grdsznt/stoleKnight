@@ -6,6 +6,8 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * 
  * @author Jean Pan
  * @version May 2024
+ * 
+ * Editor: Andy Feng
  */
 public class Hero1 extends Hero
 {
