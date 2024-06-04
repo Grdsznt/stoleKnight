@@ -47,11 +47,11 @@ public class GameWorld extends World
         setActOrder(Hero.class);
         // addObject(new Ogre(), 500, 500);
         // every time add a wall pls add it to obstacles
+        mouseHold = false;
     }
     
     public ArrayList<Wall> getObstacles() {
         return obstacles;
-        mouseHold = false;
     }
     
     private void generateRooms(int startRow, int startCol) {
