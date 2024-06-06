@@ -56,8 +56,9 @@ public abstract class Hero extends SuperSmoothMover
         image.drawOval(30, 16, 18, 18);
         image.drawRect(0, 0, 49, 49);
         setImage(image);*/
+        getImage().scale(48, 48);
         radius = getImage().getHeight()/2;
-        radius = 24;
+        
         currentWeapon = initialWeapon;
     }
     
@@ -307,7 +308,7 @@ public abstract class Hero extends SuperSmoothMover
                 } else if (direction.equals("left")) {
                     setLocation(1050, getPreciseY());
                 } else if (direction.equals("right")) {
-                    setLocation(150, getPreciseY());
+                    setLocation(342, getPreciseY());
                 }
             }
         }
