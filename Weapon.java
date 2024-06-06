@@ -15,6 +15,8 @@ public abstract class Weapon extends Actor
      */
     protected boolean isAttacking;
     protected int damage;
+    protected Hero hero;
+    protected Enemy e;
     
     public Weapon(int damage){
         isAttacking = false;

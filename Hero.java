@@ -350,7 +350,7 @@ public abstract class Hero extends SuperSmoothMover
     
     private void updateWeaponPosition() {
         if (currentWeapon != null) {
-            int offsetX = right ? 3 : -3;
+            int offsetX = right ? 2 : -2;
             currentWeapon.setLocation(getX() + offsetX, getY() + 5);
         }
     }

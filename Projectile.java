@@ -6,7 +6,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * @author Andy Feng
  * @version 1.0
  */
-public class Projectile extends Actor
+public class Projectile extends SuperSmoothMover
 {
     private GreenfootImage arrow = new GreenfootImage("images/weapon_arrow.png");
     private int direction_X;
@@ -18,6 +18,7 @@ public class Projectile extends Actor
     private int angle;
     private boolean firstTime;
     private int damage;
+    private boolean traveling;
     
     public Projectile(int direction_X, int direction_Y, int damage){
         setImage(arrow);
@@ -25,6 +26,7 @@ public class Projectile extends Actor
         this.direction_Y = direction_Y;
         firstTime = true;
         this.damage = damage;
+        traveling = false;
     }
     
     public void act()
@@ -35,7 +37,10 @@ public class Projectile extends Actor
             firstTime = false;
         }
         
-        move(speed);
+        if(!traveling && !GameWorld.isMouseHolding()){
+            traveling = true;
+        }
+        if(traveling) move(speed);
     }
 
     private int calculateRotation(){

@@ -12,16 +12,22 @@ public class Bow extends Weapon
 {
     private int actCount = 0;
     //Attacking frames
-    private static GreenfootImage[] bowFrames = {new GreenfootImage("weapon_bow0.png"), new GreenfootImage("weapon_bow1.png")};
+    private static GreenfootImage[] bowFramesRight = {new GreenfootImage("weapon_bow0.png"), new GreenfootImage("weapon_bow1.png")};
+    private static GreenfootImage[] bowFramesLeft = {new GreenfootImage("weapon_bow0.png"), new GreenfootImage("weapon_bow1.png")};;
     private boolean shootOneArrow;
+    private Hero hero;
     
     /**
      * Constructor of Bow to set its original image.
      */
     public Bow(int damage){
         super(damage);
-        setImage(bowFrames[0]);
+        setImage(bowFramesRight[0]);
         shootOneArrow = true;
+        
+        for(int i = 0; i < bowFramesLeft.length; i++){
+            bowFramesLeft[i].mirrorHorizontally();
+        }
     }
     
     public void act()
@@ -37,6 +43,7 @@ public class Bow extends Weapon
      */
     public void attack(){
         //Attack by pulling the bow
+        if(hero == null) return;
         if(isAttacking && shootOneArrow){
             getWorld().addObject(new Projectile(GameWorld.getMouseX(), GameWorld.getMouseY(), damage), getX(), getY());
             shootOneArrow = false;
@@ -46,7 +53,13 @@ public class Bow extends Weapon
     }
     
     private void animation(){
-        if(isAttacking) setImage(bowFrames[1]);
-        else setImage(bowFrames[0]);
+        if(hero == null) return;
+        if(hero.right){
+            if(isAttacking) setImage(bowFramesRight[1]);
+            else setImage(bowFramesRight[0]);
+        } else {
+            if(isAttacking) setImage(bowFramesLeft[1]);
+            else setImage(bowFramesLeft[0]);
+        }
     }
 }
