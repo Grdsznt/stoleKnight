@@ -32,7 +32,7 @@ public class Wizard extends Enemy
     }
     
     public Wizard() {
-        super(300, 4, 60, 450, 450);
+        super(300, 4, 5, 60, 450, 450);
         setImage(idleFrames[0]);
         for (GreenfootImage img: idleFrames) {
             img.scale(36, 63);

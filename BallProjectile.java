@@ -24,13 +24,17 @@ public class BallProjectile extends Actor
     }
     
     public void act() {
-        // move this in the rotation direction
+        if (isTouching(Hero.class)) {
+            causeDamage();
+        }
+        move(1);
+        if (isTouching(Wall.class)) getWorld().removeObject(this);
     }
     
     public void causeDamage() {
         ArrayList<Hero> heroes = (ArrayList<Hero>) getIntersectingObjects(Hero.class);
-        heroes.get(0).health -= damage;
+        if (heroes.size() != 0) {
+            heroes.get(0).takeDamage(damage);
+        }
     }
-    
-
 }
