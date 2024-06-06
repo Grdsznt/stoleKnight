@@ -14,13 +14,12 @@ public class Wall extends Tile
     
     public Wall(RoomData parent, int row, int col) {
         super(parent, row, col);
-         GreenfootImage image = new GreenfootImage(48, 48);
+        GreenfootImage image = new GreenfootImage(48, 48);
         
-         image.setColor(new Color(0, 0, 0));
-         image.drawRect(0, 0, 47, 47);
+        image.setColor(new Color(0, 0, 0));
+        image.drawRect(0, 0, 47, 47);
   
-         setImage(image);
-       
+        setImage(image);
     }
     /**
      * Act - do whatever the Wall wants to do. This method is called whenever
@@ -31,7 +30,7 @@ public class Wall extends Tile
        
     }
     
-    public void addedToWorld() {
+    public void addedToWorld(World w) {
         int centerX = getX(), centerY = getY();
         topBoundary = new Line(new Pair(centerX-44, centerY+44), new Pair(centerX+44, centerY+44));
         bottomBoundary = new Line(new Pair(centerX-44, centerY-44), new Pair(centerX+44, centerY-44));
