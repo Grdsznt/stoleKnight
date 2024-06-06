@@ -14,12 +14,12 @@ public class Wall extends Tile
     
     public Wall(RoomData parent, int row, int col) {
         super(parent, row, col);
-         GreenfootImage image = new GreenfootImage(48, 48);
+         GreenfootImage image = new GreenfootImage("Tiles/wall0.png");
         
-         image.setColor(new Color(0, 0, 0));
-         image.drawRect(0, 0, 47, 47);
+         image.scale(48, 48);
   
          setImage(image);
+         
        
     }
     /**
