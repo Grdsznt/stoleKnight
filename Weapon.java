@@ -30,7 +30,7 @@ public abstract class Weapon extends Actor
     {
         // Add your action code here.
         isAttacking = GameWorld.isMouseHolding();
-        causeDamage();
+        //causeDamage();
         
         hero = (Hero) getOneIntersectingObject(Hero.class);
         enemy = (Enemy) getOneIntersectingObject(Enemy.class);
