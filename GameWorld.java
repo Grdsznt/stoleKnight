@@ -48,6 +48,7 @@ public class GameWorld extends World
         // addObject(new Ogre(), 500, 500);
         // every time add a wall pls add it to obstacles
         mouseHold = false;
+        setPaintOrder(Hero.class, Weapon.class);
     }
     
     public ArrayList<Wall> getObstacles() {

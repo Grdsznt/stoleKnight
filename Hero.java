@@ -21,7 +21,7 @@ public abstract class Hero extends SuperSmoothMover
      */
     
     //ArrayList<Power> powerList;
-    protected ArrayList<Weapon> weaponInInventory = new ArrayList<Weapon>();
+    protected ArrayList<Weapon> weaponsInInventory = new ArrayList<Weapon>();
     private int Hp;
     private int shield;
     private double speed;
@@ -40,7 +40,8 @@ public abstract class Hero extends SuperSmoothMover
     
     
     public Hero(int Hp, int shieldValue, int speed, int initialEnergy, Weapon initialWeapon) {
-        weaponInInventory.add(initialWeapon);
+        weaponsInInventory.add(initialWeapon);
+        currentWeapon = initialWeapon;
         this.Hp = Hp;
         this.shield = shieldValue;
         this.speed = speed;
@@ -58,7 +59,6 @@ public abstract class Hero extends SuperSmoothMover
         setImage(image);*/
         radius = getImage().getHeight()/2;
         radius = 24;
-        currentWeapon = initialWeapon;
     }
     
     public void act()
@@ -67,8 +67,8 @@ public abstract class Hero extends SuperSmoothMover
         takeDamage();
 
         Weapon weaponOnGround = (Weapon) getOneIntersectingObject(Weapon.class);
-        if(weaponInInventory.size() < 2 && weaponOnGround != null) pickUpWeapon(weaponOnGround);
-        else if(weaponInInventory.size() >= 2 && weaponOnGround != null) switchWeaponOnGround(weaponOnGround);
+        handleAllWeaponAction(weaponOnGround);
+        switchWeaponInInventory();
         
         updateFacingDirection();
         updateWeaponPosition();
@@ -321,19 +321,6 @@ public abstract class Hero extends SuperSmoothMover
         }
     }
     
-    private void pickUpWeapon(Weapon newWeapon) {
-        //pick up a new weapon if the Hero only has 1 weapon
-        if(Greenfoot.isKeyDown("e")) weaponInInventory.add(newWeapon);
-    }
-    
-    private boolean switchWeaponOnGround(Weapon newWeapon) {
-        //switch the current weapon the hero is using with another weapon
-        weaponInInventory.remove(currentWeapon);
-        weaponInInventory.add(newWeapon);
-        currentWeapon = newWeapon;
-        return true;
-    }
-    
     public abstract void ability();
     
     public abstract void animation();
@@ -350,13 +337,60 @@ public abstract class Hero extends SuperSmoothMover
     
     private void updateWeaponPosition() {
         if (currentWeapon != null) {
-            int offsetX = right ? 2 : -2;
-            currentWeapon.setLocation(getX() + offsetX, getY() + 5);
+            int offsetX = 0;
+            int offsetY = 0;
+            if(currentWeapon instanceof Sword){
+                offsetX = right ? 6 : -6;
+                offsetY = -2;
+            }
+            if(currentWeapon instanceof Bow){
+                offsetX = right ? 2 : -2;
+                offsetY = 5;
+            }
+            currentWeapon.setLocation(getX() + offsetX, getY() + offsetY);
+        }
+        for(Weapon weapon : weaponsInInventory){
+            if(weapon != currentWeapon){
+                weapon.setLocation(getX() + (right ? -10 : 10), getY());
+                weapon.beingUsed = false;
+            }
         }
     }
     
-    private void switchCurrentWeapon() {
-        
+    private void switchWeaponInInventory() {
+        try{
+            if(Greenfoot.isKeyDown("1")){
+                currentWeapon = weaponsInInventory.get(0);
+                currentWeapon.beingUsed = true;
+            }
+            if(Greenfoot.isKeyDown("2")){
+                currentWeapon = weaponsInInventory.get(1);
+                currentWeapon.beingUsed = true;
+            }
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("no weapon there lol");
+        }
+    }
+    
+    private void dropWeapon() {
+        currentWeapon.beingUsed = false;
+        getWorld().addObject(currentWeapon, getX(), getY());
+    }
+    
+    private void pickUpAndSwitchCurrentWeapon(Weapon weaponOnGround) {
+        int currentWeaponIndex = weaponsInInventory.indexOf(currentWeapon);
+        dropWeapon();
+        weaponsInInventory.set(currentWeaponIndex, weaponOnGround);
+        currentWeapon = weaponOnGround;
+        currentWeapon.beingUsed = true;
+    }
+    
+    private void handleAllWeaponAction(Weapon weaponOnGround) {
+        if(weaponsInInventory.size() < 2 && Greenfoot.isKeyDown("e")) {
+            weaponsInInventory.add(weaponOnGround);
+        } else if(weaponsInInventory.size() == 2 && Greenfoot.isKeyDown("e")) {
+            pickUpAndSwitchCurrentWeapon(weaponOnGround);
+        }
     }
     
     public void resetXVelocity() {

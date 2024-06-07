@@ -347,5 +347,4 @@ public class Enemy extends SuperSmoothMover
         }
         return obstacles;
     }
-    
 }
