@@ -87,6 +87,7 @@ public class RoomData
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 21; j++) {
                 if (roomGrid[i][j] instanceof Wall) {
+                    
                     int count = 0;
                     if (i != 0 && roomGrid[i-1][j] instanceof Wall) {
                         count += 8;
@@ -103,7 +104,25 @@ public class RoomData
                     roomGrid[i][j].setImage("Tiles/wall" + count + ".png");
                     System.out.println("Stf: "+ count);
                     roomGrid[i][j].getImage().scale(48, 48);
-                    
+                    if (i == 0 && j == 0) {
+                        roomGrid[i][j].setImage("Tiles/cornertopleft.png");
+                    } else if (i == 14 && j == 0) {
+                        roomGrid[i][j].setImage("Tiles/cornerbottomleft.png");
+                    } else if (i == 14 && j == 20) {
+                        roomGrid[i][j].setImage("Tiles/cornerbottomright.png");
+                    } else if (i == 0 && j == 20) {
+                        roomGrid[i][j].setImage("Tiles/cornertopright.png");
+                    } else if (j == 0) {
+                        roomGrid[i][j].setImage("Tiles/edgeleft.png");
+
+                    } else if (j == 20) {
+                        roomGrid[i][j].setImage("Tiles/edgeright.png");
+                    }
+                    roomGrid[i][j].getImage().scale(48, 48);
+                }
+                
+                if (roomGrid[i][j] == null) {
+                    roomGrid[i][j] = new Floor(this, i, j);
                 }
             }
         }

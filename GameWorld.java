@@ -45,6 +45,7 @@ public class GameWorld extends World
         // int spawnCol = Greenfoot.getRandomNumber(2)+1;
         generateRooms(2, 2);
         setActOrder(Hero.class);
+        setPaintOrder(Wall.class, Chest.class, Weapon.class, Hero.class);
         // addObject(new Ogre(), 500, 500);
         // every time add a wall pls add it to obstacles
         mouseHold = false;
@@ -175,7 +176,13 @@ public class GameWorld extends World
         }
         
         System.out.println("");
-        
+        for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 21; j++) {
+                
+                // add 192 because there's 4 tiles of extra size to the left
+                addObject(new Floor(null, i, j), j*BLOCK_SIZE+BLOCK_SIZE/2+192, i*BLOCK_SIZE+BLOCK_SIZE/2);
+            }
+        }
         loadRoom(startRow, startCol);
     }
     
