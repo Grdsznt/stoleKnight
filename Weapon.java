@@ -15,18 +15,25 @@ public abstract class Weapon extends Actor
      */
     protected boolean isAttacking;
     protected int damage;
+    protected Enemy enemy;
+    protected boolean beingUsed;
+    protected Hero hero;
     
     public Weapon(int damage){
         isAttacking = false;
         this.damage = damage;
+        
+        beingUsed = false;
     }
     
     public void act()
     {
         // Add your action code here.
         isAttacking = GameWorld.isMouseHolding();
-        causeDamage();
-        System.out.println(isAttacking);
+        //causeDamage();
+        
+        hero = (Hero) getOneIntersectingObject(Hero.class);
+        enemy = (Enemy) getOneIntersectingObject(Enemy.class);
     }
     
     public abstract void attack();
@@ -34,7 +41,7 @@ public abstract class Weapon extends Actor
     public void causeDamage() {
         ArrayList<Enemy> e = (ArrayList<Enemy>) getIntersectingObjects(Enemy.class);
         for(Enemy enemy : e){
-            enemy.health -= damage;
+            enemy.setHealth(enemy.getHealth()-damage);
             e.remove(enemy);
         }
     }

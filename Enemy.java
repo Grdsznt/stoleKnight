@@ -12,7 +12,7 @@ import java.util.Deque;
 /**
  * Write a description of class Enemy here.
  * 
- * @author (your name) 
+ * @author Edwin
  * @version (a version number or a date)
  */
 public class Enemy extends SuperSmoothMover
@@ -32,9 +32,10 @@ public class Enemy extends SuperSmoothMover
     protected Deque<int[]> currentPath;
     public static int GRID_CHECK = 16;
     
-    public Enemy(int health, int speed, double targetRadius, int centerX, int centerY) {
+    public Enemy(int health, int speed, int damage, double targetRadius, int centerX, int centerY) {
         this.health = health;
         this.speed = speed;
+        this.damage = damage;
         this.targetRadius = targetRadius;
         this.centerX = centerX; this.centerY = centerY;
     }
@@ -346,6 +347,14 @@ public class Enemy extends SuperSmoothMover
             obstacles.add(w.getRightBoundary());
         }
         return obstacles;
+    }
+    
+    public int getHealth(){
+        return health;
+    }
+    
+    public void setHealth(int health) {
+        this.health = health;
     }
     
 }

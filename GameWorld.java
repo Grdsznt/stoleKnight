@@ -47,8 +47,12 @@ public class GameWorld extends World
         setActOrder(Hero.class);
         setPaintOrder(Wall.class, Chest.class, Weapon.class, Hero.class);
         // addObject(new Ogre(), 500, 500);
+        obstacles = (ArrayList<Wall>) getObjects(Wall.class);
+        addObject(new Ogre(500, 500), 500, 500);
+        addObject(new Hero1(), 525, 525);
         // every time add a wall pls add it to obstacles
         mouseHold = false;
+        setPaintOrder(Hero.class, Weapon.class);
     }
     
     public ArrayList<Wall> getObstacles() {
