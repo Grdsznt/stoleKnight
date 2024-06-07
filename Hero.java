@@ -66,6 +66,10 @@ public abstract class Hero extends SuperSmoothMover
         radius = 24;
     }
     
+    public void addedToWorld(World world) {
+        world.addObject(currentWeapon, getX(), getY());
+    }
+    
     public void act()
     {
         control();
@@ -76,12 +80,15 @@ public abstract class Hero extends SuperSmoothMover
             }
         }
         renderHero();
-        Weapon weaponOnGround = (Weapon) getOneIntersectingObject(Weapon.class);
-        handleAllWeaponAction(weaponOnGround);
-        switchWeaponInInventory();
+        ArrayList<Weapon> weaponsOnGround = (ArrayList<Weapon>) getIntersectingObjects(Weapon.class);
+        for(Weapon weaponOnGround : weaponsOnGround) {
+            handleAllWeaponAction(weaponOnGround);
+        }
         
+        switchWeaponInInventory();
         updateFacingDirection();
         updateWeaponPosition();
+        System.out.println(weaponsInInventory.size());
     }
     
     private void control() {
@@ -414,7 +421,7 @@ public abstract class Hero extends SuperSmoothMover
     private void handleAllWeaponAction(Weapon weaponOnGround) {
         if(weaponsInInventory.size() < 2 && Greenfoot.isKeyDown("e")) {
             weaponsInInventory.add(weaponOnGround);
-        } else if(weaponsInInventory.size() == 2 && Greenfoot.isKeyDown("e")) {
+        } else if(weaponsInInventory.size() >= 2 && Greenfoot.isKeyDown("e")) {
             pickUpAndSwitchCurrentWeapon(weaponOnGround);
         }
     }
