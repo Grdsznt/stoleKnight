@@ -13,7 +13,6 @@ public class CircleHitbox extends Hitbox
         super(parent, xOffset, yOffset);
         this.radius = radius;
         setImage(new GreenfootImage((int)radius*2, (int)radius*2));
-
     }
     
     /**

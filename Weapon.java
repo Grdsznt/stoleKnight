@@ -41,7 +41,7 @@ public abstract class Weapon extends Actor
     public void causeDamage() {
         ArrayList<Enemy> e = (ArrayList<Enemy>) getIntersectingObjects(Enemy.class);
         for(Enemy enemy : e){
-            enemy.health -= damage;
+            enemy.setHealth(enemy.getHealth()-damage);
             e.remove(enemy);
         }
     }

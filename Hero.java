@@ -5,7 +5,7 @@ import java.util.ArrayList;
  * 
  * @author Andy Feng, Felix Zhao
  * @version 1.0
- * Edited by Jean Pan
+ * Edited by Jean Pan, Edwin Dong
  * 
  * This is the main character of the game, the player can control control this character to pass the game
  * The main character will have various actions:
@@ -29,6 +29,10 @@ public abstract class Hero extends SuperSmoothMover
     protected boolean right;
     protected int energy;
     protected boolean attack;
+    protected boolean isInvincible;
+    protected long invincibleStart;
+    protected int invincibleDuration;
+    protected boolean isTransparent;
     private double xMoveVel = 0;
     private double yMoveVel = 0;
     private double xAddedVel = 0;
@@ -50,7 +54,8 @@ public abstract class Hero extends SuperSmoothMover
         attack = false;
         right = true;
         mouseHold = false;
-        
+        isInvincible = false;
+        invincibleDuration = 1000;
         /*GreenfootImage image = new GreenfootImage(50, 50);
         image.setColor(new Color(0, 0, 0));
         image.drawOval(0, 0, 49, 49);
@@ -64,8 +69,13 @@ public abstract class Hero extends SuperSmoothMover
     public void act()
     {
         control();
-        takeDamage();
-
+        if (isInvincible) {
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - invincibleStart > invincibleDuration) {
+                isInvincible = false;
+            }
+        }
+        renderHero();
         Weapon weaponOnGround = (Weapon) getOneIntersectingObject(Weapon.class);
         handleAllWeaponAction(weaponOnGround);
         switchWeaponInInventory();
@@ -313,13 +323,29 @@ public abstract class Hero extends SuperSmoothMover
         }
     }
     
-    private void takeDamage() {
+    public void takeDamage(int damage) {
         // implement later
+        if (!isInvincible) {
+            Hp -= damage;
+            isInvincible = true;
+            invincibleStart = System.currentTimeMillis();
+        }
         
         if(Hp <= 0){
             //game over
+            getWorld().removeObject(this);
+        }
+        
+    }
+    
+    public void renderHero() {
+        if (isInvincible) {
+            getImage().setTransparency(128); // 50% transparency
+        } else {
+            getImage().setTransparency(255); // 100% visibility
         }
     }
+
     
     public abstract void ability();
     

@@ -45,7 +45,9 @@ public class GameWorld extends World
         // int spawnCol = Greenfoot.getRandomNumber(2)+1;
         generateRooms(2, 2);
         setActOrder(Hero.class);
-        // addObject(new Ogre(), 500, 500);
+        obstacles = (ArrayList<Wall>) getObjects(Wall.class);
+        addObject(new Ogre(500, 500), 500, 500);
+        addObject(new Hero1(), 525, 525);
         // every time add a wall pls add it to obstacles
         mouseHold = false;
         setPaintOrder(Hero.class, Weapon.class);
