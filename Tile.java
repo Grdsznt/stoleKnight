@@ -6,7 +6,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * @author (your name) 
  * @version (a version number or a date)
  */
-public class Tile extends Actor
+public abstract class Tile extends Actor
 {
     protected RoomData parentRoom;
     protected int row;

@@ -21,7 +21,7 @@ public abstract class Hero extends SuperSmoothMover
      */
     
     //ArrayList<Power> powerList;
-    protected ArrayList<Weapon> weaponInInventory = new ArrayList<Weapon>();
+    protected ArrayList<Weapon> weaponsInInventory = new ArrayList<Weapon>();
     private int Hp;
     private int shield;
     private double speed;
@@ -41,33 +41,30 @@ public abstract class Hero extends SuperSmoothMover
     private int dashCooldown = 40;
     private int radius;
     protected Weapon currentWeapon;
-    
-    
+    private int weaponActionCooldown = 0;
+
     public Hero(int Hp, int shieldValue, int speed, int initialEnergy, Weapon initialWeapon) {
-        weaponInInventory.add(initialWeapon);
+        weaponsInInventory.add(initialWeapon);
+        currentWeapon = initialWeapon;
         this.Hp = Hp;
         this.shield = shieldValue;
         this.speed = speed;
         this.energy = initialEnergy;
-        
+
         attack = false;
         right = true;
         mouseHold = false;
         isInvincible = false;
         invincibleDuration = 1000;
-        /*GreenfootImage image = new GreenfootImage(50, 50);
-        image.setColor(new Color(0, 0, 0));
-        image.drawOval(0, 0, 49, 49);
-        image.drawOval(30, 16, 18, 18);
-        image.drawRect(0, 0, 49, 49);
-        setImage(image);*/
         radius = getImage().getHeight()/2;
         radius = 24;
-        currentWeapon = initialWeapon;
     }
     
-    public void act()
-    {
+    public void addedToWorld(World world) {
+        world.addObject(currentWeapon, getX(), getY());
+    }
+    
+    public void act() {
         control();
         if (isInvincible) {
             long currentTime = System.currentTimeMillis();
@@ -76,12 +73,14 @@ public abstract class Hero extends SuperSmoothMover
             }
         }
         renderHero();
-        Weapon weaponOnGround = (Weapon) getOneIntersectingObject(Weapon.class);
-        if(weaponInInventory.size() < 2 && weaponOnGround != null) pickUpWeapon(weaponOnGround);
-        else if(weaponInInventory.size() >= 2 && weaponOnGround != null) switchWeaponOnGround(weaponOnGround);
-        
+        handleWeaponActions();
+        switchWeaponInInventory();
         updateFacingDirection();
         updateWeaponPosition();
+
+        if (weaponActionCooldown > 0) {
+            weaponActionCooldown--;
+        }
     }
     
     private void control() {
@@ -317,7 +316,7 @@ public abstract class Hero extends SuperSmoothMover
                 } else if (direction.equals("left")) {
                     setLocation(1050, getPreciseY());
                 } else if (direction.equals("right")) {
-                    setLocation(150, getPreciseY());
+                    setLocation(342, getPreciseY());
                 }
             }
         }
@@ -347,42 +346,94 @@ public abstract class Hero extends SuperSmoothMover
     }
 
     
-    private void pickUpWeapon(Weapon newWeapon) {
-        //pick up a new weapon if the Hero only has 1 weapon
-        if(Greenfoot.isKeyDown("e")) weaponInInventory.add(newWeapon);
-    }
-    
-    private boolean switchWeaponOnGround(Weapon newWeapon) {
-        //switch the current weapon the hero is using with another weapon
-        weaponInInventory.remove(currentWeapon);
-        weaponInInventory.add(newWeapon);
-        currentWeapon = newWeapon;
-        return true;
-    }
-    
     public abstract void ability();
     
     public abstract void animation();
     
-    private void updateFacingDirection(){
+    private void updateFacingDirection() {
         if (GameWorld.isMouseHolding()) {
-            if(GameWorld.getMouseX() < getX()) right = false;
-            else right = true;
+            right = GameWorld.getMouseX() >= getX();
         } else {
-            if(Greenfoot.isKeyDown("a")) right = false;
-            if(Greenfoot.isKeyDown("d")) right = true;
+            if (Greenfoot.isKeyDown("a")) right = false;
+            if (Greenfoot.isKeyDown("d")) right = true;
         }
     }
-    
+
     private void updateWeaponPosition() {
         if (currentWeapon != null) {
-            int offsetX = right ? 3 : -3;
-            currentWeapon.setLocation(getX() + offsetX, getY() + 5);
+            int offsetX = 0;
+            int offsetY = 0;
+            if(currentWeapon instanceof Sword){
+                offsetX = right ? 6 : -6;
+                offsetY = -2;
+            }
+            if(currentWeapon instanceof Bow){
+                offsetX = right ? 2 : -2;
+                offsetY = 5;
+            }
+            currentWeapon.setLocation(getX() + offsetX, getY() + offsetY);
+        }
+        for(Weapon weapon : weaponsInInventory){
+            if(weapon != currentWeapon){
+                weapon.setLocation(getX() + (right ? -10 : 10), getY());
+                weapon.beingUsed = false;
+            }
         }
     }
-    
-    private void switchCurrentWeapon() {
-        
+
+    private void switchWeaponInInventory() {
+        if (weaponActionCooldown == 0) {
+            try {
+                if(Greenfoot.isKeyDown("1")){
+                    currentWeapon = weaponsInInventory.get(0);
+                    currentWeapon.beingUsed = true;
+                    weaponActionCooldown = 5; // Adding cooldown to avoid multiple detections
+                }
+                if(Greenfoot.isKeyDown("2")){
+                    currentWeapon = weaponsInInventory.get(1);
+                    currentWeapon.beingUsed = true;
+                    weaponActionCooldown = 5; // Adding cooldown to avoid multiple detections
+                }
+            } catch (IndexOutOfBoundsException e) {
+                System.out.println("No weapon there.");
+            }
+        }
+    }
+
+    private void dropWeapon() {
+        currentWeapon.beingUsed = false;
+        getWorld().addObject(currentWeapon, getX(), getY());
+    }
+
+    private void pickUpAndSwitchCurrentWeapon(Weapon weaponOnGround) {
+        int currentWeaponIndex = weaponsInInventory.indexOf(currentWeapon);
+        dropWeapon();
+        weaponsInInventory.set(currentWeaponIndex, weaponOnGround);
+        currentWeapon = weaponOnGround;
+        currentWeapon.beingUsed = true;
+    }
+
+    private void handleWeaponActions() {
+        ArrayList<Weapon> weaponsOnGround = (ArrayList<Weapon>) getIntersectingObjects(Weapon.class);
+        for(Weapon weaponOnGround : weaponsOnGround) {
+            if(weaponsInInventory.indexOf(weaponOnGround) == -1) {
+                handleWeaponPickup(weaponOnGround);
+            }
+        }
+    }
+
+    private void handleWeaponPickup(Weapon weaponOnGround) {
+        if (weaponActionCooldown == 0) {
+            if (weaponsInInventory.size() < 2 && Greenfoot.isKeyDown("e")) {
+                System.out.println("Weapon picked up");
+                weaponsInInventory.add(weaponOnGround);
+                weaponActionCooldown = 20; // Adding cooldown to avoid multiple detections
+            } else if (weaponsInInventory.size() >= 2 && Greenfoot.isKeyDown("e")) {
+                System.out.println("Weapon switched");
+                pickUpAndSwitchCurrentWeapon(weaponOnGround);
+                weaponActionCooldown = 20; // Adding cooldown to avoid multiple detections
+            }
+        }
     }
     
     public void resetXVelocity() {
