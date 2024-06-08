@@ -30,7 +30,9 @@ public class Hero1 extends Hero
     }
     
     public void addedToWorld(World w) {
+        super.addedToWorld(w);
         w.addObject(overlay, getX(), getY());
+        
     }
     
     /**r
