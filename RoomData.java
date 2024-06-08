@@ -13,10 +13,7 @@ public class RoomData
     // 0000 - up, down, left, right
     // add unique room shapes later - special rooms e.x chest/shop/special room should be all the same
     public RoomData(int roomType) {
-        if (Greenfoot.getRandomNumber(4) == 0) {
-            // special room stuff
-            
-        }
+        
         roomGrid = new Tile[15][21]; 
         for (int i = 0; i < 21; i++) {
             if (i > 8 && i < 12) {
@@ -60,10 +57,9 @@ public class RoomData
         if ((roomType & 16) != 0) {
 
         } else if ((roomType & 32) != 0) {
-            roomGrid[5][5] = new Wall(this, 5, 5);
-            roomGrid[6][5] = new Wall(this, 6, 5);
+            roomGrid[7][10] = new Portal(this, 7, 10);
         } else if ((roomType & 64) != 0) {
-            roomGrid[7][10] = new Chest(this, 10, 7);
+            roomGrid[7][10] = new Chest(this, 7, 10);
         }
         String[][] innerTiles = getRandomRoom(roomType);
         if (innerTiles != null) {
@@ -76,6 +72,8 @@ public class RoomData
                         case "Wall":
                             roomGrid[i+3][j+3] = new Wall(this, i+3, j+3);
                             break;
+                        case "Void":
+                            roomGrid[i+3][j+3] = new Void(this, i+3, j+3);
                     }
                     
                     
@@ -102,7 +100,7 @@ public class RoomData
                         count+=1;
                     }
                     roomGrid[i][j].setImage("Tiles/wall" + count + ".png");
-                    System.out.println("Stf: "+ count);
+                    
                     roomGrid[i][j].getImage().scale(48, 48);
                     if (i == 0 && j == 0) {
                         roomGrid[i][j].setImage("Tiles/cornertopleft.png");
@@ -119,6 +117,12 @@ public class RoomData
                         roomGrid[i][j].setImage("Tiles/edgeright.png");
                     }
                     roomGrid[i][j].getImage().scale(48, 48);
+                } else if (roomGrid[i][j] instanceof Void) {
+                    if (i > 0 && !(roomGrid[i-1][j] instanceof Void)) {
+                        roomGrid[i][j].setImage("Tiles/voidedge.png");
+                        roomGrid[i][j].getImage().scale(48, 48);
+
+                    }
                 }
                 
             }
@@ -134,6 +138,7 @@ public class RoomData
         if (type >= 16) {
             return null;
         }
+        //return innerRooms[10];
         return innerRooms[Greenfoot.getRandomNumber(innerRooms.length)];
     }
     
@@ -143,6 +148,20 @@ public class RoomData
     // 19*9 (25-5, 15-4)
     // start from (3,3) end at (21, 11) 0-indexed
     private static String[][][] innerRooms = new String[][][] {
+        
+        {
+            {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+            {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+            {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+            {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+            {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+            {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+            {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+            {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+            {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+            
+        },
+        
         {
             {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
             {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
@@ -166,6 +185,108 @@ public class RoomData
             {null, null, null, null, null, null, null, "Wall", null, null, null, null, null, null, null},
             {null, null, null, null, null, null, null, "Wall", null, null, null, null, null, null, null},
             {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
-        }
+        },
+        
+        {
+            {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+            {null, "Wall", null, null, null, null, null, null, null, null, null, null, null, "Wall", null},
+            {null, "Wall", null, null, null, null, null, null, null, null, null, null, null, "Wall", null},
+            {null, "Wall", null, null, null, null, null, null, null, null, null, null, null, "Wall", null},
+            {null, "Wall", "Wall", "Wall", "Wall", null, null, null, null, null, "Wall", "Wall", "Wall", "Wall", null},
+            {null, "Wall", null, null, null, null, null, null, null, null, null, null, null, "Wall", null},
+            {null, "Wall", null, null, null, null, null, null, null, null, null, null, null, "Wall", null},
+            {null, "Wall", null, null, null, null, null, null, null, null, null, null, null, "Wall", null},
+            {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+        },
+        
+        {
+            {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+            {null, "Wall", "Wall", "Wall", null, null, null, null, null, null, null, "Wall", "Wall", "Wall", null},
+            {null, "Wall", null, null, null, null, null, null, null, null, null, null, null, "Wall", null},
+            {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+            {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+            {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+            {null, "Wall", null, null, null, null, null, null, null, null, null, null, null, "Wall", null},
+            {null, "Wall", "Wall", "Wall", null, null, null, null, null, null, null, "Wall", "Wall", "Wall", null},
+            {null, null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+            
+        },
+        
+        {
+            {"Wall", "Wall", "Wall", "Wall", "Wall", "Wall", "Wall", "Wall", "Wall", "Wall", "Wall", "Wall", "Wall", "Wall", "Wall"},
+            {"Wall", null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+            {"Wall", null, null, null, null, null, null, null, null, null, null, null, null, null, null},
+            {"Wall", null, null, "Wall", "Wall", "Wall", "Wall", "Wall", "Wall", "Wall", "Wall", "Wall", "Wall", "Wall", "Wall"},
+            {"Wall", null, null, "Wall", null, null, null, null, null, null, null, null, null, null, "Wall"},
+            {"Wall", null, null, "Wall", null, null, null, null, null, null, null, null, null, null, "Wall"},
+            {"Wall", null, null, null, null, null, null, null, "Wall", null, null, null, null, null, "Wall"},
+            {"Wall", null, null, null, null, null, null, null, "Wall", null, null, null, null, null, "Wall"},
+            {"Wall", "Wall", "Wall", "Wall", "Wall", "Wall", "Wall", "Wall", "Wall", "Wall", "Wall", "Wall", "Wall", "Wall", "Wall"}
+            
+        },
+        
+        {
+            {null, null, null, null, null, null, "Wall", "Wall", "Wall", null, null, null, null, null, null},
+            {null, null, null, null, null, null, "Wall", "Void", "Wall", null, null, null, null, null, null},
+            {null, null, null, null, null, "Wall", "Wall", "Void", "Wall", "Wall", null, null, null, null, null},
+            {null, null, null, null, null, "Wall", "Void", "Void", "Void", "Wall", null, null, null, null, null},
+            {null, null, null, null, "Wall", "Wall", "Wall", "Wall", "Wall", "Wall", "Wall", null, null, null, null},
+            {null, null, null, null, "Wall", null, null, null, null, null, "Wall", null, null, null, null},
+            {null, null, null, null, "Wall", null, null, null, null, null, "Wall", null, null, null, null},
+            {null, null, null, null, "Wall", null, null, null, null, null, "Wall", null, null, null, null},
+            {null, null, null, null, "Wall", null, null, null, null, null, "Wall", null, null, null, null},
+            
+        },
+        
+        {
+            {null, null, null, null, "Wall", "Wall", "Wall", "Wall", "Wall", "Wall", "Wall", null, null, null, null},
+            {null, null, null, null, "Wall", null, null, null, null, null, null, null, null, null, null},
+            {null, null, null, null, "Wall", null, null, null, null, null, null, null, null, null, null},
+            {null, null, null, null, "Wall", null, null, null, null, null, null, null, null, null, null},
+            {null, null, null, null, "Wall", "Wall", "Wall", "Wall", "Wall", null, null, null, null, null, null},
+            {null, null, null, null, "Wall", null, null, null, null, null, null, null, null, null, null},
+            {null, null, null, null, "Wall", null, null, null, null, null, null, null, null, null, null},
+            {null, null, null, null, "Wall", null, null, null, null, null, null, null, null, null, null},
+            {null, null, null, null, "Wall", null, null, null, null, null, null, null, null, null, null},
+        },
+        
+        {
+            {null, null, null, null, "Wall", "Wall", "Wall", "Wall", "Wall", "Wall", "Wall", null, null, null, null},
+            {null, null, null, null, "Wall", null, null, null, null, null, null, null, null, null, null},
+            {null, null, null, null, "Wall", null, null, null, null, null, null, null, null, null, null},
+            {null, null, null, null, "Wall", null, null, null, null, null, null, null, null, null, null},
+            {null, null, null, null, "Wall", "Wall", "Wall", "Wall", "Wall", null, null, null, null, null, null},
+            {null, null, null, null, "Wall", null, null, null, null, null, null, null, null, null, null},
+            {null, null, null, null, "Wall", null, null, null, null, null, null, null, null, null, null},
+            {null, null, null, null, "Wall", null, null, null, null, null, null, null, null, null, null},
+            {null, null, null, null, "Wall", "Wall", "Wall", "Wall", "Wall", "Wall", "Wall", null, null, null, null},
+            
+        },
+        
+        {
+            {null, null, null, null, "Wall", "Wall", "Wall", "Wall", "Wall", "Wall", "Wall", null, null, null, null},
+            {null, null, null, null, null, null, null, "Wall", null, null, null, null, null, null, null},
+            {null, null, null, null, null, null, null, "Wall", null, null, null, null, null, null, null},
+            {null, null, null, null, null, null, null, "Wall", null, null, null, null, null, null, null},
+            {null, null, null, null, null, null, null, "Wall", null, null, null, null, null, null, null},
+            {null, null, null, null, null, null, null, "Wall", null,  null, null, null, null, null, null},
+            {null, null, null, null, null, null, null, "Wall", null, null, null, null, null, null, null},
+            {null, null, null, null, null, null, null, "Wall", null, null, null, null, null, null, null},
+            {null, null, null, null, "Wall", "Wall", "Wall", "Wall", null, null, null, null, null, null, null},
+            
+        },
+        
+        {
+            {null, null, null, null, "Wall", null, null, null, null, null, "Wall", null, null, null, null},
+            {null, null, null, null, "Wall", null, null, null, null, null, "Wall", null, null, null, null},
+            {null, null, null, null, "Wall", null, null, null, null, null, "Wall", null, null, null, null},
+            {null, null, null, null, "Wall", "Wall", null, null, null, "Wall", "Wall", null, null, null, null},
+            {null, null, null, null, null, "Wall", null, null, null, "Wall", null, null, null, null, null},
+            {null, null, null, null, null, "Wall", "Wall", null, "Wall",  "Wall", null, null, null, null, null},
+            {null, null, null, null, null, null,  "Wall", null,  "Wall", null, null, null, null, null, null},
+            {null, null, null, null, null, null,  "Wall",  "Wall",  "Wall", null, null, null, null, null, null},
+            {null, null, null, null, null, null, null,  "Wall", null, null, null, null, null, null, null},
+            
+        },
     };
 }

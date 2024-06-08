@@ -35,12 +35,15 @@ public abstract class Hero extends SuperSmoothMover
     protected long invincibleStart;
     protected int invincibleDuration;
     protected boolean isTransparent;
+    protected int lastHitCounter = 0;
+    
     private double xMoveVel = 0;
     private double yMoveVel = 0;
     private double xAddedVel = 0;
     private double yAddedVel = 0;
     private double friction = 1;
     private int dashCooldown = 40;
+    
     private int radius;
     protected Weapon currentWeapon;
     private int weaponActionCooldown = 0;
@@ -67,11 +70,13 @@ public abstract class Hero extends SuperSmoothMover
         radius = getImage().getHeight()/2;
         radius = 24;
         hpBar = new SuperStatBar(hp, hp, null, 105, 18, 0, Color.RED, Color.BLACK);
+        shieldBar = new SuperStatBar(shield, shield, null, 105, 18, 0, Color.GRAY, Color.BLACK);
     }
     
     public void addedToWorld(World world) {
         world.addObject(currentWeapon, getX(), getY());
         world.addObject(hpBar, 118, 38);
+        world.addObject(shieldBar, 118, 69);
     }
     
     public void act() {
@@ -82,11 +87,19 @@ public abstract class Hero extends SuperSmoothMover
                 isInvincible = false;
             }
         }
+        if (lastHitCounter >= 300 && shield < maxShield) {
+            if (lastHitCounter % 60 == 0) {
+                shield++;
+                shieldBar.update(shield);
+            }
+        }
+        lastHitCounter++;
         renderHero();
         handleWeaponActions();
         switchWeaponInInventory();
         updateFacingDirection();
         updateWeaponPosition();
+        tileInteraction();
 
         if (weaponActionCooldown > 0) {
             weaponActionCooldown--;
@@ -320,13 +333,13 @@ public abstract class Hero extends SuperSmoothMover
             if (direction != null) {
                 System.out.println("yeah");
                 if (direction.equals("up")) {
-                    setLocation(getPreciseX(), 570);
+                    setLocation(getPreciseX(), 600);
                 } else if (direction.equals("down")) {
-                    setLocation(getPreciseX(), 150);
+                    setLocation(getPreciseX(), 110);
                 } else if (direction.equals("left")) {
-                    setLocation(1050, getPreciseY());
+                    setLocation(1090, getPreciseY());
                 } else if (direction.equals("right")) {
-                    setLocation(342, getPreciseY());
+                    setLocation(362, getPreciseY());
                 }
             }
         }
@@ -335,8 +348,15 @@ public abstract class Hero extends SuperSmoothMover
     public void takeDamage(int damage) {
         // implement later
         if (!isInvincible) {
-            hp -= damage;
-            hpBar.update(hp);
+            if (shield > 0) {
+                shield -= damage;
+                shield = Math.max(shield, 0);
+                shieldBar.update(shield);
+            } else {
+                hp -= damage;
+                hpBar.update(hp);
+            }
+            lastHitCounter = 0;
             isInvincible = true;
             invincibleStart = System.currentTimeMillis();
         }
@@ -444,6 +464,13 @@ public abstract class Hero extends SuperSmoothMover
                 pickUpAndSwitchCurrentWeapon(weaponOnGround);
                 weaponActionCooldown = 20; // Adding cooldown to avoid multiple detections
             }
+        }
+    }
+    
+    private void tileInteraction() {
+        Portal portal = (Portal)getOneIntersectingObject(Portal.class);
+        if (portal != null) {
+            
         }
     }
     
