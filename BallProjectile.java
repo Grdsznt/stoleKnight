@@ -1,4 +1,5 @@
 import greenfoot.*;
+import java.util.ArrayList;
 /**
  * Write a description of class BallProjectile here.
  * 
@@ -9,7 +10,9 @@ public class BallProjectile extends Actor
 {
     // instance variables - replace the example below with your own
     private GreenfootImage img = new GreenfootImage("glow_ball.png");
-    private int size, damage, rotation;
+    private int size;
+    private int damage;
+    private int rotation;
 
     /**
      * Constructor for objects of class BallProjectile
@@ -17,7 +20,9 @@ public class BallProjectile extends Actor
     
     public BallProjectile(int size, int damage, int rotation)
     {
-        this.size = size; this.damage = damage; this.rotation = rotation;
+        this.size = size; 
+        this.damage = damage; 
+        this.rotation = rotation;
         img.scale(size, size);
         setImage(img);
         setRotation(rotation);

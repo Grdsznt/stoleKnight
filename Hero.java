@@ -22,8 +22,10 @@ public abstract class Hero extends SuperSmoothMover
     
     //ArrayList<Power> powerList;
     protected ArrayList<Weapon> weaponsInInventory = new ArrayList<Weapon>();
-    private int Hp;
+    private int hp;
+    private int maxHP;
     private int shield;
+    private int maxShield;
     private double speed;
     private boolean mouseHold;
     protected boolean right;
@@ -42,11 +44,17 @@ public abstract class Hero extends SuperSmoothMover
     private int radius;
     protected Weapon currentWeapon;
     private int weaponActionCooldown = 0;
+    
+    private SuperStatBar hpBar;
+    private SuperStatBar shieldBar;
+    private SuperStatBar energyBar;
 
-    public Hero(int Hp, int shieldValue, int speed, int initialEnergy, Weapon initialWeapon) {
+    public Hero(int hp, int shieldValue, int speed, int initialEnergy, Weapon initialWeapon) {
         weaponsInInventory.add(initialWeapon);
         currentWeapon = initialWeapon;
-        this.Hp = Hp;
+        this.hp = hp;
+        maxHP = hp;
+        maxShield = shieldValue;
         this.shield = shieldValue;
         this.speed = speed;
         this.energy = initialEnergy;
@@ -58,10 +66,12 @@ public abstract class Hero extends SuperSmoothMover
         invincibleDuration = 1000;
         radius = getImage().getHeight()/2;
         radius = 24;
+        hpBar = new SuperStatBar(hp, hp, null, 105, 18, 0, Color.RED, Color.BLACK);
     }
     
     public void addedToWorld(World world) {
         world.addObject(currentWeapon, getX(), getY());
+        world.addObject(hpBar, 118, 38);
     }
     
     public void act() {
@@ -325,12 +335,13 @@ public abstract class Hero extends SuperSmoothMover
     public void takeDamage(int damage) {
         // implement later
         if (!isInvincible) {
-            Hp -= damage;
+            hp -= damage;
+            hpBar.update(hp);
             isInvincible = true;
             invincibleStart = System.currentTimeMillis();
         }
         
-        if(Hp <= 0){
+        if(hp <= 0){
             //game over
             getWorld().removeObject(this);
         }

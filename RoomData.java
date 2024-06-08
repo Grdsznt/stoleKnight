@@ -121,9 +121,6 @@ public class RoomData
                     roomGrid[i][j].getImage().scale(48, 48);
                 }
                 
-                if (roomGrid[i][j] == null) {
-                    roomGrid[i][j] = new Floor(this, i, j);
-                }
             }
         }
         

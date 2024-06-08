@@ -45,14 +45,23 @@ public class GameWorld extends World
         // int spawnCol = Greenfoot.getRandomNumber(2)+1;
         generateRooms(2, 2);
         setActOrder(Hero.class);
-        setPaintOrder(Wall.class, Chest.class, Weapon.class, Hero.class);
+        setPaintOrder(Wall.class, Chest.class, Weapon.class, Hero.class, Enemy.class);
         // addObject(new Ogre(), 500, 500);
         obstacles = (ArrayList<Wall>) getObjects(Wall.class);
         addObject(new Ogre(500, 500), 500, 500);
         addObject(new Hero1(), 525, 525);
         // every time add a wall pls add it to obstacles
         mouseHold = false;
-        setPaintOrder(Hero.class, Weapon.class);
+        // background stuff
+        GreenfootImage background = new GreenfootImage(1200, 720);
+        background.setColor(new Color(34, 34, 34));
+        background.fillRect(0, 0, 1200, 720);
+        GreenfootImage stats = new GreenfootImage("statbar.png");
+        stats.scale(183, 123);
+        background.drawImage(stats, 15, 15);
+        setBackground(background);
+        
+        
     }
     
     public ArrayList<Wall> getObstacles() {
