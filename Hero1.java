@@ -25,7 +25,7 @@ public class Hero1 extends Hero
         super(Hp, shield, speed, energy, new Sword());
         loadIdleFrames();
         setImage(idleFramesRight[0]);
-        hitbox = new SimpleHitbox(this, getImage().getWidth()/2-20, getImage().getHeight()/2-15);
+        hitbox = new SimpleHitbox(this, getImage().getWidth()/2-25, getImage().getHeight()/2-15);
         overlay = new Overlay(this, hitbox);
     }
     
@@ -56,6 +56,10 @@ public class Hero1 extends Hero
     
     public void ability() {
         
+    }
+    
+    public SimpleHitbox getHitbox() {
+        return hitbox;
     }
     
     private int frame = 0;

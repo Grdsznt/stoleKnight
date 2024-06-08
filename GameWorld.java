@@ -46,8 +46,11 @@ public class GameWorld extends World
         generateRooms(2, 2);
         setActOrder(Hero.class);
         obstacles = (ArrayList<Wall>) getObjects(Wall.class);
+        
+        // testing
         addObject(new Ogre(500, 500), 500, 500);
         addObject(new Hero1(), 525, 525);
+        
         // every time add a wall pls add it to obstacles
         mouseHold = false;
     }

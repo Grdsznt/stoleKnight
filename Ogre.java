@@ -25,8 +25,7 @@ public class Ogre extends Enemy
     private Overlay overlay;
     private Pair target;
     public Ogre(int centerX, int centerY) {
-        super(1000, 2, 3, 200, centerX, centerY);
-        setImage(idleFrames[0]);
+        super(1000, 2, 3, 200, centerX, centerY);        
         homeRadius = 60; 
         for (GreenfootImage img: idleFrames) {
             img.scale(64, 64);
@@ -34,6 +33,7 @@ public class Ogre extends Enemy
         for (GreenfootImage img: runFrames) {
             img.scale(64, 64);
         }
+        setImage(idleFrames[0]);
         actNum = 0;
         frameNum = 0;
         hitbox = new SimpleHitbox(this, getImage().getWidth()/2-10, getImage().getHeight()/2-5);
@@ -107,7 +107,8 @@ public class Ogre extends Enemy
                 }
             }
         }
-        if (isTouching(Hero.class)) {
+         
+        if (hitbox.intersectsOval(getWorld().getObjects(Hero.class).get(0))) {
             h = getIntersectingObjects(Hero.class).get(0);
             if (h != null) {
                 h.takeDamage(damage);
@@ -156,37 +157,5 @@ public class Ogre extends Enemy
         } else {
             isMoving = true;
         }
-    }
-    
-    private boolean intersectsOval(Actor other) {
-        // Get the center of the oval hitbox (enemy)
-        int enemyCenterX = getX();
-        int enemyCenterY = getY();
-
-        // Get the bounding box of the other actor
-        GreenfootImage otherImage = other.getImage();
-        int otherWidth = otherImage.getWidth();
-        int otherHeight = otherImage.getHeight();
-        int otherLeft = other.getX() - otherWidth / 2;
-        int otherRight = other.getX() + otherWidth / 2;
-        int otherTop = other.getY() - otherHeight / 2;
-        int otherBottom = other.getY() + otherHeight / 2;
-        int radiusX = getImage().getWidth() / 2;
-        int radiusY = getImage().getHeight() / 2;
-
-        // Check each corner of the other actor's bounding box
-        return ellipseContains(enemyCenterX, enemyCenterY, radiusX, radiusY, otherLeft, otherTop)
-            || ellipseContains(enemyCenterX, enemyCenterY, radiusX, radiusY, otherRight, otherTop)
-            || ellipseContains(enemyCenterX, enemyCenterY, radiusX, radiusY, otherLeft, otherBottom)
-            || ellipseContains(enemyCenterX, enemyCenterY, radiusX, radiusY, otherRight, otherBottom);
-    }
-
-    private boolean ellipseContains(int centerX, int centerY, int radiusX, int radiusY, int x, int y) {
-        // Translate point (x, y) to the coordinate space of the ellipse
-        int dx = x - centerX;
-        int dy = y - centerY;
-
-        // Check if the point (dx, dy) is within the ellipse
-        return (dx * dx) / (double) (radiusX * radiusX) + (dy * dy) / (double) (radiusY * radiusY) <= 1.0;
     }
 }
