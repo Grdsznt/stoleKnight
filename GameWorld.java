@@ -28,6 +28,9 @@ public class GameWorld extends World
     ArrayList<Tile> grid;
     ArrayList<Wall> obstacles;
     private boolean mainPathDone;
+    private Map map;
+    private Label levelLabel;
+    
     private static boolean mouseHold;
     
     private static MouseInfo mouse;
@@ -43,16 +46,31 @@ public class GameWorld extends World
         level = 1;
         // int spawnRow = Greenfoot.getRandomNumber(2)+1;
         // int spawnCol = Greenfoot.getRandomNumber(2)+1;
+        map = new Map();
+        
+        addObject(map, 104, 590);
         generateRooms(2, 2);
         setActOrder(Hero.class);
-        setPaintOrder(Wall.class, Chest.class, Weapon.class, Hero.class);
+        setPaintOrder(Wall.class, Chest.class, Weapon.class, Hero.class, Enemy.class);
         // addObject(new Ogre(), 500, 500);
         obstacles = (ArrayList<Wall>) getObjects(Wall.class);
         addObject(new Ogre(500, 500), 500, 500);
         addObject(new Hero1(), 525, 525);
         // every time add a wall pls add it to obstacles
         mouseHold = false;
-        setPaintOrder(Hero.class, Weapon.class);
+        // background stuff
+        GreenfootImage background = new GreenfootImage(1200, 720);
+        background.setColor(new Color(34, 34, 34));
+        background.fillRect(0, 0, 1200, 720);
+        GreenfootImage stats = new GreenfootImage("statbar.png");
+        stats.scale(183, 123);
+        background.setColor(Color.WHITE);
+        
+        background.drawImage(stats, 15, 15);
+        setBackground(background);
+        
+        levelLabel = new Label("Level 1", 30);
+        addObject(levelLabel, 104, 690);
     }
     
     public ArrayList<Wall> getObstacles() {
@@ -208,6 +226,27 @@ public class GameWorld extends World
                 addObject(room[i][j], j*BLOCK_SIZE+BLOCK_SIZE/2+192, i*BLOCK_SIZE+BLOCK_SIZE/2);
             }
         }
+        
+        map.setActiveRoom(row, col);
+        map.drawRoom(row, col, worldGrid[row][col]);
+        map.drawPaths(row, col, worldGrid[row][col]);
+        
+        if ((worldGrid[row][col] & 1) != 0) {
+            map.drawRoom(row, col+1, worldGrid[row][col+1]);
+        }
+        
+        if ((worldGrid[row][col] & 2) != 0) {
+            map.drawRoom(row, col-1, worldGrid[row][col-1]);
+        }
+        
+        if ((worldGrid[row][col] & 4) != 0) {
+            map.drawRoom(row+1, col, worldGrid[row+1][col]);
+        }
+        
+        if ((worldGrid[row][col] & 8) != 0) {
+            map.drawRoom(row-1, col, worldGrid[row-1][col]);
+        }
+        
     }
     
     private void unloadRoom(int row, int col) {
