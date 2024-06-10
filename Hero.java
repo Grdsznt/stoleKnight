@@ -22,11 +22,12 @@ public abstract class Hero extends SuperSmoothMover
     
     //ArrayList<Power> powerList;
     protected ArrayList<Weapon> weaponsInInventory = new ArrayList<Weapon>();
-    private int hp;
-    private int maxHP;
-    private int shield;
-    private int maxShield;
-    private double speed;
+    protected int hp;
+    protected int maxHP;
+    protected int shield;
+    protected int maxShield;
+    protected double speed;
+    protected int gold;
     private boolean mouseHold;
     protected boolean right;
     protected int energy;
@@ -37,20 +38,24 @@ public abstract class Hero extends SuperSmoothMover
     protected boolean isTransparent;
     protected int lastHitCounter = 0;
     
-    private double xMoveVel = 0;
-    private double yMoveVel = 0;
-    private double xAddedVel = 0;
-    private double yAddedVel = 0;
-    private double friction = 1;
-    private int dashCooldown = 40;
+    protected double xMoveVel = 0;
+    protected double yMoveVel = 0;
+    protected double xAddedVel = 0;
+    protected double yAddedVel = 0;
+    protected double friction = 1;
+    protected int dashCooldown = 40;
     
-    private int radius;
+    protected int radius;
     protected Weapon currentWeapon;
-    private int weaponActionCooldown = 0;
+    protected int weaponActionCooldown = 0;
     
-    private SuperStatBar hpBar;
-    private SuperStatBar shieldBar;
-    private SuperStatBar energyBar;
+    protected SuperStatBar hpBar;
+    protected SuperStatBar shieldBar;
+    protected SuperStatBar energyBar;
+    protected Label goldLabel;
+    protected Image goldCoin;
+    protected Image weaponLabelOne;
+    protected Image weaponLabelTwo;
 
     public Hero(int hp, int shieldValue, int speed, int initialEnergy, Weapon initialWeapon) {
         weaponsInInventory.add(initialWeapon);
@@ -71,12 +76,24 @@ public abstract class Hero extends SuperSmoothMover
         radius = 24;
         hpBar = new SuperStatBar(hp, hp, null, 105, 18, 0, Color.RED, Color.BLACK);
         shieldBar = new SuperStatBar(shield, shield, null, 105, 18, 0, Color.GRAY, Color.BLACK);
+        gold = 10;
+        goldLabel = new Label("10", 32);
+        goldCoin = new Image("coins/coin0.png");
+        goldCoin.getImage().scale(32, 32);
+        weaponLabelOne = new Image("weaponslot.png");
+        weaponLabelTwo = new Image("weaponslot.png");
     }
     
     public void addedToWorld(World world) {
         world.addObject(currentWeapon, getX(), getY());
         world.addObject(hpBar, 118, 38);
         world.addObject(shieldBar, 118, 69);
+        world.addObject(goldLabel, 88, 160);
+        world.addObject(goldCoin, 36, 160);
+        // world.addObject(weaponLabelOne, 64, 210);
+        // world.addObject(weaponLabelTwo, 144, 210);
+        world.addObject(weaponLabelOne, 56, 230);
+        world.addObject(weaponLabelTwo, 152, 230);
     }
     
     public void act() {
@@ -470,7 +487,9 @@ public abstract class Hero extends SuperSmoothMover
     private void tileInteraction() {
         Portal portal = (Portal)getOneIntersectingObject(Portal.class);
         if (portal != null) {
-            
+            if (Greenfoot.isKeyDown("e")) {
+                getWorldOfType(GameWorld.class).nextMap(this);
+            }
         }
     }
     
