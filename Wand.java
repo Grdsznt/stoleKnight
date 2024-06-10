@@ -15,6 +15,7 @@ public class Wand extends Weapon
     
     GreenfootImage wand = new GreenfootImage("weapon_red_magic_staff.png");
     private int damage;
+    
     public void act()
     {
         super.act();
@@ -28,6 +29,7 @@ public class Wand extends Weapon
     }
     
     public void attack() {
+        
     }
     
     private void animate(){
