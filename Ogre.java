@@ -36,7 +36,7 @@ public class Ogre extends Enemy
         setImage(idleFrames[0]);
         actNum = 0;
         frameNum = 0;
-        hitbox = new SimpleHitbox(this, getImage().getWidth()/2-10, getImage().getHeight()/2-5);
+        hitbox = new SimpleHitbox(this, getImage().getWidth()/2-10, getImage().getHeight()/2-7);
         overlay = new Overlay(this, hitbox);
     }
     
@@ -81,6 +81,7 @@ public class Ogre extends Enemy
                     setRotation(0);
                 }
             } else {
+                aStar(h.getX(), h.getY(), 10000, true);
                 if (currentPath.size() > 0) {
                     double distanceRequired = speed;
                     int[] position = currentPath.peekFirst();

@@ -30,7 +30,8 @@ public class Enemy extends SuperSmoothMover
             {-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}
     };
     protected Deque<int[]> currentPath;
-    public static int GRID_CHECK = 16;
+    // protected SightlineOverlay sl;
+    public static int GRID_CHECK = 48;
     
     public Enemy(int health, int speed, int damage, double targetRadius, int centerX, int centerY) {
         this.health = health;
@@ -38,98 +39,13 @@ public class Enemy extends SuperSmoothMover
         this.damage = damage;
         this.targetRadius = targetRadius;
         this.centerX = centerX; this.centerY = centerY;
+        // sl = new SightlineOverlay(new Pair(0, 0), new Pair(0, 0));
     }
     
-    class Cell {
-        private int parent_i, parent_j;
-        private double f, g, h;
-       
-        /**
-         * Creates a new cell for pathfinding
-         *
-         */
-        public Cell() {
-            this.parent_i = -1;
-            this.parent_j = -1;
-            this.f = -1;
-            this.g = -1;
-            this.h = -1;
-        }
-        /**
-         * Returns parent
-         *
-         * @return Returns the coords of its parent
-         */
-        public int[] getParent() {
-            return new int[]{parent_i, parent_j};
-        }
-       
-        /**
-         * Returns f
-         *
-         * @return Returns the value of f
-         */
-        public double getF() {
-            return f;
-        }
-       
-        /**
-         * Returns g
-         *
-         * @return Returns the value of g
-         */
-        public double getG() {
-            return g;
-        }
-       
-        /**
-         * Returns h
-         *
-         * @return Returns the value h
-         */
-        public double getH() {
-            return h;
-        }
-       
-        /**
-         * Changes value of f
-         *
-         * @param val Sets f to val
-         */
-        public void setF(double val) {
-            f = val;
-        }
-       
-        /**
-         * Changes value of g
-         *
-         * @param val Sets g to val
-         */
-        public void setG(double val) {
-            g = val;
-        }
-       
-        /**
-         * Changes value of h
-         *
-         * @param val Sets h to val
-         */
-        public void setH(double val) {
-            h = val;
-        }
-       
-        /**
-         * Sets the parent
-         *
-         * @param i The i-position (row) of the parent
-         * @param j The j-position (col) of the parent
-         */
-        public void setParent(int i, int j) {
-            parent_i = i;
-            parent_j = j;
-        }
-    }
-
+    // public void addedToWorld(World w) {
+        // getWorld().addObject(sl, getX(), getY());
+    // }
+    
     
     public void act()
     {
@@ -177,6 +93,107 @@ public class Enemy extends SuperSmoothMover
     protected void pathfind() {
         
     }
+    
+    protected ArrayList<int[]> tracePath(Cell[][] cellData, int[] target) {
+        ArrayList<int[]> path = new ArrayList<int[]>();
+        int row = target[0];
+        int col = target[1];
+       
+        while (!(cellData[row][col].getParent()[0] == row && cellData[row][col].getParent()[1] == col)) {
+            // reveresed as cols is the x-axis and row is the y-axis
+            path.add(new int[]{col*GRID_CHECK, row*GRID_CHECK});
+            int tempRow = cellData[row][col].getParent()[0];
+            int tempCol = cellData[row][col].getParent()[1];
+            row = tempRow;
+            col = tempCol;
+           
+        }
+       
+        Collections.reverse(path);
+        return path;
+    }
+    
+    protected double calculateDistance(int x1, int y1, int x2, int y2)
+    {
+        int dx = x2 - x1;
+        int dy = y2 - y1;
+        return Math.sqrt(dx*dx + dy*dy);
+    }
+   
+    // Method to check if two line segments intersect
+    protected boolean doLinesIntersect(Line l1, Line l2) {
+        int o1 = orientation(l1.start, l1.end, l2.start);
+        int o2 = orientation(l1.start, l1.end, l2.end);
+        int o3 = orientation(l2.start, l2.end, l1.start);
+        int o4 = orientation(l2.start, l2.end, l1.end);
+        
+        // General case
+        if (o1 != o2 && o3 != o4) return true;
+    
+        // Special cases
+        // l1 and l2 are collinear and l2.start lies on segment l1
+        if (o1 == 0 && onSegment(l1.start, l2.start, l1.end)) return true;
+    
+        // l1 and l2 are collinear and l2.end lies on segment l1
+        if (o2 == 0 && onSegment(l1.start, l2.end, l1.end)) return true;
+    
+        // l2 and l1 are collinear and l1.start lies on segment l2
+        if (o3 == 0 && onSegment(l2.start, l1.start, l2.end)) return true;
+    
+        // l2 and l1 are collinear and l1.end lies on segment l2
+        if (o4 == 0 && onSegment(l2.start, l1.end, l2.end)) return true;
+
+        return false;
+    }
+
+    // Helper method to find the orientation of the ordered triplet (p, q, r)
+    protected int orientation(Pair p, Pair q, Pair r) {
+        int val = (q.s - p.s) * (r.f - q.f) - (q.f - p.f) * (r.s - q.s);
+        if (val == 0) return 0; // collinear
+        return (val > 0) ? 1 : 2; // clockwise : counterclockwise
+    }
+
+    // Method to check line of sight
+    protected boolean hasLineOfSight(Pair enemy, Pair player, List<Line> obstacles) {
+        Line sightLine = new Line(enemy, player);
+        // sl.updateLine(enemy, player);
+        
+        for (Line obstacle : obstacles) {
+            if (doLinesIntersect(sightLine, obstacle)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    // Check if point q lies on segment pr
+    protected boolean onSegment(Pair p, Pair q, Pair r) {
+        if (q.f <= Math.max(p.f, r.f) && q.f >= Math.min(p.f, r.f) &&
+            q.s <= Math.max(p.s, r.s) && q.s >= Math.min(p.s, r.s)) {
+            return true;
+        }
+        return false;
+    }
+
+    protected List<Line> processWalls(ArrayList<Wall> a) {
+        List<Line> obstacles = new ArrayList<Line>();
+        for (Wall w: a) {
+            obstacles.add(w.getTopBoundary());
+            obstacles.add(w.getBottomBoundary());
+            obstacles.add(w.getLeftBoundary());
+            obstacles.add(w.getRightBoundary());
+        }
+        return obstacles;
+    }
+    
+    public int getHealth(){
+        return health;
+    }
+    
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
     
     /**
     * <div>
@@ -282,79 +299,96 @@ public class Enemy extends SuperSmoothMover
         }
     }
     
-    protected ArrayList<int[]> tracePath(Cell[][] cellData, int[] target) {
-        ArrayList<int[]> path = new ArrayList<int[]>();
-        int row = target[0];
-        int col = target[1];
+    class Cell {
+        private int parent_i, parent_j;
+        private double f, g, h;
        
-        while (!(cellData[row][col].getParent()[0] == row && cellData[row][col].getParent()[1] == col)) {
-            // reveresed as cols is the x-axis and row is the y-axis
-            path.add(new int[]{col*GRID_CHECK, row*GRID_CHECK});
-            int tempRow = cellData[row][col].getParent()[0];
-            int tempCol = cellData[row][col].getParent()[1];
-            row = tempRow;
-            col = tempCol;
-           
+        /**
+         * Creates a new cell for pathfinding
+         *
+         */
+        public Cell() {
+            this.parent_i = -1;
+            this.parent_j = -1;
+            this.f = -1;
+            this.g = -1;
+            this.h = -1;
+        }
+        /**
+         * Returns parent
+         *
+         * @return Returns the coords of its parent
+         */
+        public int[] getParent() {
+            return new int[]{parent_i, parent_j};
         }
        
-        Collections.reverse(path);
-        return path;
-    }
-    
-    protected double calculateDistance(int x1, int y1, int x2, int y2)
-    {
-        int dx = x2 - x1;
-        int dy = y2 - y1;
-        return Math.sqrt(dx*dx + dy*dy);
-    }
-   
-    // Method to check if two line segments intersect
-    protected boolean doLinesIntersect(Line l1, Line l2) {
-        int o1 = orientation(l1.start, l1.end, l2.start);
-        int o2 = orientation(l1.start, l1.end, l2.end);
-        int o3 = orientation(l2.start, l2.end, l1.start);
-        int o4 = orientation(l2.start, l2.end, l1.end);
-
-        if (o1 != o2 && o3 != o4) return true;
-        return false;
-    }
-
-    // Helper method to find the orientation of the ordered triplet (p, q, r)
-    protected int orientation(Pair p, Pair q, Pair r) {
-        int val = (q.s - p.s) * (r.f - q.f) - (q.f - p.f) * (r.s - q.s);
-        if (val == 0) return 0; // collinear
-        return (val > 0) ? 1 : 2; // clockwise : counterclockwise
-    }
-
-    // Method to check line of sight
-    protected boolean hasLineOfSight(Pair enemy, Pair player, List<Line> obstacles) {
-        Line sightLine = new Line(enemy, player);
-
-        for (Line obstacle : obstacles) {
-            if (doLinesIntersect(sightLine, obstacle)) {
-                return false;
-            }
+        /**
+         * Returns f
+         *
+         * @return Returns the value of f
+         */
+        public double getF() {
+            return f;
         }
-        return true;
-    }
-    
-    protected List<Line> processWalls(ArrayList<Wall> a) {
-        List<Line> obstacles = new ArrayList<Line>();
-        for (Wall w: a) {
-            obstacles.add(w.getTopBoundary());
-            obstacles.add(w.getBottomBoundary());
-            obstacles.add(w.getLeftBoundary());
-            obstacles.add(w.getRightBoundary());
+       
+        /**
+         * Returns g
+         *
+         * @return Returns the value of g
+         */
+        public double getG() {
+            return g;
         }
-        return obstacles;
+       
+        /**
+         * Returns h
+         *
+         * @return Returns the value h
+         */
+        public double getH() {
+            return h;
+        }
+       
+        /**
+         * Changes value of f
+         *
+         * @param val Sets f to val
+         */
+        public void setF(double val) {
+            f = val;
+        }
+       
+        /**
+         * Changes value of g
+         *
+         * @param val Sets g to val
+         */
+        public void setG(double val) {
+            g = val;
+        }
+       
+        /**
+         * Changes value of h
+         *
+         * @param val Sets h to val
+         */
+        public void setH(double val) {
+            h = val;
+        }
+       
+        /**
+         * Sets the parent
+         *
+         * @param i The i-position (row) of the parent
+         * @param j The j-position (col) of the parent
+         */
+        public void setParent(int i, int j) {
+            parent_i = i;
+            parent_j = j;
+        }
     }
+
     
-    public int getHealth(){
-        return health;
-    }
-    
-    public void setHealth(int health) {
-        this.health = health;
-    }
-    
+        
 }
