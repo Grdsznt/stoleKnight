@@ -248,6 +248,13 @@ public class GameWorld extends World
             map.drawRoom(row-1, col, worldGrid[row-1][col]);
         }
         
+        // enemy things
+        ArrayList<Enemy> enemyList = roomGrid[row][col].getEnemies();
+        
+        
+        for (Enemy enemy : enemyList) {
+            addObject(enemy, 500, 500);
+        }
     }
     
     private void unloadRoom(int row, int col) {
@@ -293,6 +300,7 @@ public class GameWorld extends World
         
         floor++;
         floorLabel.setValue("Floor " + floor);
+        Greenfoot.setWorld(new BuffWorld(this, hero));
     }
     
     /**
@@ -313,6 +321,8 @@ public class GameWorld extends World
     public int[] getRoomPosition() {
         return new int[]{currentRoomRow, currentRoomCol};
     }
+    
+    
     
     public void act() {
         mouse = Greenfoot.getMouseInfo();

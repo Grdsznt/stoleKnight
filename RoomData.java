@@ -10,6 +10,7 @@ import greenfoot.*;
 public class RoomData  
 {
     protected Tile[][] roomGrid;
+    protected ArrayList<Enemy> enemyList = new ArrayList<Enemy>();
     // 0000 - up, down, left, right
     // add unique room shapes later - special rooms e.x chest/shop/special room should be all the same
     public RoomData(int roomType) {
@@ -62,10 +63,13 @@ public class RoomData
             roomGrid[7][10] = new Chest(this, 7, 10);
         }
         String[][] innerTiles = getRandomRoom(roomType);
+        // (r, c) pairs
+        ArrayList<int[]> possibleLocations = new ArrayList<int[]>();
         if (innerTiles != null) {
             for (int i = 0; i < innerTiles.length; i++) {
                 for (int j = 0; j < innerTiles[i].length; j++) {
                     if (innerTiles[i][j] == null) {
+                        possibleLocations.add(new int[] {(i+7)*48, (j+7)*48});
                         continue;
                     }
                     switch (innerTiles[i][j]) {
@@ -74,6 +78,8 @@ public class RoomData
                             break;
                         case "Void":
                             roomGrid[i+3][j+3] = new Void(this, i+3, j+3);
+                            break;
+                        
                     }
                     
                     
@@ -123,8 +129,15 @@ public class RoomData
                         roomGrid[i][j].getImage().scale(48, 48);
 
                     }
-                }
+                } 
                 
+            }
+        }
+        if (roomType < 16 && possibleLocations.size() > 0) {
+            int numberOfEnemies = 1;
+            for (int i = 0; i < numberOfEnemies; i++) {
+                int[] location = possibleLocations.get(Greenfoot.getRandomNumber(possibleLocations.size()));
+                enemyList.add(new Ogre(location[1], location[0]));
             }
         }
         
@@ -133,6 +146,16 @@ public class RoomData
     public Tile[][] getTileData() {
         return roomGrid;
     }
+    
+    /**
+     * Returns the enemy list
+     *
+     * @return Returns the enemy list
+     */
+    public ArrayList<Enemy> getEnemies() {
+        return enemyList;
+    }
+    
     // 0000 - special rooms - start - end - loot/shop - special
     public static String[][] getRandomRoom(int type) {
         if (type >= 16) {

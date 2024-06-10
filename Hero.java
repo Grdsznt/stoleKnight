@@ -38,6 +38,7 @@ public abstract class Hero extends SuperSmoothMover
     protected boolean isTransparent;
     protected int lastHitCounter = 0;
     
+    protected boolean canMove = true;
     protected double xMoveVel = 0;
     protected double yMoveVel = 0;
     protected double xAddedVel = 0;
@@ -502,4 +503,6 @@ public abstract class Hero extends SuperSmoothMover
         yMoveVel = 0;
         yAddedVel = 0;
     }
+    
+    
 }

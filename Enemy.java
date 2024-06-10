@@ -26,6 +26,10 @@ public class Enemy extends SuperSmoothMover
     protected double targetRadius;
     protected int centerX, centerY;
     protected Hero h = null;
+    
+    protected int spawnX;
+    protected int spawnY;
+    
     protected int[][] directions = new int[][] {
             {-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}
     };
@@ -35,9 +39,12 @@ public class Enemy extends SuperSmoothMover
     public Enemy(int health, int speed, int damage, double targetRadius, int centerX, int centerY) {
         this.health = health;
         this.speed = speed;
+
         this.damage = damage;
         this.targetRadius = targetRadius;
         this.centerX = centerX; this.centerY = centerY;
+        spawnX = centerX;
+        spawnY = centerY;
     }
     
     class Cell {
@@ -177,6 +184,26 @@ public class Enemy extends SuperSmoothMover
     protected void pathfind() {
         
     }
+    
+    /**
+     * Sets the spawn position when you enter the room
+     *
+     */
+    public void setSpawnPosition(int x, int y) {
+        spawnX = x;
+        spawnY = y;
+    }
+    
+    
+    /**
+     * Sets the locations to the spawnX and spawnY
+     *
+     */
+    public void addedWorld() {
+        setLocation(spawnX, spawnY);
+    }
+    
+    
     
     /**
     * <div>
