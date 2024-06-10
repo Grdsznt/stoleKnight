@@ -11,9 +11,8 @@ public class RoomExit extends Tile
     private String direction;
     public RoomExit(RoomData parent, int row, int col, String direction) {
         super(parent, row, col);
-        GreenfootImage image = new GreenfootImage(48, 48);
-        image.setColor(new Color(50, 250, 50));
-        image.fillRect(0, 0, 48, 48);
+        GreenfootImage image = new GreenfootImage("Tiles/notinbattle.png");
+        image.scale(48, 48);
         
         setImage(image);
         this.direction = direction;

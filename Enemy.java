@@ -31,7 +31,7 @@ public class Enemy extends SuperSmoothMover
     };
     protected Deque<int[]> currentPath;
     // protected SightlineOverlay sl;
-    public static int GRID_CHECK = 48;
+    public static int GRID_CHECK = 12;
     
     public Enemy(int health, int speed, int damage, double targetRadius, int centerX, int centerY) {
         this.health = health;
@@ -39,6 +39,7 @@ public class Enemy extends SuperSmoothMover
         this.damage = damage;
         this.targetRadius = targetRadius;
         this.centerX = centerX; this.centerY = centerY;
+        currentPath = new LinkedList<int[]>();
         // sl = new SightlineOverlay(new Pair(0, 0), new Pair(0, 0));
     }
     
@@ -90,9 +91,6 @@ public class Enemy extends SuperSmoothMover
         return new Pair(newX, newY);
     }
     
-    protected void pathfind() {
-        
-    }
     
     protected ArrayList<int[]> tracePath(Cell[][] cellData, int[] target) {
         ArrayList<int[]> path = new ArrayList<int[]>();
@@ -215,7 +213,7 @@ public class Enemy extends SuperSmoothMover
         int exactStartY = getY();
        
         int totalRows = getWorld().getHeight()/GRID_CHECK;
-        int totalCols = getWorld().getWidth()/3*2/GRID_CHECK;
+        int totalCols = getWorld().getWidth()/GRID_CHECK;
         int targetRow = targetY/GRID_CHECK;
         int targetCol = targetX/GRID_CHECK;
         // r, c for current Row and current col respectivly

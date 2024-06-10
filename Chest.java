@@ -8,7 +8,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class Chest extends Tile
 {
-    private String direction;
+    private Label interactionLabel;
     public Chest(RoomData parent, int row, int col) {
         super(parent, row, col);
         GreenfootImage image = new GreenfootImage("Tiles/chest1.png");
@@ -16,6 +16,15 @@ public class Chest extends Tile
         
         setImage(image);
         getImage().scale(48, 48);
-        this.direction = direction;
+        interactionLabel = new Label("E to Open", 32);
+    }
+    
+    
+    public void act() {
+        if (getOneIntersectingObject(Hero.class) != null) {
+            getWorld().addObject(interactionLabel, getX(), getY()-50);
+        } else {
+            getWorld().removeObject(interactionLabel);
+        }
     }
 }

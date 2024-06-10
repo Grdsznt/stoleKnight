@@ -28,6 +28,10 @@ public class GameWorld extends World
     ArrayList<Tile> grid;
     ArrayList<Wall> obstacles;
     private boolean mainPathDone;
+    private Map map;
+    private Label floorLabel;
+    private int floor;
+    
     private static boolean mouseHold;
     
     private static MouseInfo mouse;
@@ -43,6 +47,9 @@ public class GameWorld extends World
         level = 1;
         // int spawnRow = Greenfoot.getRandomNumber(2)+1;
         // int spawnCol = Greenfoot.getRandomNumber(2)+1;
+        map = new Map();
+        
+        addObject(map, 104, 590);
         generateRooms(2, 2);
         setActOrder(Hero.class);
         // setPaintOrder(Wall.class, Chest.class, Weapon.class, Hero.class);
@@ -53,6 +60,19 @@ public class GameWorld extends World
         
         mouseHold = false;
         setPaintOrder(Hero.class, Weapon.class, Overlay.class, SightlineOverlay.class, Enemy.class);
+        // background stuff
+        GreenfootImage background = new GreenfootImage(1200, 720);
+        background.setColor(new Color(34, 34, 34));
+        background.fillRect(0, 0, 1200, 720);
+        GreenfootImage stats = new GreenfootImage("statbar.png");
+        stats.scale(183, 123);
+        background.setColor(Color.WHITE);
+        
+        background.drawImage(stats, 15, 15);
+        setBackground(background);
+        floor = 1;
+        floorLabel = new Label("Floor 1", 30);
+        addObject(floorLabel, 104, 690);
     }
     
     public ArrayList<Wall> getObstacles() {
@@ -209,6 +229,27 @@ public class GameWorld extends World
                 addObject(room[i][j], j*BLOCK_SIZE+BLOCK_SIZE/2+192, i*BLOCK_SIZE+BLOCK_SIZE/2);
             }
         }
+        
+        map.setActiveRoom(row, col);
+        map.drawRoom(row, col, worldGrid[row][col]);
+        map.drawPaths(row, col, worldGrid[row][col]);
+        
+        if ((worldGrid[row][col] & 1) != 0) {
+            map.drawRoom(row, col+1, worldGrid[row][col+1]);
+        }
+        
+        if ((worldGrid[row][col] & 2) != 0) {
+            map.drawRoom(row, col-1, worldGrid[row][col-1]);
+        }
+        
+        if ((worldGrid[row][col] & 4) != 0) {
+            map.drawRoom(row+1, col, worldGrid[row+1][col]);
+        }
+        
+        if ((worldGrid[row][col] & 8) != 0) {
+            map.drawRoom(row-1, col, worldGrid[row-1][col]);
+        }
+        
     }
     
     private void unloadRoom(int row, int col) {
@@ -241,6 +282,21 @@ public class GameWorld extends World
         return true;
     }
     
+    public void nextMap(Hero hero) {
+        unloadRoom(currentRoomRow, currentRoomCol);
+        map.resetMap();
+        worldGrid = new int[5][5];
+        roomGrid = new RoomData[5][5];
+        currentRoomRow = 2;
+        currentRoomCol = 2;
+        generateRooms(2, 2);
+        // 500, 500 temp numbers - change later
+        hero.setLocation(500, 500);
+        
+        floor++;
+        floorLabel.setValue("Floor " + floor);
+    }
+    
     /**
      * Switches to a different room
      *
@@ -251,6 +307,11 @@ public class GameWorld extends World
         return changeRooms(pos[0], pos[1]);
     }
     
+    /**
+     * Returns the position of the room on the map
+     *
+     * @return Returns the position of the room on the map
+     */
     public int[] getRoomPosition() {
         return new int[]{currentRoomRow, currentRoomCol};
     }

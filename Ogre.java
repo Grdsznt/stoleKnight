@@ -25,7 +25,7 @@ public class Ogre extends Enemy
     private Overlay overlay;
     private Pair target;
     public Ogre(int centerX, int centerY) {
-        super(1000, 2, 3, 200, centerX, centerY);        
+        super(1000, 2, 3, 300, centerX, centerY);        
         homeRadius = 60; 
         for (GreenfootImage img: idleFrames) {
             img.scale(64, 64);
@@ -81,31 +81,34 @@ public class Ogre extends Enemy
                     setRotation(0);
                 }
             } else {
-                aStar(h.getX(), h.getY(), 10000, true);
+                if (actNum % 20 == 0) aStar(h.getX(), h.getY(), 20, true);
                 if (currentPath.size() > 0) {
-                    double distanceRequired = speed;
-                    int[] position = currentPath.peekFirst();
-                    turnTowards(position[0], position[1]);
-                    double distance = calculateDistance(getX(), position[0], getY(), position[1]);
-                    if (distance <= speed) {
-                        while (distanceRequired >= distance && currentPath.size() > 0) {
-                            setLocation(position[0], position[1]);
-                            currentPath.pollFirst();
-                            distanceRequired -= distance;
-                            if (currentPath.size() == 0) {
-                                break;
-                            }
-                            position = currentPath.peekFirst();
-                            distance = calculateDistance(getX(), position[0], getY(), position[1]);
-                            turnTowards(position[0], position[1]);
-                        }
-                        if (currentPath.size() > 0) {
-                            move(distanceRequired);
-                        }
-                    } else {
-                        move(speed);
+                    int[] nextPosition = currentPath.peekFirst();
+                    float dx = nextPosition[0] - getX();
+                    float dy = nextPosition[1] - getY();
+                    float distance = (float) Math.sqrt(dx * dx + dy * dy);
+        
+                    // Normalize the direction vector
+                    if (distance != 0) {
+                        dx /= distance;
+                        dy /= distance;
                     }
-                }
+        
+                    // Calculate next step
+                    float nextX = getX() + dx * (float) speed;
+                    float nextY = getY() + dy * (float) speed;
+        
+                    // Check if the next step oversteps the target
+                    if (Math.sqrt(Math.pow(nextPosition[0] - nextX, 2) + Math.pow(nextPosition[1] - nextY, 2)) < speed) {
+                        // Move directly to the point if the next step is beyond it
+                        setLocation(nextPosition[0], nextPosition[1]);
+                        currentPath.pollFirst(); // Remove the reached point
+                    } else {
+                        // Move incrementally towards the waypoint
+                        setLocation((int) nextX, (int) nextY);
+                        isMoving = true;
+                    }
+                }      
             }
         }
          
@@ -119,7 +122,7 @@ public class Ogre extends Enemy
         animate();
         actNum++;
     }
-    
+        
     private void animate() {
         if (actNum % (speed !=0 ? (int) (-6 * speed + 25) : 10) == 0) {
             if (frameNum >= 3) {
