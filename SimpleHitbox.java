@@ -16,35 +16,26 @@ public class SimpleHitbox
         this.radiusY = radiusY;
     }
 
-    // public void updateHitbox() {
-        // GreenfootImage image = actor.getImage();
-        // this.radiusX = image.getWidth() / 2;
-        // this.radiusY = image.getHeight() / 2;
-    // }
-
     public boolean intersectsOval(Actor other) {
-        int centerX = actor.getX();
-        int centerY = actor.getY();
-
-        GreenfootImage otherImage = other.getImage();
-        int otherWidth = otherImage.getWidth();
-        int otherHeight = otherImage.getHeight();
-        int otherLeft = other.getX() - otherWidth / 2;
-        int otherRight = other.getX() + otherWidth / 2;
-        int otherTop = other.getY() - otherHeight / 2;
-        int otherBottom = other.getY() + otherHeight / 2;
-
-        return ellipseContains(centerX, centerY, radiusX, radiusY, otherLeft, otherTop)
-            || ellipseContains(centerX, centerY, radiusX, radiusY, otherRight, otherTop)
-            || ellipseContains(centerX, centerY, radiusX, radiusY, otherLeft, otherBottom)
-            || ellipseContains(centerX, centerY, radiusX, radiusY, otherRight, otherBottom);
-    }
-
-    private boolean ellipseContains(int centerX, int centerY, int radiusX, int radiusY, int x, int y) {
-        int dx = x - centerX;
-        int dy = y - centerY;
-
-        return (dx * dx) / (double) (radiusX * radiusX) + (dy * dy) / (double) (radiusY * radiusY) <= 1.0;
+        if (other instanceof Hero1) {
+            Hero1 hero = (Hero1) other;
+            SimpleHitbox otherHitbox = hero.getHitbox();
+            int dx = other.getX() - actor.getX();
+            int dy = other.getY() - actor.getY();
+    
+            double angle = Math.atan2(dy, dx);
+            double cosAngle = Math.cos(angle);
+            double sinAngle = Math.sin(angle);
+    
+            double distance = Math.sqrt(dx * dx + dy * dy);
+    
+            double overlapX = radiusX * cosAngle + otherHitbox.getRadiusX() * cosAngle;
+            double overlapY = radiusY * sinAngle + otherHitbox.getRadiusX() * sinAngle;
+    
+            return distance < Math.sqrt(overlapX * overlapX + overlapY * overlapY);
+        } else {
+            return false;
+        }
     }
     
     public void drawHitbox() {

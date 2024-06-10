@@ -11,7 +11,7 @@ public class Pair
     /**
      * Constructor for objects of class Pair
      */
-    public static int f, s;
+    public int f, s;
     public Pair(int first, int second) {
        f = first; s = second; // stores 2 numbers
     } 
