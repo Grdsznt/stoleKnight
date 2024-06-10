@@ -61,7 +61,7 @@ public abstract class Hero extends SuperSmoothMover
         weaponsInInventory.add(initialWeapon);
         currentWeapon = initialWeapon;
         currentWeapon.beingUsed = true;
-        this.Hp = Hp;
+        this.hp = hp;
         this.shield = shieldValue;
         this.speed = speed;
         this.energy = initialEnergy;
