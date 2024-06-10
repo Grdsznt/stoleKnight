@@ -96,4 +96,26 @@ public class Map extends Actor
         usedImages.get(0).setLocation(24+24*col+getX()-getImage().getWidth()/2, 24+24*row+getY()-getImage().getHeight()/2);
         
     }
+    
+    /**
+     * Resets the map to nothing
+     *
+     */
+    public void resetMap() {
+        for (Image image : usedImages) {
+            getWorld().removeObject(image);
+        }
+        Image holder = usedImages.get(0);
+        usedImages.clear();
+        usedImages.add(holder);
+        
+        GreenfootImage image = new GreenfootImage(144, 144);
+        image.setColor(new Color(100, 100, 100));
+        image.drawRect(0, 0, 143, 143);
+        image.drawRect(1, 1, 141, 141);
+        image.setColor(new Color(100, 100, 100, 100));
+        image.fillRect(2, 2, 139, 139);
+        
+        setImage(image);
+    }
 }

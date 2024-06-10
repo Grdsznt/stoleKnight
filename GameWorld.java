@@ -29,7 +29,8 @@ public class GameWorld extends World
     ArrayList<Wall> obstacles;
     private boolean mainPathDone;
     private Map map;
-    private Label levelLabel;
+    private Label floorLabel;
+    private int floor;
     
     private static boolean mouseHold;
     
@@ -68,9 +69,9 @@ public class GameWorld extends World
         
         background.drawImage(stats, 15, 15);
         setBackground(background);
-        
-        levelLabel = new Label("Level 1", 30);
-        addObject(levelLabel, 104, 690);
+        floor = 1;
+        floorLabel = new Label("Floor 1", 30);
+        addObject(floorLabel, 104, 690);
     }
     
     public ArrayList<Wall> getObstacles() {
@@ -279,6 +280,21 @@ public class GameWorld extends World
         return true;
     }
     
+    public void nextMap(Hero hero) {
+        unloadRoom(currentRoomRow, currentRoomCol);
+        map.resetMap();
+        worldGrid = new int[5][5];
+        roomGrid = new RoomData[5][5];
+        currentRoomRow = 2;
+        currentRoomCol = 2;
+        generateRooms(2, 2);
+        // 500, 500 temp numbers - change later
+        hero.setLocation(500, 500);
+        
+        floor++;
+        floorLabel.setValue("Floor " + floor);
+    }
+    
     /**
      * Switches to a different room
      *
@@ -289,6 +305,11 @@ public class GameWorld extends World
         return changeRooms(pos[0], pos[1]);
     }
     
+    /**
+     * Returns the position of the room on the map
+     *
+     * @return Returns the position of the room on the map
+     */
     public int[] getRoomPosition() {
         return new int[]{currentRoomRow, currentRoomCol};
     }
