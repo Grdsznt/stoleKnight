@@ -32,14 +32,18 @@ public class BallProjectile extends Actor
         if (isTouching(Hero.class)) {
             causeDamage();
         }
-        move(1);
-        if (isTouching(Wall.class)) getWorld().removeObject(this);
+        // double angle = Math.toRadians(rotation);
+        // int newX = getX() + (int) (2 * Math.cos(angle));
+        // int newY = getY() + (int) (2 * Math.sin(angle));
+        // setLocation(newX, newY);
+        move(2);
+        if (isTouching(Wall.class) || getX() > 1180 || getY() > 700 || getX() < 10 || getY() < 10) getWorld().removeObject(this);
     }
     
     public void causeDamage() {
         ArrayList<Hero> heroes = (ArrayList<Hero>) getIntersectingObjects(Hero.class);
         if (heroes.size() != 0) {
-            heroes.get(0).takeDamage(damage);
+            if (heroes.get(0).getWorld() != null) heroes.get(0).takeDamage(damage);
         }
     }
 }
