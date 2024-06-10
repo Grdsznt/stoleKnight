@@ -10,8 +10,8 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class Hero1 extends Hero
 {
-    private static int Hp = 100; //To test
-    private static int shield = 0; //To test
+    private static int Hp = 50; //To test
+    private static int shield = 10; //To test
     private static int speed = 5; //To test
     protected static int energy = 200; //To test
     protected static GreenfootImage[] idleFramesRight = new GreenfootImage[11];
@@ -34,7 +34,7 @@ public class Hero1 extends Hero
         
     }
     
-    /**r
+    /**
      * Load all idle frames of this Hero1. Should be called before initializing any Hero1 objects.
      */
     private void loadIdleFrames(){

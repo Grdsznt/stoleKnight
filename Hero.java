@@ -22,9 +22,12 @@ public abstract class Hero extends SuperSmoothMover
     
     //ArrayList<Power> powerList;
     protected ArrayList<Weapon> weaponsInInventory = new ArrayList<Weapon>();
-    private int Hp;
-    private int shield;
-    private double speed;
+    protected int hp;
+    protected int maxHP;
+    protected int shield;
+    protected int maxShield;
+    protected double speed;
+    protected int gold;
     private boolean mouseHold;
     protected boolean right;
     protected int energy;
@@ -33,17 +36,28 @@ public abstract class Hero extends SuperSmoothMover
     protected long invincibleStart;
     protected int invincibleDuration;
     protected boolean isTransparent;
-    private double xMoveVel = 0;
-    private double yMoveVel = 0;
-    private double xAddedVel = 0;
-    private double yAddedVel = 0;
-    private double friction = 1;
-    private int dashCooldown = 40;
-    private int radius;
+    protected int lastHitCounter = 0;
+    
+    protected double xMoveVel = 0;
+    protected double yMoveVel = 0;
+    protected double xAddedVel = 0;
+    protected double yAddedVel = 0;
+    protected double friction = 1;
+    protected int dashCooldown = 40;
+    
+    protected int radius;
     protected Weapon currentWeapon;
-    private int weaponActionCooldown = 0;
+    protected int weaponActionCooldown = 0;
+    
+    protected SuperStatBar hpBar;
+    protected SuperStatBar shieldBar;
+    protected SuperStatBar energyBar;
+    protected Label goldLabel;
+    protected Image goldCoin;
+    protected Image weaponLabelOne;
+    protected Image weaponLabelTwo;
 
-    public Hero(int Hp, int shieldValue, int speed, int initialEnergy, Weapon initialWeapon) {
+    public Hero(int hp, int shieldValue, int speed, int initialEnergy, Weapon initialWeapon) {
         weaponsInInventory.add(initialWeapon);
         currentWeapon = initialWeapon;
         currentWeapon.beingUsed = true;
@@ -59,10 +73,26 @@ public abstract class Hero extends SuperSmoothMover
         invincibleDuration = 1000;
         radius = getImage().getHeight()/2;
         radius = 24;
+        hpBar = new SuperStatBar(hp, hp, null, 105, 18, 0, Color.RED, Color.BLACK);
+        shieldBar = new SuperStatBar(shield, shield, null, 105, 18, 0, Color.GRAY, Color.BLACK);
+        gold = 10;
+        goldLabel = new Label("10", 32);
+        goldCoin = new Image("coins/coin0.png");
+        goldCoin.getImage().scale(32, 32);
+        weaponLabelOne = new Image("weaponslot.png");
+        weaponLabelTwo = new Image("weaponslot.png");
     }
     
     public void addedToWorld(World world) {
         world.addObject(currentWeapon, getX(), getY());
+        world.addObject(hpBar, 118, 38);
+        world.addObject(shieldBar, 118, 69);
+        world.addObject(goldLabel, 88, 160);
+        world.addObject(goldCoin, 36, 160);
+        // world.addObject(weaponLabelOne, 64, 210);
+        // world.addObject(weaponLabelTwo, 144, 210);
+        world.addObject(weaponLabelOne, 56, 230);
+        world.addObject(weaponLabelTwo, 152, 230);
     }
     
     public void act() {
@@ -73,12 +103,21 @@ public abstract class Hero extends SuperSmoothMover
                 isInvincible = false;
             }
         }
+        if (lastHitCounter >= 300 && shield < maxShield) {
+            if (lastHitCounter % 60 == 0) {
+                shield++;
+                shieldBar.update(shield);
+            }
+        }
+        lastHitCounter++;
         renderHero();
         handleWeaponActions();
         switchWeaponInInventory();
         updateFacingDirection();
         updateWeaponPosition();
         
+        tileInteraction();
+
         if (weaponActionCooldown > 0) {
             weaponActionCooldown--;
         }
@@ -311,13 +350,13 @@ public abstract class Hero extends SuperSmoothMover
             if (direction != null) {
                 System.out.println("yeah");
                 if (direction.equals("up")) {
-                    setLocation(getPreciseX(), 570);
+                    setLocation(getPreciseX(), 600);
                 } else if (direction.equals("down")) {
-                    setLocation(getPreciseX(), 150);
+                    setLocation(getPreciseX(), 110);
                 } else if (direction.equals("left")) {
-                    setLocation(1050, getPreciseY());
+                    setLocation(1090, getPreciseY());
                 } else if (direction.equals("right")) {
-                    setLocation(150, getPreciseY());
+                    setLocation(362, getPreciseY());
                 }
             }
         }
@@ -326,12 +365,20 @@ public abstract class Hero extends SuperSmoothMover
     public void takeDamage(int damage) {
         // implement later
         if (!isInvincible) {
-            Hp -= damage;
+            if (shield > 0) {
+                shield -= damage;
+                shield = Math.max(shield, 0);
+                shieldBar.update(shield);
+            } else {
+                hp -= damage;
+                hpBar.update(hp);
+            }
+            lastHitCounter = 0;
             isInvincible = true;
             invincibleStart = System.currentTimeMillis();
         }
         
-        if(Hp <= 0){
+        if(hp <= 0){
             //game over
             getWorld().removeObject(this);
         }
@@ -446,6 +493,15 @@ public abstract class Hero extends SuperSmoothMover
                 System.out.println("Weapon switched");
                 pickUpAndSwitchCurrentWeapon(weaponOnGround);
                 weaponActionCooldown = 20; // Adding cooldown to avoid multiple detections
+            }
+        }
+    }
+    
+    private void tileInteraction() {
+        Portal portal = (Portal)getOneIntersectingObject(Portal.class);
+        if (portal != null) {
+            if (Greenfoot.isKeyDown("e")) {
+                getWorldOfType(GameWorld.class).nextMap(this);
             }
         }
     }

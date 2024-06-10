@@ -28,6 +28,10 @@ public class GameWorld extends World
     ArrayList<Tile> grid;
     ArrayList<Wall> obstacles;
     private boolean mainPathDone;
+    private Map map;
+    private Label floorLabel;
+    private int floor;
+    
     private static boolean mouseHold;
     
     private static MouseInfo mouse;
@@ -43,14 +47,31 @@ public class GameWorld extends World
         level = 1;
         // int spawnRow = Greenfoot.getRandomNumber(2)+1;
         // int spawnCol = Greenfoot.getRandomNumber(2)+1;
+        map = new Map();
+        
+        addObject(map, 104, 590);
         generateRooms(2, 2);
         setActOrder(Hero.class);
+        setPaintOrder(Wall.class, Chest.class, Weapon.class, Hero.class, Enemy.class);
+        // addObject(new Ogre(), 500, 500);
         obstacles = (ArrayList<Wall>) getObjects(Wall.class);
         addObject(new Ogre(500, 500), 500, 500);
         addObject(new Hero1(), 525, 525);
         // every time add a wall pls add it to obstacles
         mouseHold = false;
-        setPaintOrder(Hero.class, Weapon.class);
+        // background stuff
+        GreenfootImage background = new GreenfootImage(1200, 720);
+        background.setColor(new Color(34, 34, 34));
+        background.fillRect(0, 0, 1200, 720);
+        GreenfootImage stats = new GreenfootImage("statbar.png");
+        stats.scale(183, 123);
+        background.setColor(Color.WHITE);
+        
+        background.drawImage(stats, 15, 15);
+        setBackground(background);
+        floor = 1;
+        floorLabel = new Label("Floor 1", 30);
+        addObject(floorLabel, 104, 690);
     }
     
     public ArrayList<Wall> getObstacles() {
@@ -178,7 +199,13 @@ public class GameWorld extends World
         }
         
         System.out.println("");
-        
+        for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 21; j++) {
+                
+                // add 192 because there's 4 tiles of extra size to the left
+                addObject(new Floor(null, i, j), j*BLOCK_SIZE+BLOCK_SIZE/2+192, i*BLOCK_SIZE+BLOCK_SIZE/2);
+            }
+        }
         loadRoom(startRow, startCol);
     }
     
@@ -190,22 +217,44 @@ public class GameWorld extends World
         currentRoomRow = row;
         currentRoomCol = col;
         Tile[][] room = roomGrid[row][col].getTileData();
-        // The world is 25x15 - 48 pixels per block - adjust properly
+        // The world is 21x15 - 48 pixels per block - adjust properly
         for (int i = 0; i < 15; i++) {
-            for (int j = 0; j < 25; j++) {
+            for (int j = 0; j < 21; j++) {
                 if (room[i][j] == null) {
                     continue;
                 }
-                addObject(room[i][j], j*BLOCK_SIZE+BLOCK_SIZE/2, i*BLOCK_SIZE+BLOCK_SIZE/2);
+                // add 192 because there's 4 tiles of extra size to the left
+                addObject(room[i][j], j*BLOCK_SIZE+BLOCK_SIZE/2+192, i*BLOCK_SIZE+BLOCK_SIZE/2);
             }
         }
+        
+        map.setActiveRoom(row, col);
+        map.drawRoom(row, col, worldGrid[row][col]);
+        map.drawPaths(row, col, worldGrid[row][col]);
+        
+        if ((worldGrid[row][col] & 1) != 0) {
+            map.drawRoom(row, col+1, worldGrid[row][col+1]);
+        }
+        
+        if ((worldGrid[row][col] & 2) != 0) {
+            map.drawRoom(row, col-1, worldGrid[row][col-1]);
+        }
+        
+        if ((worldGrid[row][col] & 4) != 0) {
+            map.drawRoom(row+1, col, worldGrid[row+1][col]);
+        }
+        
+        if ((worldGrid[row][col] & 8) != 0) {
+            map.drawRoom(row-1, col, worldGrid[row-1][col]);
+        }
+        
     }
     
     private void unloadRoom(int row, int col) {
         Tile[][] room = roomGrid[row][col].getTileData();
         // The world is 25x15 - 48 pixels per block - adjust properly
         for (int i = 0; i < 15; i++) {
-            for (int j = 0; j < 25; j++) {
+            for (int j = 0; j < 21; j++) {
                 if (room[i][j] == null) {
                     continue;
                 }
@@ -231,6 +280,21 @@ public class GameWorld extends World
         return true;
     }
     
+    public void nextMap(Hero hero) {
+        unloadRoom(currentRoomRow, currentRoomCol);
+        map.resetMap();
+        worldGrid = new int[5][5];
+        roomGrid = new RoomData[5][5];
+        currentRoomRow = 2;
+        currentRoomCol = 2;
+        generateRooms(2, 2);
+        // 500, 500 temp numbers - change later
+        hero.setLocation(500, 500);
+        
+        floor++;
+        floorLabel.setValue("Floor " + floor);
+    }
+    
     /**
      * Switches to a different room
      *
@@ -241,6 +305,11 @@ public class GameWorld extends World
         return changeRooms(pos[0], pos[1]);
     }
     
+    /**
+     * Returns the position of the room on the map
+     *
+     * @return Returns the position of the room on the map
+     */
     public int[] getRoomPosition() {
         return new int[]{currentRoomRow, currentRoomCol};
     }
