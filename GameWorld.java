@@ -57,6 +57,7 @@ public class GameWorld extends World
         // testing
         addObject(new Ogre(500, 500), 500, 500);
         addObject(new Hero1(), 800, 600);
+        addObject(new Wizard(800, 200), 800, 200);
         
         mouseHold = false;
         setPaintOrder(Hero.class, Weapon.class, Overlay.class, SightlineOverlay.class, Enemy.class);
@@ -96,7 +97,7 @@ public class GameWorld extends World
                         worldGrid[currRow-1][currCol] += 4;
                         currRow--;
                         valid = true;
-                    }
+                    } 
                 } else if (direction == 1) {
                     if (currRow+1 < 4 && worldGrid[currRow+1][currCol] == 0) {
                         worldGrid[currRow][currCol] += 4;

@@ -19,11 +19,20 @@ public abstract class Weapon extends Actor {
         this.damage = damage;
         beingUsed = false;
     }
-
-    public void act() {
-        isAttacking = GameWorld.isMouseHolding();
-        if(enemy == null && hero != null) hero = (Hero) getOneIntersectingObject(Hero.class);
-        if(hero == null && enemy != null) enemy = (Enemy) getOneIntersectingObject(Enemy.class);
+    
+    public void act()
+    {
+        // Add your action code here.
+        
+        if (this instanceof Wand) {
+            
+        }else {
+            isAttacking = GameWorld.isMouseHolding();
+        }
+        //causeDamage();
+        
+        hero = (Hero) getOneIntersectingObject(Hero.class);
+        enemy = (Enemy) getOneIntersectingObject(Enemy.class);
     }
 
     public abstract void attack();
