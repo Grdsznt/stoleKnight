@@ -8,7 +8,7 @@
 public class Line  
 {
     // instance variables - replace the example below with your own
-    Pair start, end;
+    public Pair start, end;
 
     /**
      * Constructor for objects of class Line

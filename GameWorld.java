@@ -52,13 +52,14 @@ public class GameWorld extends World
         addObject(map, 104, 590);
         generateRooms(2, 2);
         setActOrder(Hero.class);
-        setPaintOrder(Wall.class, Chest.class, Weapon.class, Hero.class, Enemy.class);
-        // addObject(new Ogre(), 500, 500);
-        obstacles = (ArrayList<Wall>) getObjects(Wall.class);
+        // setPaintOrder(Wall.class, Chest.class, Weapon.class, Hero.class);
+        
+        // testing
         addObject(new Ogre(500, 500), 500, 500);
-        addObject(new Hero1(), 525, 525);
-        // every time add a wall pls add it to obstacles
+        addObject(new Hero1(), 800, 600);
+        
         mouseHold = false;
+        setPaintOrder(Hero.class, Weapon.class, Overlay.class, SightlineOverlay.class, Enemy.class);
         // background stuff
         GreenfootImage background = new GreenfootImage(1200, 720);
         background.setColor(new Color(34, 34, 34));
@@ -75,6 +76,7 @@ public class GameWorld extends World
     }
     
     public ArrayList<Wall> getObstacles() {
+        obstacles = (ArrayList<Wall>) getObjects(Wall.class);
         return obstacles;
     }
     
