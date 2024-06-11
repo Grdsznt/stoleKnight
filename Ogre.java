@@ -36,8 +36,8 @@ public class Ogre extends Enemy
     }
     
     public void addedToWorld(World w) {
-        //w.addObject(overlay, getX(), getY());
-        super.addedToWorld(w);
+        w.addObject(overlay, getX(), getY());
+        SimpleHitbox.allHitboxesInWorld.add(hitbox);
     }
     
     public void act()
@@ -118,6 +118,13 @@ public class Ogre extends Enemy
         }
         
         animate();
+        
+        if(health <= 0) {
+            SimpleHitbox.allHitboxesInWorld.remove(hitbox);
+            getWorld().removeObject(overlay);
+            getWorld().removeObject(this);
+            return;
+        }
         actNum++;
     }
         
@@ -159,5 +166,9 @@ public class Ogre extends Enemy
         } else {
             isMoving = true;
         }
+    }
+    
+    public SimpleHitbox getHitBox() {
+        return hitbox;
     }
 }

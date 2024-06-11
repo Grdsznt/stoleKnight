@@ -51,6 +51,7 @@ public class Enemy extends SuperSmoothMover
         spawnY = centerY;
     }
      
+    
     public void act()
     {
         // Add your action code here.
@@ -198,6 +199,10 @@ public class Enemy extends SuperSmoothMover
     
     public void setHealth(int health) {
         this.health = health;
+    }
+    
+    public SimpleHitbox getHitbox() {
+        return hitbox;
     }
 
     /**
