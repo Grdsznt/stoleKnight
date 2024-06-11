@@ -384,12 +384,13 @@ public abstract class Hero extends SuperSmoothMover
                 shield -= damage;
                 shield = Math.max(shield, 0);
                 shieldBar.update(shield);
-                playDamageSound();
+                
             } else {
                 hp -= damage;
                 hpBar.update(hp);
-                playDamageSound();
+                
             }
+            //playDamageSound();
             lastHitCounter = 0;
             isInvincible = true;
             invincibleStart = System.currentTimeMillis();
@@ -532,6 +533,7 @@ public abstract class Hero extends SuperSmoothMover
         yMoveVel = 0;
         yAddedVel = 0;
     }
+    
     public void playDamageSound(){
         damageSounds[damageSoundsIndex].setVolume(80);
         damageSounds[damageSoundsIndex].play();
@@ -547,5 +549,25 @@ public abstract class Hero extends SuperSmoothMover
             damageSounds[i] = new GreenfootSound("damageSound.mp3");
         }   
 
+    }
+    
+    
+    /**
+     * Adds to the hitboxList
+     *
+     * @param cls The class to add (Has to be a sublcass of Actor)
+     */
+    public void addHitboxList(Class<?> cls) {
+        if (!(Actor.class).isAssignableFrom(cls)) return;
+        hitboxList.add(cls);
+    }
+    
+    /**
+     * Remove from hitbox list
+     *
+     * @param cls The class to remove
+     */
+    public void removeHitboxList(Class<?> cls) {
+        hitboxList.remove(cls);
     }
 }

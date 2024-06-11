@@ -74,6 +74,7 @@ public class GameWorld extends World
         floor = 1;
         floorLabel = new Label("Floor 1", 30);
         addObject(floorLabel, 104, 690);
+        
     }
     
     public ArrayList<Wall> getObstacles() {
@@ -221,6 +222,18 @@ public class GameWorld extends World
         currentRoomCol = col;
         Tile[][] room = roomGrid[row][col].getTileData();
         // The world is 21x15 - 48 pixels per block - adjust properly
+        ArrayList<Enemy> enemyList = roomGrid[row][col].getEnemies();
+        
+        for (Enemy enemy : enemyList) {
+            addObject(enemy, 500, 500);
+        }
+        
+        System.out.println("loaded");
+        if (enemyList.size() != 0) {
+            for (Hero hero: getObjects(Hero.class)) {
+                hero.addHitboxList(RoomExit.class);
+            }
+        }
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 21; j++) {
                 if (room[i][j] == null) {
@@ -228,6 +241,9 @@ public class GameWorld extends World
                 }
                 // add 192 because there's 4 tiles of extra size to the left
                 addObject(room[i][j], j*BLOCK_SIZE+BLOCK_SIZE/2+192, i*BLOCK_SIZE+BLOCK_SIZE/2);
+                if (enemyList.size() > 0 && room[i][j] instanceof RoomExit) {
+                    ((RoomExit)room[i][j]).setState(true);
+                }
             }
         }
         
@@ -252,13 +268,7 @@ public class GameWorld extends World
         }
         
         // enemy things
-        ArrayList<Enemy> enemyList = roomGrid[row][col].getEnemies();
         
-        
-        for (Enemy enemy : enemyList) {
-            addObject(enemy, 500, 500);
-        }
-        System.out.println("loaded");
     }
     
     private void unloadRoom(int row, int col) {
