@@ -8,20 +8,22 @@ import greenfoot.*;
 public class SimpleHitbox  
 {
     private Actor actor;
-    private int radiusX, radiusY;
+    private int radiusX, radiusY, offsetY, offsetX;
 
-    public SimpleHitbox(Actor actor, int radiusX, int radiusY) {
+    public SimpleHitbox(Actor actor, int radiusX, int radiusY, int offsetY, int offsetX) {
         this.actor = actor;
         this.radiusX = radiusX;
         this.radiusY = radiusY;
+        this.offsetY = offsetY;
+        this.offsetX = offsetX;
     }
 
     public boolean intersectsOval(Actor other) {
         if (other instanceof Hero1) {
             Hero1 hero = (Hero1) other;
             SimpleHitbox otherHitbox = hero.getHitbox();
-            int dx = other.getX() - actor.getX();
-            int dy = other.getY() - actor.getY();
+            int dx = (other.getX() + otherHitbox.getOffsetX()) - (actor.getX() + offsetX);
+            int dy = (other.getY() + otherHitbox.getOffsetY()) - (actor.getY() + offsetY);
     
             double angle = Math.atan2(dy, dx);
             double cosAngle = Math.cos(angle);
@@ -34,15 +36,8 @@ public class SimpleHitbox
     
             return distance < Math.sqrt(overlapX * overlapX + overlapY * overlapY);
         } else {
-            return false;
+            return false; // edit here
         }
-    }
-    
-    public void drawHitbox() {
-        GreenfootImage image = actor.getImage();
-        image.setColor(new Color(255, 0, 0));
-        image.drawOval(actor.getX() - radiusX, actor.getY() - radiusY, radiusX * 2, radiusY * 2);
-        actor.setImage(image);
     }
     
     public int getRadiusX() {
@@ -51,5 +46,13 @@ public class SimpleHitbox
 
     public int getRadiusY() {
         return radiusY;
+    }
+    
+    public int getOffsetY() {
+        return offsetY;
+    }
+    
+    public int getOffsetX() {
+        return offsetX;
     }
 }

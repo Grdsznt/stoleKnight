@@ -43,7 +43,7 @@ public class Wand extends Weapon
         double clockwiseAngle = (angleDegrees + 360) % 360;
         
         proj = new BallProjectile(20, 3, (int)clockwiseAngle); 
-        getWorld().addObject(proj, getX(), getY());
+        getWorld().addObject(proj, getX(), getY()-15);
     }
     
     public void attack() {
@@ -60,6 +60,6 @@ public class Wand extends Weapon
     }
     
     public void followWizard(Wizard w){
-        setLocation(w.getX(), w.getY());
+        setLocation(w.getX()-4, w.getY()+17);
     }
 }

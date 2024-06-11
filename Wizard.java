@@ -72,12 +72,12 @@ public class Wizard extends Enemy
         actNum = 0; frameNum = 0;
         homeRadius = 60;
         w = new Wand(3);
-        hitbox = new SimpleHitbox(this, getImage().getWidth()/2-2, getImage().getHeight()/2-6);
+        hitbox = new SimpleHitbox(this, getImage().getWidth()/2-2, getImage().getHeight()/2-9, 10, 2);
         overlay = new Overlay(this, hitbox);
     }
     
     public void addedToWorld(World world) {
-        world.addObject(w, getX(), getY());
+        world.addObject(w, getX()-4, getY()+17);
         world.addObject(overlay, getX(), getY());
     }
     

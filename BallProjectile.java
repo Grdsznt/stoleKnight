@@ -13,6 +13,8 @@ public class BallProjectile extends Actor
     private int size;
     private int damage;
     private int rotation;
+    private SimpleHitbox hitbox;
+    private Overlay overlay;
 
     /**
      * Constructor for objects of class BallProjectile
@@ -26,18 +28,30 @@ public class BallProjectile extends Actor
         img.scale(size, size);
         setImage(img);
         setRotation(rotation);
+        hitbox = new SimpleHitbox(this, getImage().getWidth()/2-2, getImage().getHeight()/2-2, 0, 0);
+        overlay = new Overlay(this, hitbox);
+    }
+    
+    public void addedToWorld(World world) {
+        world.addObject(overlay, getX(), getY());
     }
     
     public void act() {
-        if (isTouching(Hero.class)) {
-            causeDamage();
+        if (getWorld().getObjects(Hero.class).size() != 0) {
+            if (hitbox.intersectsOval(getWorld().getObjects(Hero.class).get(0))) {
+                causeDamage();
+            }
         }
+        
         // double angle = Math.toRadians(rotation);
         // int newX = getX() + (int) (2 * Math.cos(angle));
         // int newY = getY() + (int) (2 * Math.sin(angle));
         // setLocation(newX, newY);
         move(2);
-        if (isTouching(Wall.class) || getX() > 1180 || getY() > 700 || getX() < 10 || getY() < 10) getWorld().removeObject(this);
+        if (isTouching(Wall.class) || getX() > 1180 || getY() > 700 || getX() < 10 || getY() < 10) {
+            getWorld().removeObject(overlay);
+            getWorld().removeObject(this);
+        }
     }
     
     public void causeDamage() {

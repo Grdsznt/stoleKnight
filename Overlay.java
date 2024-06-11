@@ -19,12 +19,14 @@ public class Overlay extends Actor {
     private void drawHitbox() {
         GreenfootImage image = getImage();
         image.clear();
-        image.setColor(new Color(255, 0, 0, 128)); // Red color with transparency
+        image.setColor(new Color(0, 255, 0, 128)); // Red color with transparency
         int centerX = target.getImage().getWidth() / 2;
         int centerY = target.getImage().getHeight() / 2;
         int radiusX = hitbox.getRadiusX();
         int radiusY = hitbox.getRadiusY();
+        int offsetX = hitbox.getOffsetX();
+        int offsetY = hitbox.getOffsetY();
         
-        image.drawOval(centerX - radiusX, centerY - radiusY, radiusX * 2, radiusY * 2);
+        image.drawOval(centerX - radiusX + offsetX, centerY - radiusY + offsetY, radiusX * 2, radiusY * 2);
     }
 }
