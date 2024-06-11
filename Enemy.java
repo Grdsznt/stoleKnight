@@ -33,6 +33,8 @@ public class Enemy extends SuperSmoothMover
     // protected SightlineOverlay sl;
     public static int GRID_CHECK = 12;
     protected boolean right;
+    protected SimpleHitbox hitbox;
+    protected Overlay overlay;
     
     public Enemy(int health, int speed, int damage, double targetRadius, int centerX, int centerY) {
         this.health = health;
@@ -43,11 +45,6 @@ public class Enemy extends SuperSmoothMover
         currentPath = new LinkedList<int[]>();
         // sl = new SightlineOverlay(new Pair(0, 0), new Pair(0, 0));
     }
-    
-    // public void addedToWorld(World w) {
-        // getWorld().addObject(sl, getX(), getY());
-    // }
-    
     
     public void act()
     {
@@ -191,6 +188,10 @@ public class Enemy extends SuperSmoothMover
     
     public void setHealth(int health) {
         this.health = health;
+    }
+    
+    public SimpleHitbox getHitbox() {
+        return hitbox;
     }
 
     

@@ -56,6 +56,8 @@ public abstract class Hero extends SuperSmoothMover
     protected Image goldCoin;
     protected Image weaponLabelOne;
     protected Image weaponLabelTwo;
+    protected SimpleHitbox hitbox;
+    protected Overlay overlay;
 
     public Hero(int hp, int shieldValue, int speed, int initialEnergy, Weapon initialWeapon) {
         weaponsInInventory.add(initialWeapon);
@@ -63,6 +65,7 @@ public abstract class Hero extends SuperSmoothMover
         currentWeapon.beingUsed = true;
         this.hp = hp;
         this.shield = shieldValue;
+        maxShield = shieldValue;
         this.speed = speed;
         this.energy = initialEnergy;
 
@@ -117,7 +120,7 @@ public abstract class Hero extends SuperSmoothMover
         updateWeaponPosition();
         
         tileInteraction();
-
+        
         if (weaponActionCooldown > 0) {
             weaponActionCooldown--;
         }
@@ -381,6 +384,7 @@ public abstract class Hero extends SuperSmoothMover
         if(hp <= 0){
             //game over
             getWorld().removeObject(this);
+            return;
         }
         
     }

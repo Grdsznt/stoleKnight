@@ -27,8 +27,6 @@ public class Wizard extends Enemy
     private int homeRadius;
     private Wand w;
     private Pair target;
-    private SimpleHitbox hitbox;
-    private Overlay overlay;
     private GameWorld gw;
     public void act()
     {
@@ -57,7 +55,14 @@ public class Wizard extends Enemy
                 // maybe red damage animation
             }
         }
+        if(health <= 0) {
+            SimpleHitbox.allHitboxesInWorld.remove(hitbox);
+            getWorld().removeObject(overlay);
+            getWorld().removeObject(this);
+            return;
+        }
         actNum++;
+        
     }
     
     public Wizard(int centerX, int centerY) {
@@ -79,6 +84,7 @@ public class Wizard extends Enemy
     public void addedToWorld(World world) {
         world.addObject(w, getX()-4, getY()+17);
         world.addObject(overlay, getX(), getY());
+        SimpleHitbox.allHitboxesInWorld.add(hitbox);
     }
     
     private void animate() {

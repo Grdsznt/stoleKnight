@@ -23,10 +23,11 @@ public class Projectile extends SuperSmoothMover
     private boolean traveling;
     private int disappearTimer;
     private boolean chargeable;
-    private Actor hit;
     
     private int chargeTime; // Store the charge time
     private int damage;
+    private Overlay overlay;
+    protected SimpleHitbox hitbox;
 
     public Projectile(int direction_X, int direction_Y, int baseDamage, int maxChargeDamage, boolean chargeable) {
         setImage(arrow);
@@ -40,6 +41,9 @@ public class Projectile extends SuperSmoothMover
         disappearTimer = 60;
         this.chargeable = chargeable;
         chargeTime = 0; // Initialize charge time
+        
+        hitbox = new SimpleHitbox(this, getImage().getWidth() / 2, getImage().getHeight() / 2, 0 ,0);
+        overlay = new Overlay(this, hitbox);
     }
 
     public Projectile(int direction_X, int direction_Y) {
@@ -53,8 +57,15 @@ public class Projectile extends SuperSmoothMover
         traveling = false;
         disappearTimer = 60;
         this.chargeable = false;
-        
         chargeTime = 0; // Initialize charge time
+
+        hitbox = new SimpleHitbox(this, getImage().getWidth() / 2, getImage().getHeight() / 2, 0 ,0);
+        overlay = new Overlay(this, hitbox);
+    }
+    
+    public void addedToWorld(World w) {
+        w.addObject(overlay, getX(), getY());
+        SimpleHitbox.allHitboxesInWorld.add(hitbox);
     }
     
     public void act() {
@@ -65,12 +76,14 @@ public class Projectile extends SuperSmoothMover
                 angle = calculateRotation();
             } else {
                 setRotation(angle - 90);
+                hitbox.rotateHitbox(angle - 90);
                 firstTime = false;
                 traveling = true;
                 damage = calculateFinalDamage();
             }
         } else if(!chargeable && firstTime) {
             damage = calculateFinalDamage();
+            hitbox.rotateHitbox(calculateRotation() - 90);
             setRotation(calculateRotation() - 90);
             firstTime = false;
             traveling = true;
@@ -79,18 +92,6 @@ public class Projectile extends SuperSmoothMover
         if (traveling) {
             move(speed);
             checkCollision(); // Check for collisions with other objects
-        }
-        
-        if(hit != null) {
-            if(hit instanceof Hero) {
-                Hero hero = (Hero) hit;
-                setLocation(hero.getX() + (hero.right ? -5 : 5), hero.getY());
-            } else if(hit instanceof Enemy) {
-                Enemy e = (Enemy) hit;
-                setLocation(e.getX() + (e.right ? -5 : 5), e.getY());
-            } else if(hit instanceof Wall) {
-                setLocation(getX(), getY());
-            }
         }
         
         disappear();
@@ -104,21 +105,24 @@ public class Projectile extends SuperSmoothMover
     }
 
     private void checkCollision() {
-        // Check if the projectile has hit any actors
-        actors = (ArrayList<Actor>) getIntersectingObjects(Actor.class);
-        if (actors.size() != 0) {
-            Actor actor = actors.get(0);
-            if (actor instanceof Enemy) {
-                Enemy e = (Enemy) actor;
-                e.health -= damage;
-                speed = 0;
-                hit = e; // Store the hit object
-            } else if (actor instanceof Wall) {
-                // If it hits a wall, stop the projectile
-                Wall wall = (Wall) actor;
-                speed = 0;
-                hit = wall; // Store the hit object (in this case, the arrow itself)
+        ArrayList<SimpleHitbox> hitBoxes = SimpleHitbox.allHitboxesInWorld;
+        if(chargeable) {
+            for(SimpleHitbox target : hitBoxes) {
+                if(target.getActor() instanceof Enemy && hitbox.isHitBoxesIntersecting(target)) {
+                    Enemy e = (Enemy) target.getActor();
+                    e.health -= damage;
+                }
             }
+        } else {
+            for(SimpleHitbox target : hitBoxes) {
+                if(target.getActor() instanceof Hero && hitbox.isHitBoxesIntersecting(target)) {
+                    Hero h = (Hero) target.getActor();
+                    h.hp -= damage;
+                }
+            }
+        }
+        if(isTouching(Wall.class)) {
+            speed = 0;
         }
     }
 
@@ -130,12 +134,8 @@ public class Projectile extends SuperSmoothMover
     }
 
     private void disappear() {
-        if (speed == 0 && !traveling) {
+        if (speed == 0 && !traveling && isTouching(Wall.class)) {
             disappearTimer--;
-        }
-        if (disappearTimer == 0) {
-            getWorld().removeObject(this);
-            return;
         }
     }
     

@@ -21,11 +21,9 @@ public class Ogre extends Enemy
     private int frameNum, actNum;
     private GameWorld gw;
     private int homeRadius;
-    private SimpleHitbox hitbox;
-    private Overlay overlay;
     private Pair target;
     public Ogre(int centerX, int centerY) {
-        super(1000, 2, 3, 300, centerX, centerY);        
+        super(5, 2, 3, 300, centerX, centerY);        
         homeRadius = 60; 
         for (GreenfootImage img: idleFrames) {
             img.scale(64, 64);
@@ -42,6 +40,7 @@ public class Ogre extends Enemy
     
     public void addedToWorld(World w) {
         w.addObject(overlay, getX(), getY());
+        SimpleHitbox.allHitboxesInWorld.add(hitbox);
     }
     
     public void act()
@@ -122,6 +121,13 @@ public class Ogre extends Enemy
         }
         
         animate();
+        
+        if(health <= 0) {
+            SimpleHitbox.allHitboxesInWorld.remove(hitbox);
+            getWorld().removeObject(overlay);
+            getWorld().removeObject(this);
+            return;
+        }
         actNum++;
     }
         
@@ -163,5 +169,9 @@ public class Ogre extends Enemy
         } else {
             isMoving = true;
         }
+    }
+    
+    public SimpleHitbox getHitBox() {
+        return hitbox;
     }
 }
