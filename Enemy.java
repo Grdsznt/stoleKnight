@@ -29,7 +29,11 @@ public class Enemy extends SuperSmoothMover
     };
     protected Deque<int[]> currentPath;
     // protected SightlineOverlay sl;
-    public static int GRID_CHECK = 12;
+    public static int GRID_CHECK = 24;
+    protected int spawnX;
+    protected int spawnY;
+    
+    protected boolean right;
     protected SimpleHitbox hitbox;
     protected Overlay overlay;
     protected int actNum, frameNum;
@@ -42,6 +46,9 @@ public class Enemy extends SuperSmoothMover
         this.targetRadius = targetRadius;
         this.centerX = centerX; this.centerY = centerY;
         currentPath = new LinkedList<int[]>();
+        // sl = new SightlineOverlay(new Pair(0, 0), new Pair(0, 0));
+        spawnX = centerX;
+        spawnY = centerY;
     }
      
     public void act()
@@ -74,13 +81,18 @@ public class Enemy extends SuperSmoothMover
         
             newX = (int) (centerX + distance * Math.cos(angle));
             newY = (int) (centerY + distance * Math.sin(angle));
-        
+            
             setLocation(newX, newY);
             
             // Check if the new location intersects with any Obstacles
             if (!isTouching(Wall.class)) {
                 isValid = true; // If no intersection, mark as valid and break loop
+            } else {
+                newX = centerX;
+                newY = centerY;
+                break;
             }
+            
         }
         setLocation(curX, curY);
         
@@ -188,6 +200,24 @@ public class Enemy extends SuperSmoothMover
         this.health = health;
     }
 
+    /**
+     * Sets the spawn position when you enter the room
+     *
+     */
+    public void setSpawnPosition(int x, int y) {
+        spawnX = x;
+        spawnY = y;
+    }
+    
+    
+    /**
+     * Sets the locations to the spawnX and spawnY
+     *
+     */
+    public void addedToWorld(World w) {
+        setLocation(spawnX, spawnY);
+    }
+
     
     /**
     * <div>
@@ -235,6 +265,7 @@ public class Enemy extends SuperSmoothMover
         openList.add(new double[]{0, r, c});
        
         while (openList.size() != 0) {
+            
             double[] item = openList.poll();
             r = (int)item[1];
             c = (int)item[2];
@@ -381,5 +412,5 @@ public class Enemy extends SuperSmoothMover
             parent_i = i;
             parent_j = j;
         }
-    }
+    }     
 }

@@ -55,7 +55,7 @@ public class GameWorld extends World
         // setPaintOrder(Wall.class, Chest.class, Weapon.class, Hero.class);
         
         // testing
-        addObject(new Ogre(500, 500), 500, 500);
+        //addObject(new Ogre(500, 500), 500, 500);
         addObject(new Hero1(), 800, 600);
         addObject(new Wizard(800, 200), 800, 200);
         addObject(new Imp(400, 400), 400, 400);
@@ -252,6 +252,14 @@ public class GameWorld extends World
             map.drawRoom(row-1, col, worldGrid[row-1][col]);
         }
         
+        // enemy things
+        ArrayList<Enemy> enemyList = roomGrid[row][col].getEnemies();
+        
+        
+        for (Enemy enemy : enemyList) {
+            addObject(enemy, 500, 500);
+        }
+        System.out.println("loaded");
     }
     
     private void unloadRoom(int row, int col) {
@@ -264,6 +272,10 @@ public class GameWorld extends World
                 }
                 removeObject(room[i][j]);
             }
+        }
+        // just in case
+        for (Enemy enemy : roomGrid[row][col].getEnemies()) {
+            removeObject(enemy);
         }
     }
 
@@ -297,6 +309,7 @@ public class GameWorld extends World
         
         floor++;
         floorLabel.setValue("Floor " + floor);
+        Greenfoot.setWorld(new BuffWorld(this, hero));
     }
     
     /**
@@ -317,6 +330,8 @@ public class GameWorld extends World
     public int[] getRoomPosition() {
         return new int[]{currentRoomRow, currentRoomCol};
     }
+    
+    
     
     public void act() {
         mouse = Greenfoot.getMouseInfo();

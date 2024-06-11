@@ -41,9 +41,6 @@ public class Portal extends Tile
         
     }
     
-    
-    
-    
     private void animate() {
         if(animationTimer.millisElapsed() < 100) return;
         animationTimer.mark();

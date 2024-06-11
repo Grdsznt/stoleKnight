@@ -38,12 +38,15 @@ public abstract class Hero extends SuperSmoothMover
     protected boolean isTransparent;
     protected int lastHitCounter = 0;
     
+    protected boolean canMove = true;
     protected double xMoveVel = 0;
     protected double yMoveVel = 0;
     protected double xAddedVel = 0;
     protected double yAddedVel = 0;
     protected double friction = 1;
     protected int dashCooldown = 40;
+    // will always be some subclass of actor
+    protected ArrayList<Class<?>> hitboxList;
     
     protected int radius;
     protected Weapon currentWeapon;
@@ -56,13 +59,16 @@ public abstract class Hero extends SuperSmoothMover
     protected Image goldCoin;
     protected Image weaponLabelOne;
     protected Image weaponLabelTwo;
+    
+    private GreenfootSound damageSound;
+    private static GreenfootSound[] damageSounds;
+    private static int damageSoundsIndex;
 
     public Hero(int hp, int shieldValue, int speed, int initialEnergy, Weapon initialWeapon) {
         weaponsInInventory.add(initialWeapon);
         currentWeapon = initialWeapon;
+        currentWeapon.beingUsed = true;
         this.hp = hp;
-        maxHP = hp;
-        maxShield = shieldValue;
         this.shield = shieldValue;
         this.speed = speed;
         this.energy = initialEnergy;
@@ -82,6 +88,10 @@ public abstract class Hero extends SuperSmoothMover
         goldCoin.getImage().scale(32, 32);
         weaponLabelOne = new Image("weaponslot.png");
         weaponLabelTwo = new Image("weaponslot.png");
+        
+        hitboxList = new ArrayList<Class<?>>();
+        hitboxList.add(Wall.class);
+        hitboxList.add(Chest.class);
     }
     
     public void addedToWorld(World world) {
@@ -116,6 +126,7 @@ public abstract class Hero extends SuperSmoothMover
         switchWeaponInInventory();
         updateFacingDirection();
         updateWeaponPosition();
+        
         tileInteraction();
 
         if (weaponActionCooldown > 0) {
@@ -218,137 +229,141 @@ public abstract class Hero extends SuperSmoothMover
         double yDistance = (yMoveVel+yAddedVel)/times;
         for (int i = 0; i < times; i++) {
             setLocation(getPreciseX()+xDistance, getPreciseY());
-            for (Wall wall : getIntersectingObjects(Wall.class)) {
-                double left = wall.getX()-wall.getImage().getWidth()/2-getPreciseX();
-                double right = wall.getX()+wall.getImage().getWidth()/2-getPreciseX();
-                double top = wall.getY()-wall.getImage().getHeight()/2-getPreciseY();
-                double bottom = wall.getY()+wall.getImage().getHeight()/2-getPreciseY();
-                
-                double edgeX = 0;
-                double edgeY = 0;
-                
-                
-                if (0 <left) {
-                    edgeX = left;
-                } else if (0 > right) {
-                    edgeX = right;
-                }
-                
-                if (0 < top) {
-                    edgeY = top;
-                } else if (0 > bottom) {
-                    edgeY = bottom;
-                }
-
-                if (edgeX*edgeX + edgeY*edgeY <= radius*radius) {
-                    if (top <= 0 && 0 <= bottom) {
-                        if (Math.abs(left) < Math.abs(right)) {
-                            setLocation(getPreciseX()+left-1-radius, getPreciseY());
-                        } else {
-                            setLocation(getPreciseX()+right+1+radius, getPreciseY());
-                        }
-                        xMoveVel = 0;
-                        xAddedVel = 0;
-                        break;
-                    } else {
-                        double yDiff = getPreciseY()-wall.getY();
-                        double xDiff = getPreciseX()-wall.getX();
-                        double halfLength = wall.getImage().getWidth()/2.0;
-                        double ratioXY = Math.abs(xDiff) / Math.abs(yDiff);
-                        double squareX = 0;
-                        double squareY = 0;
-                        
-                        if (Math.abs(xDiff) >= Math.abs(yDiff)) {
-                            squareX = halfLength * Math.signum(xDiff); // half length of sqaure
-                            squareY = halfLength / ratioXY * Math.signum(yDiff);
-                        } else {
-                            squareY = halfLength * Math.signum(yDiff);
-                            squareX = halfLength * ratioXY * Math.signum(xDiff);
-                        }
-                        
-                        ratioXY = Math.abs(xDiff) / (Math.abs(yDiff) + Math.abs(xDiff));
-                        // do radius of circle instead 25
-                        double multiplier = radius / Math.sqrt((Math.pow(ratioXY, 2) + Math.pow(1-ratioXY, 2)));
-                        double radiusX = Math.signum(xDiff)*multiplier*ratioXY + Math.signum(xDiff);
-                        double radiusY = Math.signum(yDiff)*multiplier*(1-ratioXY) + Math.signum(yDiff);
-                        System.out.println("Stuff: " + xDiff + " " + yDiff + " " + ratioXY);
-                        System.out.println("Stuff2: " + squareX + " " + squareY);
-                        System.out.println("Stuff3: " + radiusX + " " + radiusY + " " + multiplier);
-                        System.out.println("Coords Wall: " + wall.getX() + " " + wall.getY());
-                        setLocation(wall.getX()+squareX+radiusX, wall.getY()+radiusY+squareY);
-                        System.out.println("Coords 2: " + getX() + " " + getY());
+            for (Class cls : hitboxList) {
+                for (Actor wall : (ArrayList<Actor>)getIntersectingObjects(cls)) {
+                    double left = wall.getX()-wall.getImage().getWidth()/2-getPreciseX();
+                    double right = wall.getX()+wall.getImage().getWidth()/2-getPreciseX();
+                    double top = wall.getY()-wall.getImage().getHeight()/2-getPreciseY();
+                    double bottom = wall.getY()+wall.getImage().getHeight()/2-getPreciseY();
+                    
+                    double edgeX = 0;
+                    double edgeY = 0;
+                    
+                    
+                    if (0 <left) {
+                        edgeX = left;
+                    } else if (0 > right) {
+                        edgeX = right;
                     }
                     
-                    //System.out.println(left + " " + right + " " + top + " " + bottom);
-                    
+                    if (0 < top) {
+                        edgeY = top;
+                    } else if (0 > bottom) {
+                        edgeY = bottom;
+                    }
+    
+                    if (edgeX*edgeX + edgeY*edgeY <= radius*radius) {
+                        if (top <= 0 && 0 <= bottom) {
+                            if (Math.abs(left) < Math.abs(right)) {
+                                setLocation(getPreciseX()+left-1-radius, getPreciseY());
+                            } else {
+                                setLocation(getPreciseX()+right+1+radius, getPreciseY());
+                            }
+                            xMoveVel = 0;
+                            xAddedVel = 0;
+                            break;
+                        } else {
+                            double yDiff = getPreciseY()-wall.getY();
+                            double xDiff = getPreciseX()-wall.getX();
+                            double halfLength = wall.getImage().getWidth()/2.0;
+                            double ratioXY = Math.abs(xDiff) / Math.abs(yDiff);
+                            double squareX = 0;
+                            double squareY = 0;
+                            
+                            if (Math.abs(xDiff) >= Math.abs(yDiff)) {
+                                squareX = halfLength * Math.signum(xDiff); // half length of sqaure
+                                squareY = halfLength / ratioXY * Math.signum(yDiff);
+                            } else {
+                                squareY = halfLength * Math.signum(yDiff);
+                                squareX = halfLength * ratioXY * Math.signum(xDiff);
+                            }
+                            
+                            ratioXY = Math.abs(xDiff) / (Math.abs(yDiff) + Math.abs(xDiff));
+                            // do radius of circle instead 25
+                            double multiplier = radius / Math.sqrt((Math.pow(ratioXY, 2) + Math.pow(1-ratioXY, 2)));
+                            double radiusX = Math.signum(xDiff)*multiplier*ratioXY + Math.signum(xDiff);
+                            double radiusY = Math.signum(yDiff)*multiplier*(1-ratioXY) + Math.signum(yDiff);
+                            // System.out.println("Stuff: " + xDiff + " " + yDiff + " " + ratioXY);
+                            // System.out.println("Stuff2: " + squareX + " " + squareY);
+                            // System.out.println("Stuff3: " + radiusX + " " + radiusY + " " + multiplier);
+                            // System.out.println("Coords Wall: " + wall.getX() + " " + wall.getY());
+                            setLocation(wall.getX()+squareX+radiusX, wall.getY()+radiusY+squareY);
+                            // System.out.println("Coords 2: " + getX() + " " + getY());
+                        }
+                        
+                        //System.out.println(left + " " + right + " " + top + " " + bottom);
+                        
+                    }
                 }
             }
             
             setLocation(getPreciseX(), getPreciseY()+yDistance);
-            for (Wall wall : getIntersectingObjects(Wall.class)) {
-                double left = wall.getX()-wall.getImage().getWidth()/2-getPreciseX();
-                double right = wall.getX()+wall.getImage().getWidth()/2-getPreciseX();
-                double top = wall.getY()-wall.getImage().getHeight()/2-getPreciseY();
-                double bottom = wall.getY()+wall.getImage().getHeight()/2-getPreciseY();
-                
-                double edgeX = 0;
-                double edgeY = 0;
-                
-                if (0 <left) {
-                    edgeX = left;
-                } else if (0 > right) {
-                    edgeX = right;
-                }
-                
-                if (0 < top) {
-                    edgeY = top;
-                } else if (0 > bottom) {
-                    edgeY = bottom;
-                }
-
-                if (edgeX*edgeX + edgeY*edgeY <= radius*radius) {
-                    if (left <= 0 && 0 <= right) {
-                        if (Math.abs(top) < Math.abs(bottom)) {
-                            setLocation(getPreciseX(), getPreciseY()+top-1-radius);
+            for (Class cls : hitboxList) {
+                for (Actor wall : (ArrayList<Actor>)getIntersectingObjects(cls)) {
+                    double left = wall.getX()-wall.getImage().getWidth()/2-getPreciseX();
+                    double right = wall.getX()+wall.getImage().getWidth()/2-getPreciseX();
+                    double top = wall.getY()-wall.getImage().getHeight()/2-getPreciseY();
+                    double bottom = wall.getY()+wall.getImage().getHeight()/2-getPreciseY();
+                    
+                    double edgeX = 0;
+                    double edgeY = 0;
+                    
+                    if (0 <left) {
+                        edgeX = left;
+                    } else if (0 > right) {
+                        edgeX = right;
+                    }
+                    
+                    if (0 < top) {
+                        edgeY = top;
+                    } else if (0 > bottom) {
+                        edgeY = bottom;
+                    }
+    
+                    if (edgeX*edgeX + edgeY*edgeY <= radius*radius) {
+                        if (left <= 0 && 0 <= right) {
+                            if (Math.abs(top) < Math.abs(bottom)) {
+                                setLocation(getPreciseX(), getPreciseY()+top-1-radius);
+                            } else {
+                                setLocation(getPreciseX(), getPreciseY()+bottom+1+radius);
+                            }
+                            yMoveVel = 0;
+                            yAddedVel = 0;
+                            break;
                         } else {
-                            setLocation(getPreciseX(), getPreciseY()+bottom+1+radius);
+                            double yDiff = getPreciseY()-wall.getY();
+                            double xDiff = getPreciseX()-wall.getX();
+                            double halfLength = wall.getImage().getWidth()/2.0;
+                            
+                            double ratioXY = Math.abs(xDiff) / Math.abs(yDiff);
+                            double squareX = 0;
+                            double squareY = 0;
+                            if (Math.abs(xDiff) >= Math.abs(yDiff)) {
+                                squareX = halfLength * Math.signum(xDiff); // half length of sqaure
+                                squareY = halfLength / ratioXY * Math.signum(yDiff);
+                            } else {
+                                squareY = halfLength * Math.signum(yDiff);
+                                squareX = halfLength * ratioXY * Math.signum(xDiff);
+                            }
+                            
+                            ratioXY = Math.abs(xDiff) / (Math.abs(yDiff) + Math.abs(xDiff));
+                            // do radius of circle instead 25
+                            double multiplier = radius / Math.sqrt((Math.pow(ratioXY, 2) + Math.pow(1-ratioXY, 2)));
+                            double radiusX = Math.signum(xDiff)*multiplier*ratioXY + Math.signum(xDiff);
+                            double radiusY = Math.signum(yDiff)*multiplier*(1-ratioXY) + Math.signum(yDiff);
+                            
+                            setLocation(wall.getX()+squareX+radiusX, wall.getY()+radiusY+squareY);
                         }
-                        yMoveVel = 0;
-                        yAddedVel = 0;
-                        break;
-                    } else {
-                        double yDiff = getPreciseY()-wall.getY();
-                        double xDiff = getPreciseX()-wall.getX();
-                        double halfLength = wall.getImage().getWidth()/2.0;
-                        
-                        double ratioXY = Math.abs(xDiff) / Math.abs(yDiff);
-                        double squareX = 0;
-                        double squareY = 0;
-                        if (Math.abs(xDiff) >= Math.abs(yDiff)) {
-                            squareX = halfLength * Math.signum(xDiff); // half length of sqaure
-                            squareY = halfLength / ratioXY * Math.signum(yDiff);
-                        } else {
-                            squareY = halfLength * Math.signum(yDiff);
-                            squareX = halfLength * ratioXY * Math.signum(xDiff);
-                        }
-                        
-                        ratioXY = Math.abs(xDiff) / (Math.abs(yDiff) + Math.abs(xDiff));
-                        // do radius of circle instead 25
-                        double multiplier = radius / Math.sqrt((Math.pow(ratioXY, 2) + Math.pow(1-ratioXY, 2)));
-                        double radiusX = Math.signum(xDiff)*multiplier*ratioXY + Math.signum(xDiff);
-                        double radiusY = Math.signum(yDiff)*multiplier*(1-ratioXY) + Math.signum(yDiff);
-                        
-                        setLocation(wall.getX()+squareX+radiusX, wall.getY()+radiusY+squareY);
                     }
                 }
             }
+            
         }
         
         ArrayList<RoomExit> exits = (ArrayList<RoomExit>)getObjectsInRange(radius, RoomExit.class);
         if (exits.size() > 0) {
             String direction = exits.get(0).activate();
             if (direction != null) {
-                System.out.println("yeah");
                 if (direction.equals("up")) {
                     setLocation(getPreciseX(), 600);
                 } else if (direction.equals("down")) {
@@ -356,7 +371,7 @@ public abstract class Hero extends SuperSmoothMover
                 } else if (direction.equals("left")) {
                     setLocation(1090, getPreciseY());
                 } else if (direction.equals("right")) {
-                    setLocation(362, getPreciseY());
+                    setLocation(352, getPreciseY());
                 }
             }
         }
@@ -369,9 +384,11 @@ public abstract class Hero extends SuperSmoothMover
                 shield -= damage;
                 shield = Math.max(shield, 0);
                 shieldBar.update(shield);
+                playDamageSound();
             } else {
                 hp -= damage;
                 hpBar.update(hp);
+                playDamageSound();
             }
             lastHitCounter = 0;
             isInvincible = true;
@@ -408,26 +425,39 @@ public abstract class Hero extends SuperSmoothMover
     }
 
     private void updateWeaponPosition() {
-        if (currentWeapon != null) {
-            int offsetX = 0;
-            int offsetY = 0;
-            if(currentWeapon instanceof Sword){
-                offsetX = right ? 6 : -6;
-                offsetY = -2;
-            }
-            if(currentWeapon instanceof Bow){
-                offsetX = right ? 2 : -2;
-                offsetY = 5;
+        if(currentWeapon != null) {
+            int offsetX;
+            int offsetY;
+
+            if(right) {
+                offsetX = currentWeapon instanceof Sword ? 15 : 5; // Adjusted offset
+                offsetY = currentWeapon instanceof Sword ? 10 : 5;
+                currentWeapon.setRotation(0);
+            } else {
+                offsetX = currentWeapon instanceof Sword ? -15 : -5; // Adjusted offset
+                offsetY = currentWeapon instanceof Sword ? 10 : 5;
+                currentWeapon.setRotation(0);
             }
             currentWeapon.setLocation(getX() + offsetX, getY() + offsetY);
+
+            if (!attack) {
+                if(currentWeapon instanceof Sword) {
+                    currentWeapon.setImage(right ? ((Sword) currentWeapon).swordRightFrames[0] : ((Sword) currentWeapon).swordLeftFrames[0]);
+                }
+                if(currentWeapon instanceof Bow) {
+                    currentWeapon.setImage(right ? ((Bow) currentWeapon).bowRightFrames[0] : ((Bow) currentWeapon).bowLeftFrames[0]);
+                }
+            }
         }
-        for(Weapon weapon : weaponsInInventory){
-            if(weapon != currentWeapon){
+
+        for (Weapon weapon : weaponsInInventory) {
+            if (weapon != currentWeapon) {
                 weapon.setLocation(getX() + (right ? -10 : 10), getY());
                 weapon.beingUsed = false;
             }
         }
     }
+
 
     private void switchWeaponInInventory() {
         if (weaponActionCooldown == 0) {
@@ -501,5 +531,21 @@ public abstract class Hero extends SuperSmoothMover
     public void resetYVelocity() {
         yMoveVel = 0;
         yAddedVel = 0;
+    }
+    public void playDamageSound(){
+        damageSounds[damageSoundsIndex].setVolume(80);
+        damageSounds[damageSoundsIndex].play();
+        damageSoundsIndex++; 
+        if (damageSoundsIndex >= damageSounds.length){
+            damageSoundsIndex = 0;
+        }
+    }
+    public static void damageSoundPlayer(){
+        damageSoundsIndex = 0;
+        damageSounds = new GreenfootSound[20]; 
+        for (int i = 0; i < damageSounds.length; i++){
+            damageSounds[i] = new GreenfootSound("damageSound.mp3");
+        }   
+
     }
 }
