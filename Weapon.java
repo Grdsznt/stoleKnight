@@ -2,10 +2,10 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.ArrayList;
 
 /**
- * Write a description of class Weapon here.
+ * One of the weapons: bow. This is coupled with an arrow.
  * 
  * @author Andy Feng
- * @version 1.0
+ * @version June 10th, 2024
  */
 public abstract class Weapon extends Actor {
     protected boolean isAttacking;
@@ -19,29 +19,28 @@ public abstract class Weapon extends Actor {
         this.damage = damage;
         beingUsed = false;
     }
-    
-    public void act()
-    {
+
+    public void act() {
         // Add your action code here.
-        
         if (this instanceof Wand) {
-            
-        }else {
+
+        } else {
             isAttacking = GameWorld.isMouseHolding();
         }
         //causeDamage();
-        
-        hero = (Hero) getOneIntersectingObject(Hero.class);
-        enemy = (Enemy) getOneIntersectingObject(Enemy.class);
+
+        //hero = (Hero) getOneIntersectingObject(Hero.class);
+        //enemy = (Enemy) getOneIntersectingObject(Enemy.class);
     }
 
     public abstract void attack();
 
-    public void causeDamage() {
-        ArrayList<Enemy> e = (ArrayList<Enemy>) getIntersectingObjects(Enemy.class);
-        for (Enemy enemy : e) {
-            enemy.setHealth(enemy.getHealth() - damage);
-            e.remove(enemy);
+    protected Actor getHolder() {
+        Actor holder = getOneIntersectingObject(Hero.class);
+        if (holder == null) {
+            holder = getOneIntersectingObject(Enemy.class);
         }
+        return holder;
     }
 }
+

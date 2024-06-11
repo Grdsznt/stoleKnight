@@ -32,6 +32,7 @@ public class Enemy extends SuperSmoothMover
     protected Deque<int[]> currentPath;
     // protected SightlineOverlay sl;
     public static int GRID_CHECK = 12;
+    protected boolean right;
     
     public Enemy(int health, int speed, int damage, double targetRadius, int centerX, int centerY) {
         this.health = health;
