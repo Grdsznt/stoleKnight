@@ -56,6 +56,10 @@ public abstract class Hero extends SuperSmoothMover
     protected Image goldCoin;
     protected Image weaponLabelOne;
     protected Image weaponLabelTwo;
+    
+    private GreenfootSound damageSound;
+    private static GreenfootSound[] damageSounds;
+    private static int damageSoundsIndex;
 
     public Hero(int hp, int shieldValue, int speed, int initialEnergy, Weapon initialWeapon) {
         weaponsInInventory.add(initialWeapon);
@@ -369,9 +373,11 @@ public abstract class Hero extends SuperSmoothMover
                 shield -= damage;
                 shield = Math.max(shield, 0);
                 shieldBar.update(shield);
+                playDamageSound();
             } else {
                 hp -= damage;
                 hpBar.update(hp);
+                playDamageSound();
             }
             lastHitCounter = 0;
             isInvincible = true;
@@ -514,5 +520,21 @@ public abstract class Hero extends SuperSmoothMover
     public void resetYVelocity() {
         yMoveVel = 0;
         yAddedVel = 0;
+    }
+    public void playDamageSound(){
+        damageSounds[damageSoundsIndex].setVolume(80);
+        damageSounds[damageSoundsIndex].play();
+        damageSoundsIndex++; 
+        if (damageSoundsIndex >= damageSounds.length){
+            damageSoundsIndex = 0;
+        }
+    }
+    public static void damageSoundPlayer(){
+        damageSoundsIndex = 0;
+        damageSounds = new GreenfootSound[20]; 
+        for (int i = 0; i < damageSounds.length; i++){
+            damageSounds[i] = new GreenfootSound("damageSound.mp3");
+        }   
+
     }
 }
