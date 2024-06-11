@@ -24,5 +24,6 @@ public class BuffWorld extends World
         GreenfootImage background = new GreenfootImage(1200, 720);
         background.setColor(new Color(34, 34, 34));
         background.fillRect(0, 0, 1200, 720);
+        setBackground(background);
     }
 }

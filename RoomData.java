@@ -69,7 +69,8 @@ public class RoomData
             for (int i = 0; i < innerTiles.length; i++) {
                 for (int j = 0; j < innerTiles[i].length; j++) {
                     if (innerTiles[i][j] == null) {
-                        possibleLocations.add(new int[] {(i+7)*48, (j+7)*48});
+                        
+                        possibleLocations.add(new int[] {(i+3)*48+24, (j+7)*48+24});
                         continue;
                     }
                     switch (innerTiles[i][j]) {
@@ -134,7 +135,7 @@ public class RoomData
             }
         }
         if (roomType < 16 && possibleLocations.size() > 0) {
-            int numberOfEnemies = 1;
+            int numberOfEnemies = 5;
             for (int i = 0; i < numberOfEnemies; i++) {
                 int[] location = possibleLocations.get(Greenfoot.getRandomNumber(possibleLocations.size()));
                 enemyList.add(new Ogre(location[1], location[0]));

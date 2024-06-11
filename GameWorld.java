@@ -257,6 +257,7 @@ public class GameWorld extends World
         for (Enemy enemy : enemyList) {
             addObject(enemy, 500, 500);
         }
+        System.out.println("loaded");
     }
     
     private void unloadRoom(int row, int col) {
@@ -269,6 +270,10 @@ public class GameWorld extends World
                 }
                 removeObject(room[i][j]);
             }
+        }
+        // just in case
+        for (Enemy enemy : roomGrid[row][col].getEnemies()) {
+            removeObject(enemy);
         }
     }
 
