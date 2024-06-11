@@ -1,46 +1,33 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
-import java.util.ArrayList;
 
 /**
- * One of the main enemies; ogres will move towards the player 
+ * Write a description of class Imp here.
  * 
- * @author Edwin
- * @version 31.5.24
+ * @author (your name) 
+ * @version (a version number or a date)
  */
-public class Ogre extends Enemy
+public class Imp extends Enemy
 {
+    
+    
     private static GreenfootImage[] idleFrames = {
-        new GreenfootImage("Ogre/ogre_idle_anim_f0.png"),new GreenfootImage("Ogre/ogre_idle_anim_f1.png"),new GreenfootImage("Ogre/ogre_idle_anim_f2.png"),
-        new GreenfootImage("Ogre/ogre_idle_anim_f3.png")
+        new GreenfootImage("Imp/imp_idle_anim_f0.png"),new GreenfootImage("Imp/imp_idle_anim_f1.png"),new GreenfootImage("Imp/imp_idle_anim_f2.png"),
+        new GreenfootImage("Imp/imp_idle_anim_f3.png")
     };
     private static GreenfootImage[] runFrames = {
-        new GreenfootImage("Ogre/ogre_run_anim_f0.png"),new GreenfootImage("Ogre/ogre_run_anim_f1.png"),new GreenfootImage("Ogre/ogre_run_anim_f2.png"),
-        new GreenfootImage("Ogre/ogre_run_anim_f3.png")
+        new GreenfootImage("Imp/imp_run_anim_f0.png"),new GreenfootImage("Imp/imp_run_anim_f1.png"),new GreenfootImage("Imp/imp_run_anim_f2.png"),
+        new GreenfootImage("Imp/imp_run_anim_f3.png")
     };
-    private GameWorld gw;
+    
     private Pair target;
-    public Ogre(int centerX, int centerY) {
-        super(50, 2, 3, 300, centerX, centerY);        
-        homeRadius = 60; 
-        for (GreenfootImage img: idleFrames) {
-            img.scale(64, 64);
-        }
-        for (GreenfootImage img: runFrames) {
-            img.scale(64, 64);
-        }
-        setImage(idleFrames[0]);
-        actNum = 0;
-        frameNum = 0;
-        hitbox = new SimpleHitbox(this, getImage().getWidth()/2-11, getImage().getHeight()/2-9, 7, 0);
-        overlay = new Overlay(this, hitbox);
-    }
+    private GameWorld gw;
     
-    public void addedToWorld(World w) {
-        w.addObject(overlay, getX(), getY());
-    }
-    
+    /**
+     * Act - do whatever the Imp wants to do. This method is called whenever
+     * the 'Act' or 'Run' button gets pressed in the environment.
+     */
     public void act()
-    { 
+    {
         if (!pursuing) {
             // pathfind to this random position in radius
             if (actNum % 400 == 0) {
@@ -112,16 +99,34 @@ public class Ogre extends Enemy
                 if (h != null && h.getWorld() != null) {
                     h.takeDamage(damage);
                 }
-                // maybe red damage animation
             }
         }
-        
         animate();
         actNum++;
     }
-        
+    
+    public Imp(int centerX, int centerY) {
+        super(20, 4, 1, 200, centerX, centerY);        
+        homeRadius = 60; 
+        for (GreenfootImage img: idleFrames) {
+            img.scale(40, 40);
+        }
+        for (GreenfootImage img: runFrames) {
+            img.scale(40, 40);
+        }
+        setImage(idleFrames[0]);
+        actNum = 0;
+        frameNum = 0;
+        hitbox = new SimpleHitbox(this, getImage().getWidth()/2-6, getImage().getHeight()/2-8, 5, 2);
+        overlay = new Overlay(this, hitbox);
+    }
+    
+    public void addedToWorld(World w) {
+        w.addObject(overlay, getX(), getY());
+    }
+    
     private void animate() {
-        if (actNum % (speed !=0 ? (int) (-6 * speed + 25) : 10) == 0) {
+        if (actNum % (speed !=0 ? (int) (-6 * speed + 15) : 10) == 0) {
             if (frameNum >= 3) {
                 frameNum = 0;
             } else {
@@ -159,4 +164,5 @@ public class Ogre extends Enemy
             isMoving = true;
         }
     }
+    
 }

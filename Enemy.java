@@ -7,8 +7,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Deque;
 
-
-
 /**
  * Write a description of class Enemy here.
  * 
@@ -32,6 +30,10 @@ public class Enemy extends SuperSmoothMover
     protected Deque<int[]> currentPath;
     // protected SightlineOverlay sl;
     public static int GRID_CHECK = 12;
+    protected SimpleHitbox hitbox;
+    protected Overlay overlay;
+    protected int actNum, frameNum;
+    protected int homeRadius;
     
     public Enemy(int health, int speed, int damage, double targetRadius, int centerX, int centerY) {
         this.health = health;
@@ -40,14 +42,8 @@ public class Enemy extends SuperSmoothMover
         this.targetRadius = targetRadius;
         this.centerX = centerX; this.centerY = centerY;
         currentPath = new LinkedList<int[]>();
-        // sl = new SightlineOverlay(new Pair(0, 0), new Pair(0, 0));
     }
-    
-    // public void addedToWorld(World w) {
-        // getWorld().addObject(sl, getX(), getY());
-    // }
-    
-    
+     
     public void act()
     {
         // Add your action code here.
@@ -386,7 +382,4 @@ public class Enemy extends SuperSmoothMover
             parent_j = j;
         }
     }
-
-    
-        
 }
