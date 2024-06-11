@@ -17,8 +17,6 @@ public class Hero1 extends Hero
     protected static GreenfootImage[] idleFramesRight = new GreenfootImage[11];
     protected static GreenfootImage[] idleFramesLeft = new GreenfootImage[11];
     private SimpleTimer animationTimer = new SimpleTimer();
-    private SimpleHitbox hitbox;
-    private Overlay overlay;
     
     public Hero1() {
         super(Hp, shield, speed, energy, new Sword());
@@ -31,7 +29,7 @@ public class Hero1 extends Hero
     public void addedToWorld(World w) {
         super.addedToWorld(w);
         w.addObject(overlay, getX(), getY());
-        
+        SimpleHitbox.allHitboxesInWorld.add(hitbox);
     }
     
     /**

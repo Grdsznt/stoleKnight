@@ -7,8 +7,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Deque;
 
-
-
 /**
  * Write a description of class Enemy here.
  * 
@@ -36,6 +34,10 @@ public class Enemy extends SuperSmoothMover
     protected int spawnY;
     
     protected boolean right;
+    protected SimpleHitbox hitbox;
+    protected Overlay overlay;
+    protected int actNum, frameNum;
+    protected int homeRadius;
     
     public Enemy(int health, int speed, int damage, double targetRadius, int centerX, int centerY) {
         this.health = health;
@@ -48,11 +50,7 @@ public class Enemy extends SuperSmoothMover
         spawnX = centerX;
         spawnY = centerY;
     }
-    
-    // public void addedToWorld(World w) {
-        // getWorld().addObject(sl, getX(), getY());
-    // }
-    
+     
     
     public void act()
     {
@@ -201,6 +199,10 @@ public class Enemy extends SuperSmoothMover
     
     public void setHealth(int health) {
         this.health = health;
+    }
+    
+    public SimpleHitbox getHitbox() {
+        return hitbox;
     }
 
     /**
@@ -415,8 +417,5 @@ public class Enemy extends SuperSmoothMover
             parent_i = i;
             parent_j = j;
         }
-    }
-
-    
-        
+    }     
 }

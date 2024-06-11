@@ -52,4 +52,7 @@ public abstract class Hitbox extends SuperSmoothMover
         parent.setLocation(getPreciseX()-xOffset, getPreciseY()-yOffset);
     }
     
+    protected SuperSmoothMover getParent() {
+        return parent;
+    }
 }

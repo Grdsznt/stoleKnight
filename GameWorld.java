@@ -57,10 +57,11 @@ public class GameWorld extends World
         // testing
         //addObject(new Ogre(500, 500), 500, 500);
         addObject(new Hero1(), 800, 600);
-        //addObject(new Wizard(800, 200), 800, 200);
+        addObject(new Wizard(800, 200), 800, 200);
+        addObject(new Imp(400, 400), 400, 400);
         
         mouseHold = false;
-        setPaintOrder(Hero.class, Weapon.class, Projectile.class, BallProjectile.class, Overlay.class, SightlineOverlay.class, Enemy.class);
+        setPaintOrder(Hero.class, Weapon.class, Overlay.class,Projectile.class, BallProjectile.class, SightlineOverlay.class, Enemy.class);
         // background stuff
         GreenfootImage background = new GreenfootImage(1200, 720);
         background.setColor(new Color(34, 34, 34));
