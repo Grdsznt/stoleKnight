@@ -60,9 +60,8 @@ public abstract class Hero extends SuperSmoothMover
     public Hero(int hp, int shieldValue, int speed, int initialEnergy, Weapon initialWeapon) {
         weaponsInInventory.add(initialWeapon);
         currentWeapon = initialWeapon;
+        currentWeapon.beingUsed = true;
         this.hp = hp;
-        maxHP = hp;
-        maxShield = shieldValue;
         this.shield = shieldValue;
         this.speed = speed;
         this.energy = initialEnergy;
@@ -116,6 +115,7 @@ public abstract class Hero extends SuperSmoothMover
         switchWeaponInInventory();
         updateFacingDirection();
         updateWeaponPosition();
+        
         tileInteraction();
 
         if (weaponActionCooldown > 0) {
@@ -408,26 +408,39 @@ public abstract class Hero extends SuperSmoothMover
     }
 
     private void updateWeaponPosition() {
-        if (currentWeapon != null) {
-            int offsetX = 0;
-            int offsetY = 0;
-            if(currentWeapon instanceof Sword){
-                offsetX = right ? 6 : -6;
-                offsetY = -2;
-            }
-            if(currentWeapon instanceof Bow){
-                offsetX = right ? 2 : -2;
-                offsetY = 5;
+        if(currentWeapon != null) {
+            int offsetX;
+            int offsetY;
+
+            if(right) {
+                offsetX = currentWeapon instanceof Sword ? 15 : 5; // Adjusted offset
+                offsetY = currentWeapon instanceof Sword ? 10 : 5;
+                currentWeapon.setRotation(0);
+            } else {
+                offsetX = currentWeapon instanceof Sword ? -15 : -5; // Adjusted offset
+                offsetY = currentWeapon instanceof Sword ? 10 : 5;
+                currentWeapon.setRotation(0);
             }
             currentWeapon.setLocation(getX() + offsetX, getY() + offsetY);
+
+            if (!attack) {
+                if(currentWeapon instanceof Sword) {
+                    currentWeapon.setImage(right ? ((Sword) currentWeapon).swordRightFrames[0] : ((Sword) currentWeapon).swordLeftFrames[0]);
+                }
+                if(currentWeapon instanceof Bow) {
+                    currentWeapon.setImage(right ? ((Bow) currentWeapon).bowRightFrames[0] : ((Bow) currentWeapon).bowLeftFrames[0]);
+                }
+            }
         }
-        for(Weapon weapon : weaponsInInventory){
-            if(weapon != currentWeapon){
+
+        for (Weapon weapon : weaponsInInventory) {
+            if (weapon != currentWeapon) {
                 weapon.setLocation(getX() + (right ? -10 : 10), getY());
                 weapon.beingUsed = false;
             }
         }
     }
+
 
     private void switchWeaponInInventory() {
         if (weaponActionCooldown == 0) {
