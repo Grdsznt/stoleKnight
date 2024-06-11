@@ -14,21 +14,25 @@ public class Wand extends Weapon
      */
     
     GreenfootImage wand = new GreenfootImage("weapon_red_magic_staff.png");
-    private int damage;
+    private int damage, actNum;
     private BallProjectile proj;
     public void act()
     {
         super.act();
         animate();
+        if (isAttacking == true && actNum % 22 == 0) isAttacking = false;
+        actNum++;
     }
     
     public Wand(int damage) {
         super(damage);
         this.damage = damage;
         setImage(wand);
+        actNum = 0;
     }
     
     public void shoot(int dx, int dy) {
+        isAttacking = true;
         // Calculate angle in radians from enemy to hero
         double angleRadians = Math.atan2(dy, dx);
 
@@ -39,7 +43,7 @@ public class Wand extends Weapon
         double clockwiseAngle = (angleDegrees + 360) % 360;
         
         proj = new BallProjectile(20, 3, (int)clockwiseAngle); 
-        getWorld().addObject(proj, getX(), getY());
+        getWorld().addObject(proj, getX(), getY()-15);
     }
     
     public void attack() {
@@ -53,5 +57,9 @@ public class Wand extends Weapon
         else {
             setRotation(0);
         }
+    }
+    
+    public void followWizard(Wizard w){
+        setLocation(w.getX()-4, w.getY()+17);
     }
 }
