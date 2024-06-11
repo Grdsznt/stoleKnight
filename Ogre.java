@@ -49,13 +49,13 @@ public class Ogre extends Enemy
     { 
         if (!pursuing) {
             // pathfind to this random position in radius
-            if (actNum % 600 == 0) {
+            if (actNum % 400 == 0) {
                 target = getRandomPositionWithinRadius(homeRadius);
             }
             if (target != null) moveTowardsTarget(target.f, target.s);
             if (actNum % 20 == 0) h = getHeroInRadius();
         }
-        if (h != null) {
+        if (h != null && h.getWorld() != null) {
             gw = (GameWorld) getWorld();
             if (hasLineOfSight(new Pair(getX(), getY()), new Pair(h.getX(), h.getY()), processWalls(gw.getObstacles()))) {
                 pursuing = true;
@@ -112,14 +112,16 @@ public class Ogre extends Enemy
                 }      
             }
         }
-         
-        if (hitbox.intersectsOval(getWorld().getObjects(Hero.class).get(0))) {
-            h = getIntersectingObjects(Hero.class).get(0);
-            if (h != null) {
-                h.takeDamage(damage);
+        if (getWorld().getObjects(Hero.class).size() != 0) {
+            if (hitbox.intersectsOval(getWorld().getObjects(Hero.class).get(0))) {
+                h = getIntersectingObjects(Hero.class).get(0);
+                if (h != null && h.getWorld() != null) {
+                    h.takeDamage(damage);
+                }
+                // maybe red damage animation
             }
-            // maybe red damage animation
         }
+        
         animate();
         actNum++;
     }

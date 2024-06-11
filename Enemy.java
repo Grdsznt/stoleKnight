@@ -35,6 +35,8 @@ public class Enemy extends SuperSmoothMover
     protected int spawnX;
     protected int spawnY;
     
+    protected boolean right;
+    
     public Enemy(int health, int speed, int damage, double targetRadius, int centerX, int centerY) {
         this.health = health;
         this.speed = speed;

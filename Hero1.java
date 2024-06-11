@@ -4,10 +4,9 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  * 
  * Note: Load the frames once manually before starting a world!
  * 
- * @author Jean Pan
+ * @author Jean Pan， Andy Feng
  * @version May 2024
  * 
- * Editor: Andy Feng
  */
 public class Hero1 extends Hero
 {
@@ -25,7 +24,7 @@ public class Hero1 extends Hero
         super(Hp, shield, speed, energy, new Sword());
         loadIdleFrames();
         setImage(idleFramesRight[0]);
-        hitbox = new SimpleHitbox(this, getImage().getWidth()/2-25, getImage().getHeight()/2-15);
+        hitbox = new SimpleHitbox(this, getImage().getWidth()/2-25, getImage().getHeight()/2-15, 0, 2);
         overlay = new Overlay(this, hitbox);
     }
     

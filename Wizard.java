@@ -27,26 +27,41 @@ public class Wizard extends Enemy
     private int homeRadius;
     private Wand w;
     private Pair target;
+    private SimpleHitbox hitbox;
+    private Overlay overlay;
+    private GameWorld gw;
     public void act()
     {
         if (h == null) { // in this case, pursuing is attacking
             // pathfind to this random position in radius
-            if (actNum % 600 == 0) {
+            if (actNum % 400 == 0) {
                 target = getRandomPositionWithinRadius(homeRadius);
             }
             if (target != null) moveTowardsTarget(target.f, target.s);
             if (actNum % 20 == 0) h = getHeroInRadius();
         } else {
             //shoot ball at
-            w.shoot(h.getX()-getX(), h.getY()-getY());
+            gw = (GameWorld) getWorld();
+            if (actNum % 60 == 0 && hasLineOfSight(new Pair(getX(), getY()), new Pair(h.getX(), h.getY()), processWalls(gw.getObstacles()))) w.shoot(h.getX()-getX(), h.getY()-getY());
             if (calculateDistance(getX(), getY(), h.getX(), h.getY()) > targetRadius) {
                 h = null;
             }
         }
+        w.followWizard(this);
+        if (getWorld().getObjects(Hero.class).size() != 0) {
+            if (hitbox.intersectsOval(getWorld().getObjects(Hero.class).get(0))) {
+                h = getIntersectingObjects(Hero.class).get(0);
+                if (h != null && h.getWorld() != null) {
+                    h.takeDamage(damage);
+                }
+                // maybe red damage animation
+            }
+        }
+        actNum++;
     }
     
-    public Wizard() {
-        super(300, 4, 5, 60, 450, 450);
+    public Wizard(int centerX, int centerY) {
+        super(300, 4, 5, 200, centerX, centerY);
         setImage(idleFrames[0]);
         for (GreenfootImage img: idleFrames) {
             img.scale(36, 63);
@@ -57,10 +72,13 @@ public class Wizard extends Enemy
         actNum = 0; frameNum = 0;
         homeRadius = 60;
         w = new Wand(3);
+        hitbox = new SimpleHitbox(this, getImage().getWidth()/2-2, getImage().getHeight()/2-9, 10, 2);
+        overlay = new Overlay(this, hitbox);
     }
     
     public void addedToWorld(World world) {
-        world.addObject(w, getX(), getY());
+        world.addObject(w, getX()-4, getY()+17);
+        world.addObject(overlay, getX(), getY());
     }
     
     private void animate() {
