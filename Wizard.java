@@ -23,12 +23,8 @@ public class Wizard extends Enemy
     };
     
     private GreenfootImage hitImage = new GreenfootImage("Wizard/wizzard_m_hit_anim_f0.png");
-    private int actNum, frameNum;
-    private int homeRadius;
     private Wand w;
     private Pair target;
-    private SimpleHitbox hitbox;
-    private Overlay overlay;
     private GameWorld gw;
     public void act()
     {
@@ -61,7 +57,7 @@ public class Wizard extends Enemy
     }
     
     public Wizard(int centerX, int centerY) {
-        super(300, 4, 5, 200, centerX, centerY);
+        super(30, 4, 5, 200, centerX, centerY);
         setImage(idleFrames[0]);
         for (GreenfootImage img: idleFrames) {
             img.scale(36, 63);

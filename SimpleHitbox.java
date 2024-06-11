@@ -55,4 +55,8 @@ public class SimpleHitbox
     public int getOffsetX() {
         return offsetX;
     }
+    
+    public Actor getActor() {
+        return actor;
+    }
 }
