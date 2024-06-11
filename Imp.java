@@ -101,6 +101,8 @@ public class Imp extends Enemy
                 }
             }
         }
+        
+        System.out.println(health);
         animate();
         actNum++;
     }
@@ -123,6 +125,7 @@ public class Imp extends Enemy
     
     public void addedToWorld(World w) {
         w.addObject(overlay, getX(), getY());
+        SimpleHitbox.allHitboxesInWorld.add(hitbox);
     }
     
     private void animate() {

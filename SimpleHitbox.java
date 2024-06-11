@@ -89,7 +89,7 @@ public class SimpleHitbox
     
         double overlapX = radiusX * cosAngle + other.getRadiusX() * cosAngle;
         double overlapY = radiusY * sinAngle + other.getRadiusX() * sinAngle;
-    
+        
         return distance < Math.sqrt(overlapX * overlapX + overlapY * overlapY);
     }
     
