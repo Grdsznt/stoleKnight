@@ -36,7 +36,7 @@ public class Ogre extends Enemy
         setImage(idleFrames[0]);
         actNum = 0;
         frameNum = 0;
-        hitbox = new SimpleHitbox(this, getImage().getWidth()/2-10, getImage().getHeight()/2-7);
+        hitbox = new SimpleHitbox(this, getImage().getWidth()/2-11, getImage().getHeight()/2-9, 7, 0);
         //overlay = new Overlay(this, hitbox);
     }
     
