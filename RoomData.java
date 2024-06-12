@@ -311,8 +311,8 @@ public class RoomData
             {null, null, null, null, "Wall", null, null, null, null, null, "Wall", null, null, null, null},
             {null, null, null, null, "Wall", "Wall", null, null, null, "Wall", "Wall", null, null, null, null},
             {null, null, null, null, null, "Wall", null, null, null, "Wall", null, null, null, null, null},
-            {null, null, null, null, null, "Wall", "Wall", null, "Wall",  "Wall", null, null, null, null, null},
-            {null, null, null, null, null, null,  "Wall", null,  "Wall", null, null, null, null, null, null},
+            {null, null, null, null, null, "Wall", "Wall", "Void", "Wall",  "Wall", null, null, null, null, null},
+            {null, null, null, null, null, null,  "Wall", "Void",  "Wall", null, null, null, null, null, null},
             {null, null, null, null, null, null,  "Wall",  "Wall",  "Wall", null, null, null, null, null, null},
             {null, null, null, null, null, null, null,  "Wall", null, null, null, null, null, null, null},
             

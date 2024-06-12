@@ -54,7 +54,9 @@ public class Wizard extends Enemy
                 // maybe red damage animation
             }
         }
-        
+        // if (health <= 0) {
+            // getWorld().removeObject(w);
+        // }
         super.act();
         
         actNum++;

@@ -43,7 +43,7 @@ public class Projectile extends SuperSmoothMover
         chargeTime = 0; // Initialize charge time
         
         hitbox = new SimpleHitbox(this, getImage().getWidth() / 2, getImage().getHeight() / 2, 0 ,0);
-        overlay = new Overlay(this, hitbox);
+        //overlay = new Overlay(this, hitbox);
     }
 
     public Projectile(int direction_X, int direction_Y) {
@@ -64,7 +64,7 @@ public class Projectile extends SuperSmoothMover
     }
     
     public void addedToWorld(World w) {
-        w.addObject(overlay, getX(), getY());
+        //w.addObject(overlay, getX(), getY());
         SimpleHitbox.allHitboxesInWorld.add(hitbox);
     }
     

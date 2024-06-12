@@ -8,8 +8,8 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class BuffWorld extends World
 {
-    GameWorld gameWorld;
-    Hero hero;
+    private GameWorld gameWorld;
+    private Hero hero;
     
     /**
      * Constructor for objects of class BuffWorld.

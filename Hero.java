@@ -577,6 +577,12 @@ public abstract class Hero extends SuperSmoothMover
                 getWorldOfType(GameWorld.class).nextMap(this);
             }
         }
+        Chest chest = (Chest)getOneIntersectingObject(Chest.class);
+        if (chest != null) {
+            if (Greenfoot.isKeyDown("e")) {
+                chest.interact(this);
+            }
+        }
     }
     
     public void resetXVelocity() {

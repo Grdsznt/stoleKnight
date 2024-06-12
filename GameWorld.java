@@ -295,6 +295,15 @@ public class GameWorld extends World
             removeObject(overlay);
             removeObject(enemy);
         }
+        
+        for (Actor actor : getObjects(Actor.class)) {
+            if (actor instanceof Projectile) {
+                removeObject(actor);
+            }
+            if (actor instanceof BallProjectile) {
+                removeObject(actor);
+            }
+        }
     }
     
     public void enemyDied(Enemy enemy) {

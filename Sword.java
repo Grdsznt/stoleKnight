@@ -14,6 +14,7 @@ public class Sword extends Weapon {
 
     protected GreenfootImage[] swordRightFrames = new GreenfootImage[6];
     protected GreenfootImage[] swordLeftFrames = new GreenfootImage[6];
+    protected GreenfootImage[] slashFrames = new GreenfootImage[4];
     private int frameNumber = 0;
     private boolean isSwinging;
     private int recoverCounter;
@@ -44,6 +45,11 @@ public class Sword extends Weapon {
             swordLeftFrames[i] = new GreenfootImage(IMAGE_PATH + i + ".png");
             swordLeftFrames[i].mirrorHorizontally();
             swordLeftFrames[i].scale(60, 60);
+        }
+        
+        for (int i = 0; i < slashFrames.length; i++) {
+            slashFrames[i] = new GreenfootImage("slasheffect/slash"+ i + ".png");
+            slashFrames[i].scale(60, 60);
         }
     }
 
