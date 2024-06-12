@@ -28,6 +28,7 @@ public class Wizard extends Enemy
     private GameWorld gw;
     public void act()
     {
+        
         if (h == null) { // in this case, pursuing is attacking
             // pathfind to this random position in radius
             if (actNum % 400 == 0) {
@@ -53,7 +54,11 @@ public class Wizard extends Enemy
                 // maybe red damage animation
             }
         }
+        
+        super.act();
+        
         actNum++;
+        
     }
     
     public Wizard(int centerX, int centerY) {
@@ -79,6 +84,7 @@ public class Wizard extends Enemy
     public void addedToWorld(World world) {
         world.addObject(w, getX()-4, getY()+17);
         world.addObject(overlay, getX(), getY());
+        super.addedToWorld(world);
     }
     
     private void animate() {

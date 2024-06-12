@@ -26,6 +26,25 @@ public class RoomExit extends Tile
         // Add your action code here.
     }
     
+    /**
+     * Sets the images of the object depending on if a battle is currently going on
+     *
+     * @param isInBattle If the state is in or not in the battle
+     */
+    public void setState(boolean isInBattle) {
+        if (!isInBattle) {
+            GreenfootImage image = new GreenfootImage("Tiles/notinbattle.png");
+            image.scale(48, 48);
+            
+            setImage(image);
+        } else {
+            GreenfootImage image = new GreenfootImage("Tiles/inbattle.png");
+            image.scale(48, 48);
+            
+            setImage(image);
+        }
+    }
+    
     public String activate() {
         GameWorld world = getWorldOfType(GameWorld.class);
         int[] pos = world.getRoomPosition();

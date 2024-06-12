@@ -28,6 +28,7 @@ public class Imp extends Enemy
      */
     public void act()
     {
+        
         if (!pursuing) {
             // pathfind to this random position in radius
             if (actNum % 400 == 0) {
@@ -101,8 +102,11 @@ public class Imp extends Enemy
                 }
             }
         }
+        
+        System.out.println(health);
         animate();
         actNum++;
+        super.act();
     }
     
     public Imp(int centerX, int centerY) {
@@ -123,6 +127,7 @@ public class Imp extends Enemy
     
     public void addedToWorld(World w) {
         w.addObject(overlay, getX(), getY());
+        super.addedToWorld(w);
     }
     
     private void animate() {
