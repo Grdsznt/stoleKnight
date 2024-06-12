@@ -56,6 +56,10 @@ public class Enemy extends SuperSmoothMover
         // Add your action code here.
     }
     
+    public Overlay getOverlay() {
+        return overlay;
+    }
+    
     protected Hero getHeroInRadius() {
         ArrayList<Hero> hero = (ArrayList<Hero>) getObjectsInRange((int)targetRadius, Hero.class);
         if (hero.size() != 0) {

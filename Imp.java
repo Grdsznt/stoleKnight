@@ -106,7 +106,7 @@ public class Imp extends Enemy
     }
     
     public Imp(int centerX, int centerY) {
-        super(20, 4, 1, 200, centerX, centerY);        
+        super(20, 3, 1, 200, centerX, centerY);        
         homeRadius = 60; 
         for (GreenfootImage img: idleFrames) {
             img.scale(40, 40);

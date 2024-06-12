@@ -72,6 +72,10 @@ public class Wizard extends Enemy
         overlay = new Overlay(this, hitbox);
     }
     
+    public Wand getWand() {
+        return w;
+    }
+    
     public void addedToWorld(World world) {
         world.addObject(w, getX()-4, getY()+17);
         world.addObject(overlay, getX(), getY());

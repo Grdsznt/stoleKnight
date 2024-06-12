@@ -55,10 +55,10 @@ public class GameWorld extends World
         // setPaintOrder(Wall.class, Chest.class, Weapon.class, Hero.class);
         
         // testing
-        //addObject(new Ogre(500, 500), 500, 500);
+        // addObject(new Ogre(500, 500), 500, 500);
         addObject(new Hero1(), 800, 600);
-        addObject(new Wizard(800, 200), 800, 200);
-        addObject(new Imp(400, 400), 400, 400);
+        // addObject(new Wizard(800, 200), 800, 200);
+        // addObject(new Imp(400, 400), 400, 400);
         
         mouseHold = false;
         setPaintOrder(Hero.class, Weapon.class, Projectile.class, BallProjectile.class, Overlay.class, SightlineOverlay.class, Enemy.class);
@@ -275,6 +275,12 @@ public class GameWorld extends World
         }
         // just in case
         for (Enemy enemy : roomGrid[row][col].getEnemies()) {
+            if (enemy instanceof Wizard) {
+                Wizard wizard = (Wizard) enemy;
+                removeObject(wizard.getWand());
+            }
+            Overlay overlay = enemy.getOverlay();
+            removeObject(overlay);
             removeObject(enemy);
         }
     }
