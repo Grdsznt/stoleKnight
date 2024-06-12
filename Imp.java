@@ -102,6 +102,8 @@ public class Imp extends Enemy
                 }
             }
         }
+        
+        System.out.println(health);
         animate();
         actNum++;
         super.act();
