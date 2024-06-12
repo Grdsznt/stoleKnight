@@ -3,12 +3,16 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 /**
  * This is the StartWorld where the user will see first.
  * 
+ * Cover image: https://www.vg247.com/soul-knight-codes
+ * Characters: https://wholesomedev.itch.io/kingfree
+ * 
  * @author Jean P
  * @version June 2024
  */
 public class StartWorld extends World
 {
     private GameWorld gWorld;
+    private GreenfootImage cover = new GreenfootImage("soul-knight-cover.jpg");
     
     //Two boxes
     private static SuperTextBox instructions = new SuperTextBox("Instructions", new Color(150,75,0), Color.WHITE, new Font(30), true, 400, 0, Color.WHITE);
@@ -21,6 +25,7 @@ public class StartWorld extends World
     {    
         // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
         super(1200, 720, 1); 
+        setBackground(cover);
         
         //Add instruction and start boxes
         addObject(instructions, 600, 300);
