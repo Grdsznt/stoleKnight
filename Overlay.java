@@ -12,9 +12,7 @@ public class Overlay extends Actor {
     }
 
     public void act() {
-        
         setLocation(target.getX(), target.getY());
-        drawHitbox();
     }
 
     private void drawHitbox() {

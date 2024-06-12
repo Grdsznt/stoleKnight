@@ -7,8 +7,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Deque;
 
-
-
 /**
  * Write a description of class Enemy here.
  * 
@@ -36,6 +34,10 @@ public class Enemy extends SuperSmoothMover
     protected int spawnY;
     
     protected boolean right;
+    protected SimpleHitbox hitbox;
+    protected Overlay overlay;
+    protected int actNum, frameNum;
+    protected int homeRadius;
     
     public Enemy(int health, int speed, int damage, double targetRadius, int centerX, int centerY) {
         this.health = health;
@@ -48,15 +50,21 @@ public class Enemy extends SuperSmoothMover
         spawnX = centerX;
         spawnY = centerY;
     }
-    
-    // public void addedToWorld(World w) {
-        // getWorld().addObject(sl, getX(), getY());
-    // }
-    
+     
     
     public void act()
     {
-        // Add your action code here.
+        if (health <= 0) {
+            getWorldOfType(GameWorld.class).enemyDied(this);
+            SimpleHitbox.allHitboxesInWorld.remove(hitbox);
+            getWorld().getObjects(Hero.class).get(0).getGold(1);
+            getWorld().removeObject(overlay);
+            getWorld().removeObject(this);
+        }
+    }
+    
+    public Overlay getOverlay() {
+        return overlay;
     }
     
     protected Hero getHeroInRadius() {
@@ -202,6 +210,15 @@ public class Enemy extends SuperSmoothMover
     public void setHealth(int health) {
         this.health = health;
     }
+    
+    public void takeDamage(int damage) {
+        health -= damage;
+        System.out.println(this);
+    }
+    
+    public SimpleHitbox getHitbox() {
+        return hitbox;
+    }
 
     /**
      * Sets the spawn position when you enter the room
@@ -219,6 +236,7 @@ public class Enemy extends SuperSmoothMover
      */
     public void addedToWorld(World w) {
         setLocation(spawnX, spawnY);
+        SimpleHitbox.allHitboxesInWorld.add(hitbox);
     }
 
     
@@ -415,8 +433,5 @@ public class Enemy extends SuperSmoothMover
             parent_i = i;
             parent_j = j;
         }
-    }
-
-    
-        
+    }     
 }

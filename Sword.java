@@ -9,30 +9,41 @@ import java.util.ArrayList;
  */
 public class Sword extends Weapon {
     private static final String IMAGE_PATH = "images/sword/sword";
-    private static final int DAMAGE = 1;
-    private static final int RECOVER_TIME = 30;
+    private static final int DAMAGE = 100;
+    private static final int RECOVER_TIME = 60;
 
     protected GreenfootImage[] swordRightFrames = new GreenfootImage[6];
     protected GreenfootImage[] swordLeftFrames = new GreenfootImage[6];
     private int frameNumber = 0;
     private boolean isSwinging;
-    private int recoverCounter = 0;
+    private int recoverCounter;
     private SimpleTimer animationTimer = new SimpleTimer();
+    private SimpleHitbox hitbox;
+    private Overlay overlay;
     
     public Sword() {
         super(DAMAGE);
         loadImages();
         isSwinging = false;
         setImage(swordRightFrames[0]);
+        recoverCounter = 0;
+        
+        hitbox = new SimpleHitbox(this, getImage().getWidth() / 2, getImage().getHeight() / 2, 0, 0);
+        overlay = new Overlay(this, hitbox);
+    }
+    
+    public void addedToWorld(World w) {
+        w.addObject(overlay, getX(), getY());
+        SimpleHitbox.allHitboxesInWorld.add(hitbox);
     }
 
     private void loadImages() {
         for (int i = 0; i < swordRightFrames.length; i++) {
             swordRightFrames[i] = new GreenfootImage(IMAGE_PATH + i + ".png");
-            swordRightFrames[i].scale(50, 50);
+            swordRightFrames[i].scale(60, 60);
             swordLeftFrames[i] = new GreenfootImage(IMAGE_PATH + i + ".png");
             swordLeftFrames[i].mirrorHorizontally();
-            swordLeftFrames[i].scale(50, 50);
+            swordLeftFrames[i].scale(60, 60);
         }
     }
 
@@ -48,26 +59,27 @@ public class Sword extends Weapon {
             boolean right = holder instanceof Hero ? ((Hero) holder).right : ((Enemy) holder).right;
             animateSword(right);
         }
+        
+        if(isSwinging) attack();
     }
 
     private void animateSword(boolean right) {
-        if (isAttacking && beingUsed && recoverCounter == 0) {
-            isSwinging = true;
-            swing(right ? swordRightFrames : swordLeftFrames);
-            attack();
-        } else if (beingUsed && !isSwinging && recoverCounter != 0) {
-            setImage(right ? swordRightFrames[0] : swordLeftFrames[0]);
+        if(getHolder() instanceof Hero) {
+            if (isAttacking && beingUsed && recoverCounter == 0) {
+                isSwinging = true;
+                swing(right ? swordRightFrames : swordLeftFrames);
+            } else if (beingUsed && !isSwinging && recoverCounter != 0) {
+                setImage(right ? swordRightFrames[0] : swordLeftFrames[0]);
+            }
         }
     }
 
     private void swing(GreenfootImage[] swingFrames) {
-        while(frameNumber < swingFrames.length) {
-            if(animationTimer.millisElapsed() > 500) {
-                setImage(swingFrames[frameNumber]);
-                frameNumber++;
-            } else {
-                animationTimer.mark();
-            }
+        if(animationTimer.millisElapsed() > 1200) {
+            setImage(swingFrames[frameNumber]);
+            frameNumber++;
+        } else {
+            animationTimer.mark();
         }
         if(frameNumber >= swingFrames.length) {
             frameNumber = 0;
@@ -77,15 +89,21 @@ public class Sword extends Weapon {
     }
 
     public void attack() {
-        Actor holder = getHolder();
-        if (holder instanceof Hero) {
-            ArrayList<Enemy> enemies = (ArrayList<Enemy>) getIntersectingObjects(Enemy.class);
-            for (Enemy enemy : enemies) {
-                enemy.health -= DAMAGE;
+        ArrayList<SimpleHitbox> hitboxes = SimpleHitbox.allHitboxesInWorld;
+        if(getHolder() instanceof Hero) {
+            for(SimpleHitbox hit : hitboxes) {
+                if(hit.getActor() instanceof Enemy && hitbox.isHitBoxesIntersecting(hit)) {
+                    Enemy e = (Enemy) hit.getActor();
+                    e.takeDamage(DAMAGE);
+                }
             }
-        } else if (holder instanceof Enemy) {
-            Hero hero = (Hero) getOneIntersectingObject(Hero.class);
-            hero.hp -= DAMAGE;
+        } else if(getHolder() instanceof Enemy) {
+            for(SimpleHitbox hit : hitboxes) {
+                if(hit.getActor() instanceof Enemy && hitbox.isHitBoxesIntersecting(hit)) {
+                    Hero h = (Hero) hit.getActor();
+                    h.takeDamage(DAMAGE);
+                }
+            }
         }
     }
 }

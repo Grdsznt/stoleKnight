@@ -59,17 +59,33 @@ public abstract class Hero extends SuperSmoothMover
     protected Image goldCoin;
     protected Image weaponLabelOne;
     protected Image weaponLabelTwo;
+    protected Image weaponOne;
+    protected Image weaponTwo;
     
     private GreenfootSound damageSound;
     private static GreenfootSound[] damageSounds;
     private static int damageSoundsIndex;
+    protected SimpleHitbox hitbox;
+    protected Overlay overlay;
 
     public Hero(int hp, int shieldValue, int speed, int initialEnergy, Weapon initialWeapon) {
         weaponsInInventory.add(initialWeapon);
+        
+        weaponOne = new Image(weaponsInInventory.get(0).getImage());
+        if (weaponOne.getImage().getWidth() > weaponOne.getImage().getWidth()) {
+            double multiplier = 60.0 / weaponOne.getImage().getWidth();
+            weaponOne.getImage().scale((int)(multiplier * weaponOne.getImage().getWidth()), (int)(multiplier * weaponOne.getImage().getHeight()));
+        } else {
+            double multiplier = 60.0 / weaponOne.getImage().getHeight();
+            weaponOne.getImage().scale((int)(multiplier * weaponOne.getImage().getWidth()), (int)(multiplier * weaponOne.getImage().getHeight()));
+        }
+        weaponTwo = null;
+        
         currentWeapon = initialWeapon;
         currentWeapon.beingUsed = true;
         this.hp = hp;
         this.shield = shieldValue;
+        maxShield = shieldValue;
         this.speed = speed;
         this.energy = initialEnergy;
 
@@ -92,6 +108,8 @@ public abstract class Hero extends SuperSmoothMover
         hitboxList = new ArrayList<Class<?>>();
         hitboxList.add(Wall.class);
         hitboxList.add(Chest.class);
+        
+        damageSoundPlayer();
     }
     
     public void addedToWorld(World world) {
@@ -104,6 +122,7 @@ public abstract class Hero extends SuperSmoothMover
         // world.addObject(weaponLabelTwo, 144, 210);
         world.addObject(weaponLabelOne, 56, 230);
         world.addObject(weaponLabelTwo, 152, 230);
+        world.addObject(weaponOne, 56, 230);
     }
     
     public void act() {
@@ -128,7 +147,7 @@ public abstract class Hero extends SuperSmoothMover
         updateWeaponPosition();
         
         tileInteraction();
-
+        
         if (weaponActionCooldown > 0) {
             weaponActionCooldown--;
         }
@@ -384,12 +403,13 @@ public abstract class Hero extends SuperSmoothMover
                 shield -= damage;
                 shield = Math.max(shield, 0);
                 shieldBar.update(shield);
-                playDamageSound();
+                
             } else {
                 hp -= damage;
                 hpBar.update(hp);
-                playDamageSound();
+                
             }
+            //playDamageSound();
             lastHitCounter = 0;
             isInvincible = true;
             invincibleStart = System.currentTimeMillis();
@@ -397,9 +417,16 @@ public abstract class Hero extends SuperSmoothMover
         
         if(hp <= 0){
             //game over
+            Greenfoot.setWorld(new StartWorld());
             getWorld().removeObject(this);
+            return;
         }
         
+    }
+    
+    public void getGold(int amount) {
+        gold += amount;
+        goldLabel.setValue(gold);
     }
     
     public void renderHero() {
@@ -502,15 +529,44 @@ public abstract class Hero extends SuperSmoothMover
 
     private void handleWeaponPickup(Weapon weaponOnGround) {
         if (weaponActionCooldown == 0) {
+            boolean pickedUp = false;
             if (weaponsInInventory.size() < 2 && Greenfoot.isKeyDown("e")) {
                 System.out.println("Weapon picked up");
                 weaponsInInventory.add(weaponOnGround);
                 weaponActionCooldown = 20; // Adding cooldown to avoid multiple detections
+                pickedUp = true;
             } else if (weaponsInInventory.size() >= 2 && Greenfoot.isKeyDown("e")) {
                 System.out.println("Weapon switched");
                 pickUpAndSwitchCurrentWeapon(weaponOnGround);
                 weaponActionCooldown = 20; // Adding cooldown to avoid multiple detections
+                pickedUp = true;
             }
+            if (!pickedUp) {
+                return;
+            }
+            getWorld().removeObject(weaponOne);
+            getWorld().removeObject(weaponTwo);
+            weaponOne = new Image(weaponsInInventory.get(0).getImage());
+            if (weaponOne.getImage().getWidth() > weaponOne.getImage().getWidth()) {
+                double multiplier = 60.0 / weaponOne.getImage().getWidth();
+                weaponOne.getImage().scale((int)(multiplier * weaponOne.getImage().getWidth()), (int)(multiplier * weaponOne.getImage().getHeight()));
+            } else {
+                double multiplier = 60.0 / weaponOne.getImage().getHeight();
+                weaponOne.getImage().scale((int)(multiplier * weaponOne.getImage().getWidth()), (int)(multiplier * weaponOne.getImage().getHeight()));
+            }
+            if (weaponsInInventory.size() < 2) {
+                return;
+            }
+            weaponTwo = new Image(weaponsInInventory.get(1).getImage());
+            if (weaponTwo.getImage().getWidth() > weaponTwo.getImage().getWidth()) {
+                double multiplier = 60.0 / weaponTwo.getImage().getWidth();
+                weaponTwo.getImage().scale((int)(multiplier * weaponTwo.getImage().getWidth()), (int)(multiplier * weaponTwo.getImage().getHeight()));
+            } else {
+                double multiplier = 60.0 / weaponTwo.getImage().getHeight();
+                weaponTwo.getImage().scale((int)(multiplier * weaponTwo.getImage().getWidth()), (int)(multiplier * weaponTwo.getImage().getHeight()));
+            }
+            getWorld().addObject(weaponOne, weaponLabelOne.getX(), weaponLabelOne.getY());
+            getWorld().addObject(weaponTwo, weaponLabelTwo.getX(), weaponLabelTwo.getY());
         }
     }
     
@@ -532,6 +588,7 @@ public abstract class Hero extends SuperSmoothMover
         yMoveVel = 0;
         yAddedVel = 0;
     }
+    
     public void playDamageSound(){
         damageSounds[damageSoundsIndex].setVolume(80);
         damageSounds[damageSoundsIndex].play();
@@ -544,8 +601,28 @@ public abstract class Hero extends SuperSmoothMover
         damageSoundsIndex = 0;
         damageSounds = new GreenfootSound[20]; 
         for (int i = 0; i < damageSounds.length; i++){
-            damageSounds[i] = new GreenfootSound("damageSound.mp3");
+            damageSounds[i] = new GreenfootSound("");
         }   
 
+    }
+    
+    
+    /**
+     * Adds to the hitboxList
+     *
+     * @param cls The class to add (Has to be a sublcass of Actor)
+     */
+    public void addHitboxList(Class<?> cls) {
+        if (!(Actor.class).isAssignableFrom(cls)) return;
+        hitboxList.add(cls);
+    }
+    
+    /**
+     * Remove from hitbox list
+     *
+     * @param cls The class to remove
+     */
+    public void removeHitboxList(Class<?> cls) {
+        hitboxList.remove(cls);
     }
 }

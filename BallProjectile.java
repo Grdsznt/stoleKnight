@@ -3,10 +3,10 @@ import java.util.ArrayList;
 /**
  * Write a description of class BallProjectile here.
  * 
- * @author (your name) 
+ * @author Edwin Dong, Andy Feng
  * @version (a version number or a date)
  */
-public class BallProjectile extends Actor
+public class BallProjectile extends SuperSmoothMover
 {
     // instance variables - replace the example below with your own
     private GreenfootImage img = new GreenfootImage("glow_ball.png");
@@ -15,7 +15,8 @@ public class BallProjectile extends Actor
     private int rotation;
     private SimpleHitbox hitbox;
     private Overlay overlay;
-
+    private boolean attackOnce;
+    
     /**
      * Constructor for objects of class BallProjectile
      */
@@ -34,6 +35,7 @@ public class BallProjectile extends Actor
     
     public void addedToWorld(World world) {
         world.addObject(overlay, getX(), getY());
+        SimpleHitbox.allHitboxesInWorld.add(hitbox);
     }
     
     public void act() {

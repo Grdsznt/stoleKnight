@@ -55,6 +55,12 @@ public class Map extends Actor
             usedImages.add(newImage);
             getWorld().addObject(newImage, 24+24*col+getX()-getImage().getWidth()/2, 24+24*row+getY()-getImage().getHeight()/2);
         }
+        
+        if ((type & 128) != 0) {
+            Image newImage = new Image("icons/eventroom.png");
+            usedImages.add(newImage);
+            getWorld().addObject(newImage, 24+24*col+getX()-getImage().getWidth()/2, 24+24*row+getY()-getImage().getHeight()/2);
+        }
     }
     
     /**

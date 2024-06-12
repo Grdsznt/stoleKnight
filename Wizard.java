@@ -23,15 +23,12 @@ public class Wizard extends Enemy
     };
     
     private GreenfootImage hitImage = new GreenfootImage("Wizard/wizzard_m_hit_anim_f0.png");
-    private int actNum, frameNum;
-    private int homeRadius;
     private Wand w;
     private Pair target;
-    private SimpleHitbox hitbox;
-    private Overlay overlay;
     private GameWorld gw;
     public void act()
     {
+        
         if (h == null) { // in this case, pursuing is attacking
             // pathfind to this random position in radius
             if (actNum % 400 == 0) {
@@ -57,11 +54,15 @@ public class Wizard extends Enemy
                 // maybe red damage animation
             }
         }
+        
+        super.act();
+        
         actNum++;
+        
     }
     
     public Wizard(int centerX, int centerY) {
-        super(300, 4, 5, 200, centerX, centerY);
+        super(30, 4, 5, 200, centerX, centerY);
         setImage(idleFrames[0]);
         for (GreenfootImage img: idleFrames) {
             img.scale(36, 63);
@@ -76,9 +77,14 @@ public class Wizard extends Enemy
         overlay = new Overlay(this, hitbox);
     }
     
+    public Wand getWand() {
+        return w;
+    }
+    
     public void addedToWorld(World world) {
         world.addObject(w, getX()-4, getY()+17);
         world.addObject(overlay, getX(), getY());
+        super.addedToWorld(world);
     }
     
     private void animate() {
