@@ -59,6 +59,8 @@ public abstract class Hero extends SuperSmoothMover
     protected Image goldCoin;
     protected Image weaponLabelOne;
     protected Image weaponLabelTwo;
+    protected Image weaponOne;
+    protected Image weaponTwo;
     
     private GreenfootSound damageSound;
     private static GreenfootSound[] damageSounds;
@@ -68,6 +70,17 @@ public abstract class Hero extends SuperSmoothMover
 
     public Hero(int hp, int shieldValue, int speed, int initialEnergy, Weapon initialWeapon) {
         weaponsInInventory.add(initialWeapon);
+        
+        weaponOne = new Image(weaponsInInventory.get(0).getImage());
+        if (weaponOne.getImage().getWidth() > weaponOne.getImage().getWidth()) {
+            double multiplier = 60.0 / weaponOne.getImage().getWidth();
+            weaponOne.getImage().scale((int)(multiplier * weaponOne.getImage().getWidth()), (int)(multiplier * weaponOne.getImage().getHeight()));
+        } else {
+            double multiplier = 60.0 / weaponOne.getImage().getHeight();
+            weaponOne.getImage().scale((int)(multiplier * weaponOne.getImage().getWidth()), (int)(multiplier * weaponOne.getImage().getHeight()));
+        }
+        weaponTwo = null;
+        
         currentWeapon = initialWeapon;
         currentWeapon.beingUsed = true;
         this.hp = hp;
@@ -107,6 +120,7 @@ public abstract class Hero extends SuperSmoothMover
         // world.addObject(weaponLabelTwo, 144, 210);
         world.addObject(weaponLabelOne, 56, 230);
         world.addObject(weaponLabelTwo, 152, 230);
+        world.addObject(weaponOne, 56, 230);
     }
     
     public void act() {
@@ -401,6 +415,7 @@ public abstract class Hero extends SuperSmoothMover
         
         if(hp <= 0){
             //game over
+            Greenfoot.setWorld(new StartWorld());
             getWorld().removeObject(this);
             return;
         }
@@ -507,15 +522,44 @@ public abstract class Hero extends SuperSmoothMover
 
     private void handleWeaponPickup(Weapon weaponOnGround) {
         if (weaponActionCooldown == 0) {
+            boolean pickedUp = false;
             if (weaponsInInventory.size() < 2 && Greenfoot.isKeyDown("e")) {
                 System.out.println("Weapon picked up");
                 weaponsInInventory.add(weaponOnGround);
                 weaponActionCooldown = 20; // Adding cooldown to avoid multiple detections
+                pickedUp = true;
             } else if (weaponsInInventory.size() >= 2 && Greenfoot.isKeyDown("e")) {
                 System.out.println("Weapon switched");
                 pickUpAndSwitchCurrentWeapon(weaponOnGround);
                 weaponActionCooldown = 20; // Adding cooldown to avoid multiple detections
+                pickedUp = true;
             }
+            if (!pickedUp) {
+                return;
+            }
+            getWorld().removeObject(weaponOne);
+            getWorld().removeObject(weaponTwo);
+            weaponOne = new Image(weaponsInInventory.get(0).getImage());
+            if (weaponOne.getImage().getWidth() > weaponOne.getImage().getWidth()) {
+                double multiplier = 60.0 / weaponOne.getImage().getWidth();
+                weaponOne.getImage().scale((int)(multiplier * weaponOne.getImage().getWidth()), (int)(multiplier * weaponOne.getImage().getHeight()));
+            } else {
+                double multiplier = 60.0 / weaponOne.getImage().getHeight();
+                weaponOne.getImage().scale((int)(multiplier * weaponOne.getImage().getWidth()), (int)(multiplier * weaponOne.getImage().getHeight()));
+            }
+            if (weaponsInInventory.size() < 2) {
+                return;
+            }
+            weaponTwo = new Image(weaponsInInventory.get(1).getImage());
+            if (weaponTwo.getImage().getWidth() > weaponTwo.getImage().getWidth()) {
+                double multiplier = 60.0 / weaponTwo.getImage().getWidth();
+                weaponTwo.getImage().scale((int)(multiplier * weaponTwo.getImage().getWidth()), (int)(multiplier * weaponTwo.getImage().getHeight()));
+            } else {
+                double multiplier = 60.0 / weaponTwo.getImage().getHeight();
+                weaponTwo.getImage().scale((int)(multiplier * weaponTwo.getImage().getWidth()), (int)(multiplier * weaponTwo.getImage().getHeight()));
+            }
+            getWorld().addObject(weaponOne, weaponLabelOne.getX(), weaponLabelOne.getY());
+            getWorld().addObject(weaponTwo, weaponLabelTwo.getX(), weaponLabelTwo.getY());
         }
     }
     

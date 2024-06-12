@@ -36,12 +36,14 @@ public class Ogre extends Enemy
     }
     
     public void addedToWorld(World w) {
-        w.addObject(overlay, getX(), getY());
-        SimpleHitbox.allHitboxesInWorld.add(hitbox);
+        super.addedToWorld(w);
+        //w.addObject(overlay, getX(), getY());
+        
     }
     
     public void act()
     { 
+        
         if (!pursuing) {
             // pathfind to this random position in radius
             if (actNum % 400 == 0) {
@@ -118,14 +120,8 @@ public class Ogre extends Enemy
         }
         
         animate();
-        
-        if(health <= 0) {
-            SimpleHitbox.allHitboxesInWorld.remove(hitbox);
-            getWorld().removeObject(overlay);
-            getWorld().removeObject(this);
-            return;
-        }
         actNum++;
+        super.act();
     }
         
     private void animate() {

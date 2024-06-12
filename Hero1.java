@@ -12,7 +12,7 @@ public class Hero1 extends Hero
 {
     private static int Hp = 50; //To test
     private static int shield = 10; //To test
-    private static int speed = 5; //To test
+    private static int speed = 3; //To test
     protected static int energy = 200; //To test
     protected static GreenfootImage[] idleFramesRight = new GreenfootImage[11];
     protected static GreenfootImage[] idleFramesLeft = new GreenfootImage[11];

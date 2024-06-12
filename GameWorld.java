@@ -233,7 +233,9 @@ public class GameWorld extends World
         if (enemyList.size() != 0) {
             for (Hero hero: getObjects(Hero.class)) {
                 hero.addHitboxList(RoomExit.class);
+                
             }
+            canChangeRooms = false;
         }
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 21; j++) {
@@ -286,6 +288,19 @@ public class GameWorld extends World
         // just in case
         for (Enemy enemy : roomGrid[row][col].getEnemies()) {
             removeObject(enemy);
+        }
+    }
+    
+    public void enemyDied(Enemy enemy) {
+        roomGrid[currentRoomRow][currentRoomCol].getEnemies().remove(enemy);
+        if (roomGrid[currentRoomRow][currentRoomCol].getEnemies().size() == 0) {
+            canChangeRooms = true;
+            for (Hero hero: getObjects(Hero.class)) {
+                hero.removeHitboxList(RoomExit.class);
+            }
+            for (RoomExit tile : getObjects(RoomExit.class)) {
+                tile.setState(false);
+            }
         }
     }
 
