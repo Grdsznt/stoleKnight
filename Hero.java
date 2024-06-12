@@ -422,6 +422,11 @@ public abstract class Hero extends SuperSmoothMover
         
     }
     
+    public void getGold(int amount) {
+        gold += amount;
+        goldLabel.setValue(gold);
+    }
+    
     public void renderHero() {
         if (isInvincible) {
             getImage().setTransparency(128); // 50% transparency
