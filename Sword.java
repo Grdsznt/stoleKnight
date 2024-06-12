@@ -28,7 +28,7 @@ public class Sword extends Weapon {
         setImage(swordRightFrames[0]);
         recoverCounter = 0;
         
-        hitbox = new SimpleHitbox(this, getImage().getWidth() / 2, getImage().getHeight() / 2, 0, 0);
+        hitbox = new SimpleHitbox(this, getImage().getWidth() / 2-4, getImage().getHeight() / 2, 0, 0);
         overlay = new Overlay(this, hitbox);
     }
     

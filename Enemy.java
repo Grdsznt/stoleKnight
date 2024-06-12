@@ -19,7 +19,7 @@ public class Enemy extends SuperSmoothMover
      * Act - do whatever the Enemy wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.
      */
-    protected boolean pursuing, isMoving;
+    protected boolean pursuing, isMoving, tookDamage;
     protected int health, speed, damage;
     protected double targetRadius;
     protected int centerX, centerY;
@@ -214,6 +214,7 @@ public class Enemy extends SuperSmoothMover
     public void takeDamage(int damage) {
         health -= damage;
         System.out.println(this);
+        tookDamage = true;
     }
     
     public SimpleHitbox getHitbox() {
