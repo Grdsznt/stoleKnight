@@ -94,14 +94,14 @@ public class Sword extends Weapon {
             for(SimpleHitbox hit : hitboxes) {
                 if(hit.getActor() instanceof Enemy && hitbox.isHitBoxesIntersecting(hit)) {
                     Enemy e = (Enemy) hit.getActor();
-                    e.health -= DAMAGE;
+                    e.takeDamage(DAMAGE);
                 }
             }
         } else if(getHolder() instanceof Enemy) {
             for(SimpleHitbox hit : hitboxes) {
                 if(hit.getActor() instanceof Enemy && hitbox.isHitBoxesIntersecting(hit)) {
                     Hero h = (Hero) hit.getActor();
-                    h.hp -= DAMAGE;
+                    h.takeDamage(DAMAGE);
                 }
             }
         }

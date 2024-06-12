@@ -61,6 +61,8 @@ public class RoomData
             roomGrid[7][10] = new Portal(this, 7, 10);
         } else if ((roomType & 64) != 0) {
             roomGrid[7][10] = new Chest(this, 7, 10);
+        } else if ((roomType & 128) != 0) {
+            
         }
         String[][] innerTiles = getRandomRoom(roomType);
         // (r, c) pairs
@@ -138,7 +140,10 @@ public class RoomData
             int numberOfEnemies = 5;
             for (int i = 0; i < numberOfEnemies; i++) {
                 int[] location = possibleLocations.get(Greenfoot.getRandomNumber(possibleLocations.size()));
-                enemyList.add(new Ogre(location[1], location[0]));
+                int random = Greenfoot.getRandomNumber(3);
+                if (random == 0) enemyList.add(new Ogre(location[1], location[0]));
+                else if (random == 1) enemyList.add(new Imp(location[1], location[0]));
+                else enemyList.add(new Wizard(location[1], location[0]));
             }
         }
         

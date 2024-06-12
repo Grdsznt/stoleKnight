@@ -38,6 +38,18 @@ public class Label extends Actor
         this.fontSize = fontSize;
         updateImage();
     }
+    
+    /**
+     * Create a new label, initialise it with the needed text, the font size, the text color and background color.
+     */
+    public Label(String value, int fontSize, Color textColor, Color bgdColor)
+    {
+        this.value = value;
+        this.fontSize = fontSize;
+        this.lineColor = textColor;
+        this.fillColor = bgdColor;
+        updateImage();
+    }
 
     /**
      * Sets the value  as text
@@ -58,6 +70,17 @@ public class Label extends Actor
     public void setValue(int value)
     {
         this.value = Integer.toString(value);
+        updateImage();
+    }
+    
+    /**
+     * Sets the font size
+     * 
+     * @param size the font size to show
+     */
+    public void setFontSize(int size)
+    {
+        this.fontSize = size;
         updateImage();
     }
     
@@ -90,5 +113,13 @@ public class Label extends Actor
     private void updateImage()
     {
         setImage(new GreenfootImage(value, fontSize, fillColor, transparent, lineColor));
+    }
+    
+    /**
+     * Update the image on screen to show the current value.
+     */
+    public void updateImage(String text, int fontSize, Color textColor, Color bgdColor)
+    {
+        setImage(new GreenfootImage(text, fontSize, textColor, transparent, bgdColor));
     }
 }

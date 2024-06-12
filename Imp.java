@@ -28,6 +28,7 @@ public class Imp extends Enemy
      */
     public void act()
     {
+        
         if (!pursuing) {
             // pathfind to this random position in radius
             if (actNum % 400 == 0) {
@@ -105,10 +106,11 @@ public class Imp extends Enemy
         System.out.println(health);
         animate();
         actNum++;
+        super.act();
     }
     
     public Imp(int centerX, int centerY) {
-        super(20, 4, 1, 200, centerX, centerY);        
+        super(20, 3, 1, 200, centerX, centerY);        
         homeRadius = 60; 
         for (GreenfootImage img: idleFrames) {
             img.scale(40, 40);
@@ -125,7 +127,7 @@ public class Imp extends Enemy
     
     public void addedToWorld(World w) {
         w.addObject(overlay, getX(), getY());
-        SimpleHitbox.allHitboxesInWorld.add(hitbox);
+        super.addedToWorld(w);
     }
     
     private void animate() {

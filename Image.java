@@ -18,6 +18,15 @@ public class Image extends Actor
     }
     
     /**
+     * Creates an image using a file name 
+     *
+     * @param fileName The file path / file name
+     */
+    public Image(GreenfootImage image) {
+        setImage(image);
+    }
+    
+    /**
      * Creates empty image with a width and a height
      *
      * @param width A parameter

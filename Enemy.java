@@ -54,7 +54,17 @@ public class Enemy extends SuperSmoothMover
     
     public void act()
     {
-        // Add your action code here.
+        if (health <= 0) {
+            getWorldOfType(GameWorld.class).enemyDied(this);
+            SimpleHitbox.allHitboxesInWorld.remove(hitbox);
+            getWorld().getObjects(Hero.class).get(0).getGold(1);
+            getWorld().removeObject(overlay);
+            getWorld().removeObject(this);
+        }
+    }
+    
+    public Overlay getOverlay() {
+        return overlay;
     }
     
     protected Hero getHeroInRadius() {
@@ -201,6 +211,11 @@ public class Enemy extends SuperSmoothMover
         this.health = health;
     }
     
+    public void takeDamage(int damage) {
+        health -= damage;
+        System.out.println(this);
+    }
+    
     public SimpleHitbox getHitbox() {
         return hitbox;
     }
@@ -221,6 +236,7 @@ public class Enemy extends SuperSmoothMover
      */
     public void addedToWorld(World w) {
         setLocation(spawnX, spawnY);
+        SimpleHitbox.allHitboxesInWorld.add(hitbox);
     }
 
     
