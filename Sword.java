@@ -33,7 +33,7 @@ public class Sword extends Weapon {
     }
     
     public void addedToWorld(World w) {
-        w.addObject(overlay, getX(), getY());
+        //w.addObject(overlay, getX(), getY());
         SimpleHitbox.allHitboxesInWorld.add(hitbox);
     }
 

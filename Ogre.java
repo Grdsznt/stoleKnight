@@ -36,7 +36,7 @@ public class Ogre extends Enemy
     }
     
     public void addedToWorld(World w) {
-        w.addObject(overlay, getX(), getY());
+        //w.addObject(overlay, getX(), getY());
         SimpleHitbox.allHitboxesInWorld.add(hitbox);
     }
     
