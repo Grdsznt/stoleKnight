@@ -20,7 +20,7 @@ public class Ogre extends Enemy
     private GameWorld gw;
     private Pair target;
     public Ogre(int centerX, int centerY) {
-        super(50, 2, 3, 300, centerX, centerY);        
+        super(50, 2, 2, 300, centerX, centerY);        
         homeRadius = 60; 
         for (GreenfootImage img: idleFrames) {
             img.scale(64, 64);
@@ -32,10 +32,11 @@ public class Ogre extends Enemy
         actNum = 0;
         frameNum = 0;
         hitbox = new SimpleHitbox(this, getImage().getWidth()/2-11, getImage().getHeight()/2-9, 7, 0);
-        //overlay = new Overlay(this, hitbox);
+        overlay = new Overlay(this, hitbox);
     }
     
     public void addedToWorld(World w) {
+        w.addObject(overlay, getX(), getY());
         super.addedToWorld(w);
         //w.addObject(overlay, getX(), getY());
         

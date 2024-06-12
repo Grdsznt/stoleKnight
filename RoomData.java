@@ -140,7 +140,10 @@ public class RoomData
             int numberOfEnemies = 5;
             for (int i = 0; i < numberOfEnemies; i++) {
                 int[] location = possibleLocations.get(Greenfoot.getRandomNumber(possibleLocations.size()));
-                enemyList.add(new Ogre(location[1], location[0]));
+                int random = Greenfoot.getRandomNumber(3);
+                if (random == 0) enemyList.add(new Ogre(location[1], location[0]));
+                else if (random == 1) enemyList.add(new Imp(location[1], location[0]));
+                else enemyList.add(new Wizard(location[1], location[0]));
             }
         }
         

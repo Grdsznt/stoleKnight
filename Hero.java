@@ -108,6 +108,8 @@ public abstract class Hero extends SuperSmoothMover
         hitboxList = new ArrayList<Class<?>>();
         hitboxList.add(Wall.class);
         hitboxList.add(Chest.class);
+        
+        damageSoundPlayer();
     }
     
     public void addedToWorld(World world) {
@@ -599,7 +601,7 @@ public abstract class Hero extends SuperSmoothMover
         damageSoundsIndex = 0;
         damageSounds = new GreenfootSound[20]; 
         for (int i = 0; i < damageSounds.length; i++){
-            damageSounds[i] = new GreenfootSound("damageSound.mp3");
+            damageSounds[i] = new GreenfootSound("");
         }   
 
     }
