@@ -37,6 +37,7 @@ public abstract class Hero extends SuperSmoothMover
     protected int invincibleDuration;
     protected boolean isTransparent;
     protected int lastHitCounter = 0;
+    protected int timeForShieldToHeal;
     
     protected boolean canMove = true;
     protected double xMoveVel = 0;
@@ -53,7 +54,9 @@ public abstract class Hero extends SuperSmoothMover
     protected int weaponActionCooldown = 0;
     
     protected SuperStatBar hpBar;
+    protected Label hpNumber;
     protected SuperStatBar shieldBar;
+    protected Label shieldNumber;
     protected SuperStatBar energyBar;
     protected Label goldLabel;
     protected Image goldCoin;
@@ -84,6 +87,7 @@ public abstract class Hero extends SuperSmoothMover
         currentWeapon = initialWeapon;
         currentWeapon.beingUsed = true;
         this.hp = hp;
+        maxHP = hp;
         this.shield = shieldValue;
         maxShield = shieldValue;
         this.speed = speed;
@@ -94,10 +98,12 @@ public abstract class Hero extends SuperSmoothMover
         mouseHold = false;
         isInvincible = false;
         invincibleDuration = 1000;
-        radius = getImage().getHeight()/2;
-        radius = 24;
+        
+        radius = 16;
         hpBar = new SuperStatBar(hp, hp, null, 105, 18, 0, Color.RED, Color.BLACK);
+        hpNumber = new Label(hp + "/" + hp, 24);
         shieldBar = new SuperStatBar(shield, shield, null, 105, 18, 0, Color.GRAY, Color.BLACK);
+        shieldNumber = new Label(shield + "/" + shield, 24);
         gold = 10;
         goldLabel = new Label("10", 32);
         goldCoin = new Image("coins/coin0.png");
@@ -115,7 +121,9 @@ public abstract class Hero extends SuperSmoothMover
     public void addedToWorld(World world) {
         world.addObject(currentWeapon, getX(), getY());
         world.addObject(hpBar, 118, 38);
+        world.addObject(hpNumber, 118, 38);
         world.addObject(shieldBar, 118, 69);
+        world.addObject(shieldNumber, 118, 69);
         world.addObject(goldLabel, 88, 160);
         world.addObject(goldCoin, 36, 160);
         // world.addObject(weaponLabelOne, 64, 210);
@@ -137,6 +145,7 @@ public abstract class Hero extends SuperSmoothMover
             if (lastHitCounter % 60 == 0) {
                 shield++;
                 shieldBar.update(shield);
+                shieldNumber.setValue(shield + "/" + maxShield);
             }
         }
         lastHitCounter++;
@@ -379,7 +388,7 @@ public abstract class Hero extends SuperSmoothMover
             
         }
         
-        ArrayList<RoomExit> exits = (ArrayList<RoomExit>)getObjectsInRange(radius, RoomExit.class);
+        ArrayList<RoomExit> exits = (ArrayList<RoomExit>)getIntersectingObjects(RoomExit.class);
         if (exits.size() > 0) {
             String direction = exits.get(0).activate();
             if (direction != null) {
@@ -403,11 +412,11 @@ public abstract class Hero extends SuperSmoothMover
                 shield -= damage;
                 shield = Math.max(shield, 0);
                 shieldBar.update(shield);
-                
+                shieldNumber.setValue(shield + "/" + maxShield);
             } else {
                 hp -= damage;
                 hpBar.update(hp);
-                
+                hpNumber.setValue(hp + "/" + maxHP);
             }
             //playDamageSound();
             lastHitCounter = 0;
@@ -575,6 +584,12 @@ public abstract class Hero extends SuperSmoothMover
         if (portal != null) {
             if (Greenfoot.isKeyDown("e")) {
                 getWorldOfType(GameWorld.class).nextMap(this);
+            }
+        }
+        Chest chest = (Chest)getOneIntersectingObject(Chest.class);
+        if (chest != null) {
+            if (Greenfoot.isKeyDown("e")) {
+                chest.interact(this);
             }
         }
     }

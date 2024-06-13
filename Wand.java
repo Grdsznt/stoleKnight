@@ -61,8 +61,9 @@ public class Wand extends Weapon
     
     private void animate(){
         if(isAttacking)  {
-            if(getHolder() instanceof Hero) setRotation(((Hero)getHolder()).right ? 20 : -20); 
-            else setRotation(20);
+            if(getHolder() instanceof Hero && beingUsed) {
+                setRotation(((Hero)getHolder()).right ? 20 : -20); 
+            } else setRotation(20);
         } else {
             setRotation(0);
         }

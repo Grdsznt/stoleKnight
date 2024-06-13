@@ -31,11 +31,11 @@ public class BallProjectile extends SuperSmoothMover
         setImage(img);
         setRotation(rotation);
         hitbox = new SimpleHitbox(this, getImage().getWidth()/2-2, getImage().getHeight()/2-2, 0, 0);
-        overlay = new Overlay(this, hitbox);
+        //overlay = new Overlay(this, hitbox);
     }
     
     public void addedToWorld(World world) {
-        world.addObject(overlay, getX(), getY());
+        //world.addObject(overlay, getX(), getY());
         SimpleHitbox.allHitboxesInWorld.add(hitbox);
     }
     

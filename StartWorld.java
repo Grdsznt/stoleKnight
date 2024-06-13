@@ -14,9 +14,12 @@ public class StartWorld extends World
     private GameWorld gWorld;
     private GreenfootImage cover = new GreenfootImage("soul-knight-cover.jpg");
     
+    //Game title
+    private SuperTextBox title = new SuperTextBox("Stole Knight", new Color(150,75,0,0), Color.BLACK, new Font(70), true, 400, 0, Color.WHITE);
+    
     //Two boxes
-    private static SuperTextBox instructions = new SuperTextBox("Instructions", new Color(150,75,0), Color.WHITE, new Font(30), true, 400, 0, Color.WHITE);
-    private static SuperTextBox start = new SuperTextBox("Start", new Color(150,75,0), Color.WHITE, new Font(30), true, 400, 0, Color.WHITE);
+    private SuperTextBox instructions = new SuperTextBox("Instructions", new Color(150,75,0), Color.WHITE, new Font(30), true, 400, 0, Color.WHITE);
+    private SuperTextBox start = new SuperTextBox("Start", new Color(150,75,0), Color.WHITE, new Font(30), true, 400, 0, Color.WHITE);
     
     /**
      * Constructor for objects of class StartWorld.
@@ -27,24 +30,27 @@ public class StartWorld extends World
         super(1200, 720, 1); 
         setBackground(cover);
         
+        //Add title
+        addObject(title, 600, 250);
+        
         //Add instruction and start boxes
-        addObject(instructions, 600, 300);
-        addObject(start, 600, 400);
+        addObject(instructions, 600, 400);
+        addObject(start, 600, 500);
     }
     
     public void act(){
         //Animate the options while hovering on them
         if(Greenfoot.mouseMoved(instructions)) {
-            instructions.updateFont(new Font(40));
+            instructions.updateFont(new Font(40), 450);
         } else if(Greenfoot.mouseMoved(start)) {
-            start.updateFont(new Font(40));
+            start.updateFont(new Font(40), 450);
         }
         
         //Return to normal if not hovering on them
         if(Greenfoot.mouseMoved(this)) {
-            instructions.updateFont(new Font(30));
-            start.updateFont(new Font(30));
-        } 
+            instructions.updateFont(new Font(30), 400);
+            start.updateFont(new Font(30), 400);
+        }
         
         //Go to each world if pressed
         /*if(Greenfoot.mousePressed(instructions))
