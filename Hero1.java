@@ -10,19 +10,19 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class Hero1 extends Hero
 {
-    private static int Hp = 50; //To test
+    private static int Hp = 10; //To test
     private static int shield = 10; //To test
-    private static int speed = 3; //To test
+    private static int speed = 5; //To test
     protected static int energy = 200; //To test
-    protected static GreenfootImage[] idleFramesRight = new GreenfootImage[11];
-    protected static GreenfootImage[] idleFramesLeft = new GreenfootImage[11];
+    protected static GreenfootImage[] idleFramesRight = new GreenfootImage[4];
+    protected static GreenfootImage[] idleFramesLeft = new GreenfootImage[4];
     private SimpleTimer animationTimer = new SimpleTimer();
     
     public Hero1() {
         super(Hp, shield, speed, energy, new Sword());
         loadIdleFrames();
         setImage(idleFramesRight[0]);
-        hitbox = new SimpleHitbox(this, getImage().getWidth()/2-25, getImage().getHeight()/2-15, 0, 2);
+        hitbox = new SimpleHitbox(this, getImage().getWidth()/2, getImage().getHeight()/2-5, 10, 5);
         overlay = new Overlay(this, hitbox);
     }
     
@@ -37,11 +37,11 @@ public class Hero1 extends Hero
      */
     private void loadIdleFrames(){
         for(int i=0; i<idleFramesRight.length; i++){
-            idleFramesRight[i] = new GreenfootImage("hero1/idle"+i+".png");
+            idleFramesRight[i] = new GreenfootImage("hero1updated/idle"+i+".png");
         }
         
         for(int i = 0; i < idleFramesLeft.length; i++){
-            idleFramesLeft[i] = new GreenfootImage("hero1/idle"+i+".png");
+            idleFramesLeft[i] = new GreenfootImage("hero1updated/idle"+i+".png");
             idleFramesLeft[i].mirrorHorizontally();
         }
     }

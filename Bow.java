@@ -52,7 +52,7 @@ public class Bow extends Weapon
         
         if(GameWorld.isMouseHolding() && beingUsed && recoverTimer == 0 && getHolder() instanceof Hero && addOne) {
             Hero hero = (Hero) getHolder();
-            chargeBar = new SuperStatBar(100, chargeValue, hero, 25, 3, hero.getImage().getHeight() / 2 - 10);
+            chargeBar = new SuperStatBar(100, chargeValue, hero, 25, 3, hero.getImage().getHeight() / 2 + 10);
             getWorld().addObject(chargeBar, hero.getX(), hero.getY());
             addOne = false;
         }
