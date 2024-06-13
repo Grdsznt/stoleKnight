@@ -28,6 +28,7 @@ public class Ogre extends Enemy
     };
     private GameWorld gw;
     private Pair target;
+    private int damageTimer;
     public Ogre(int centerX, int centerY) {
         super(50, 2, 2, 300, centerX, centerY);        
         homeRadius = 60; 
@@ -40,6 +41,7 @@ public class Ogre extends Enemy
         setImage(idleFrames[0]);
         actNum = 0;
         frameNum = 0;
+        damageTimer = 0;
         tookDamage = false;
         hitbox = new SimpleHitbox(this, getImage().getWidth()/2-11, getImage().getHeight()/2-9, 7, 0);
         overlay = new Overlay(this, hitbox);
@@ -130,7 +132,8 @@ public class Ogre extends Enemy
             }
         }
         if (tookDamage) {
-            // damage timer
+            if (damageTimer == 0) damageTimer = actNum;
+            if (damageTimer != 0 && Math.abs(actNum - damageTimer) > 90) tookDamage = false;
         }
         animate();
         actNum++;

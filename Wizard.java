@@ -22,10 +22,20 @@ public class Wizard extends Enemy
         new GreenfootImage("Wizard/wizzard_m_run_anim_f3.png")
     };
     
+    private static GreenfootImage[] redRunFrames = {
+        new GreenfootImage("Wizard/wizzard_m_run_anim_f0_red.png"),new GreenfootImage("Wizard/wizzard_m_run_anim_f1_red.png"),new GreenfootImage("Wizard/wizzard_m_run_anim_f2_red.png"),
+        new GreenfootImage("Wizard/wizzard_m_run_anim_f3_red.png")
+    };
+    private static GreenfootImage[] redIdleFrames = {
+        new GreenfootImage("Wizard/wizzard_m_idle_anim_f0_red.png"),new GreenfootImage("Wizard/wizzard_m_idle_anim_f1_red.png"),new GreenfootImage("Wizard/wizzard_m_idle_anim_f2_red.png"),
+        new GreenfootImage("Wizard/wizzard_m_idle_anim_f3_red.png")
+    };
+    
     private GreenfootImage hitImage = new GreenfootImage("Wizard/wizzard_m_hit_anim_f0.png");
     private Wand w;
     private Pair target;
     private GameWorld gw;
+    private int damageTimer;
     public void act()
     {
         
@@ -38,6 +48,7 @@ public class Wizard extends Enemy
             if (actNum % 20 == 0) h = getHeroInRadius();
         } else {
             //shoot ball at
+            setImage(hitImage);
             gw = (GameWorld) getWorld();
             if (actNum % 60 == 0 && hasLineOfSight(new Pair(getX(), getY()), new Pair(h.getX(), h.getY()), processWalls(gw.getObstacles()))) w.shoot(h.getX()-getX(), h.getY()-getY());
             if (calculateDistance(getX(), getY(), h.getX(), h.getY()) > targetRadius) {
@@ -57,6 +68,11 @@ public class Wizard extends Enemy
         
         super.act();
         
+        if (tookDamage) {
+            if (damageTimer == 0) damageTimer = actNum;
+            if (damageTimer != 0 && Math.abs(actNum - damageTimer) > 90) tookDamage = false;
+        }
+        
         actNum++;
         
     }
@@ -71,6 +87,7 @@ public class Wizard extends Enemy
             img.scale(36, 63);
         }
         actNum = 0; frameNum = 0;
+        damageTimer = 0;
         tookDamage = false;
         homeRadius = 60;
         w = new Wand(3);
@@ -96,9 +113,11 @@ public class Wizard extends Enemy
                 frameNum++;
             }
             if (isMoving) {
-                setImage(runFrames[frameNum]);
+                if (tookDamage) setImage(redRunFrames[frameNum]);
+                else setImage(runFrames[frameNum]);
             } else {
-                setImage(idleFrames[frameNum]);
+                if (tookDamage) setImage(redIdleFrames[frameNum]);
+                else setImage(idleFrames[frameNum]);
             }
         }
     }
