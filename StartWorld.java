@@ -15,8 +15,8 @@ public class StartWorld extends World
     private GreenfootImage cover = new GreenfootImage("soul-knight-cover.jpg");
     
     //Two boxes
-    private static SuperTextBox instructions = new SuperTextBox("Instructions", new Color(150,75,0), Color.WHITE, new Font(30), true, 400, 0, Color.WHITE);
-    private static SuperTextBox start = new SuperTextBox("Start", new Color(150,75,0), Color.WHITE, new Font(30), true, 400, 0, Color.WHITE);
+    private SuperTextBox instructions = new SuperTextBox("Instructions", new Color(150,75,0), Color.WHITE, new Font(30), true, 400, 0, Color.WHITE);
+    private SuperTextBox start = new SuperTextBox("Start", new Color(150,75,0), Color.WHITE, new Font(30), true, 400, 0, Color.WHITE);
     
     /**
      * Constructor for objects of class StartWorld.
@@ -35,16 +35,16 @@ public class StartWorld extends World
     public void act(){
         //Animate the options while hovering on them
         if(Greenfoot.mouseMoved(instructions)) {
-            instructions.updateFont(new Font(40));
+            instructions.updateFont(new Font(40), 450);
         } else if(Greenfoot.mouseMoved(start)) {
-            start.updateFont(new Font(40));
+            start.updateFont(new Font(40), 450);
         }
         
         //Return to normal if not hovering on them
         if(Greenfoot.mouseMoved(this)) {
-            instructions.updateFont(new Font(30));
-            start.updateFont(new Font(30));
-        } 
+            instructions.updateFont(new Font(30), 400);
+            start.updateFont(new Font(30), 400);
+        }
         
         //Go to each world if pressed
         /*if(Greenfoot.mousePressed(instructions))
