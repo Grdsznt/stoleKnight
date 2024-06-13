@@ -13,7 +13,8 @@ public class BuffWorld extends World
     private GameWorld gameWorld;
     private Hero hero;
     private static HashMap<String, String> descriptions = new HashMap<String, String>() {{
-        put("a", "a");
+        put("Extra HP", "Gain Extra 2 HP");
+        put("Faster Shield Recover", "Gain Extra 2 HP");
     }};
     private static ArrayList<String> unselectedPowers;
     private ArrayList<BuffSelection> buffList;

@@ -37,6 +37,7 @@ public abstract class Hero extends SuperSmoothMover
     protected int invincibleDuration;
     protected boolean isTransparent;
     protected int lastHitCounter = 0;
+    protected int timeForShieldToHeal;
     
     protected boolean canMove = true;
     protected double xMoveVel = 0;
@@ -144,6 +145,7 @@ public abstract class Hero extends SuperSmoothMover
             if (lastHitCounter % 60 == 0) {
                 shield++;
                 shieldBar.update(shield);
+                shieldNumber.setValue(shield + "/" + maxShield);
             }
         }
         lastHitCounter++;
