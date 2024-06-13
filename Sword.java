@@ -29,8 +29,8 @@ public class Sword extends Weapon {
         isSwinging = false;
         setImage(swordRightFrames[0]);
         recoverCounter = 0;
-        //effect = new Image("slasheffect/slash0.png");
-        hitbox = new SimpleHitbox(this, getImage().getWidth() / 2, getImage().getHeight() / 2, 0, 0);
+        
+        hitbox = new SimpleHitbox(this, getImage().getWidth() / 2-4, getImage().getHeight() / 2, 0, 0);
         overlay = new Overlay(this, hitbox);
     }
     

@@ -563,15 +563,15 @@ public abstract class Hero extends SuperSmoothMover
                 double multiplier = 60.0 / weaponOne.getImage().getHeight();
                 weaponOne.getImage().scale((int)(multiplier * weaponOne.getImage().getWidth()), (int)(multiplier * weaponOne.getImage().getHeight()));
             }
-            if (weaponsInInventory.size() < 2) {
+            if (weaponsInInventory.size()   < 2) {
                 return;
             }
             weaponTwo = new Image(weaponsInInventory.get(1).getImage());
             if (weaponTwo.getImage().getWidth() > weaponTwo.getImage().getWidth()) {
-                double multiplier = 60.0 / weaponTwo.getImage().getWidth();
+                double multiplier = 45.0 / weaponTwo.getImage().getWidth();
                 weaponTwo.getImage().scale((int)(multiplier * weaponTwo.getImage().getWidth()), (int)(multiplier * weaponTwo.getImage().getHeight()));
             } else {
-                double multiplier = 60.0 / weaponTwo.getImage().getHeight();
+                double multiplier = 45.0 / weaponTwo.getImage().getHeight();
                 weaponTwo.getImage().scale((int)(multiplier * weaponTwo.getImage().getWidth()), (int)(multiplier * weaponTwo.getImage().getHeight()));
             }
             getWorld().addObject(weaponOne, weaponLabelOne.getX(), weaponLabelOne.getY());

@@ -73,6 +73,7 @@ public class Wizard extends Enemy
             img.scale(36, 63);
         }
         actNum = 0; frameNum = 0;
+        tookDamage = false;
         homeRadius = 60;
         w = new Wand(3);
         hitbox = new SimpleHitbox(this, getImage().getWidth()/2-2, getImage().getHeight()/2-9, 10, 2);

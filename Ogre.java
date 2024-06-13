@@ -17,6 +17,15 @@ public class Ogre extends Enemy
         new GreenfootImage("Ogre/ogre_run_anim_f0.png"),new GreenfootImage("Ogre/ogre_run_anim_f1.png"),new GreenfootImage("Ogre/ogre_run_anim_f2.png"),
         new GreenfootImage("Ogre/ogre_run_anim_f3.png")
     };
+    
+    private static GreenfootImage[] redIdleFrames = {
+        new GreenfootImage("Ogre/ogre_run_anim_f0_red.png"),new GreenfootImage("Ogre/ogre_run_anim_f1_red.png"),new GreenfootImage("Ogre/ogre_run_anim_f2_red.png"),
+        new GreenfootImage("Ogre/ogre_run_anim_f3_red.png")
+    };
+    private static GreenfootImage[] redRunFrames = {
+        new GreenfootImage("Ogre/ogre_run_anim_f0_red.png"),new GreenfootImage("Ogre/ogre_run_anim_f1_red.png"),new GreenfootImage("Ogre/ogre_run_anim_f2_red.png"),
+        new GreenfootImage("Ogre/ogre_run_anim_f3_red.png")
+    };
     private GameWorld gw;
     private Pair target;
     public Ogre(int centerX, int centerY) {
@@ -31,6 +40,7 @@ public class Ogre extends Enemy
         setImage(idleFrames[0]);
         actNum = 0;
         frameNum = 0;
+        tookDamage = false;
         hitbox = new SimpleHitbox(this, getImage().getWidth()/2-11, getImage().getHeight()/2-9, 7, 0);
         overlay = new Overlay(this, hitbox);
     }
@@ -119,7 +129,9 @@ public class Ogre extends Enemy
                 // maybe red damage animation
             }
         }
-        
+        if (tookDamage) {
+            // damage timer
+        }
         animate();
         actNum++;
         super.act();
@@ -133,9 +145,11 @@ public class Ogre extends Enemy
                 frameNum++;
             }
             if (isMoving) {
-                setImage(runFrames[frameNum]);
+                if (tookDamage) setImage(redRunFrames[frameNum]);
+                else setImage(runFrames[frameNum]);
             } else {
-                setImage(idleFrames[frameNum]);
+                if (tookDamage) setImage(redIdleFrames[frameNum]);
+                else setImage(idleFrames[frameNum]);
             }
         }
     }

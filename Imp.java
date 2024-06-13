@@ -121,6 +121,7 @@ public class Imp extends Enemy
         setImage(idleFrames[0]);
         actNum = 0;
         frameNum = 0;
+        tookDamage = false;
         hitbox = new SimpleHitbox(this, getImage().getWidth()/2-6, getImage().getHeight()/2-8, 5, 2);
         overlay = new Overlay(this, hitbox);
     }
