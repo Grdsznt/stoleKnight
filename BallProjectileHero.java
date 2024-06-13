@@ -6,7 +6,7 @@ import java.util.ArrayList;
  * @author Edwin Dong, Andy Feng
  * @version (a version number or a date)
  */
-public class BallProjectile extends SuperSmoothMover
+public class BallProjectileHero extends SuperSmoothMover
 {
     // instance variables - replace the example below with your own
     private GreenfootImage img = new GreenfootImage("glow_ball.png");
@@ -21,7 +21,7 @@ public class BallProjectile extends SuperSmoothMover
      * Constructor for objects of class BallProjectile
      */
     
-    public BallProjectile(int size, int damage, int rotation)
+    public BallProjectileHero(int size, int damage, int rotation)
     {
         this.size = size; 
         this.damage = damage; 
@@ -39,9 +39,10 @@ public class BallProjectile extends SuperSmoothMover
     }
     
     public void act() {
-        if (getWorld().getObjects(Hero.class).size() != 0) {
-            if (hitbox.intersectsOval(getWorld().getObjects(Hero.class).get(0))) {
-                causeDamage();
+        ArrayList<Enemy> enemies = (ArrayList<Enemy>) getWorld().getObjects(Enemy.class);
+        for (Enemy e : enemies) {
+            if (hitbox.intersectsOval(e)) {
+                e.takeDamage(damage);
                 getWorld().removeObject(overlay);
                 getWorld().removeObject(this);
                 return;
@@ -51,13 +52,6 @@ public class BallProjectile extends SuperSmoothMover
         if (isTouching(Wall.class) || getX() > 1180 || getY() > 700 || getX() < 10 || getY() < 10) {
             getWorld().removeObject(overlay);
             getWorld().removeObject(this);
-        }
-    }
-    
-    public void causeDamage() {
-        ArrayList<Hero> heroes = (ArrayList<Hero>) getIntersectingObjects(Hero.class);
-        if (heroes.size() != 0) {
-            if (heroes.get(0).getWorld() != null) heroes.get(0).takeDamage(damage);
         }
     }
 }
