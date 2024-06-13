@@ -23,7 +23,7 @@ public class Image extends Actor
      * @param fileName The file path / file name
      */
     public Image(GreenfootImage image) {
-        setImage(image);
+        setImage(new GreenfootImage(image));
     }
     
     /**
