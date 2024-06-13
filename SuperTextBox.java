@@ -142,10 +142,14 @@ public class SuperTextBox extends Actor
 
     }
     
-    public void updateFont(Font font){
+    public void updateFont(Font font, int width){
         this.font = font;
-        forceHeight((padding * 2) + (vSpace * (numLines)) + (font.getSize() * numLines) + (2 * borderThickness));
-        update();
+        this.fontSize = font.getSize();
+        this.width = width;
+        this.height = (padding * 2) + (vSpace * (numLines)) + (fontSize * numLines) + (2 * borderThickness);
+        image = generateImage(this.width, this.height);
+        update(text);
+        setImage(image);
     }
 
     
