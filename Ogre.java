@@ -5,10 +5,12 @@ import java.util.ArrayList;
  * One of the main enemies; ogres will move towards the player 
  * 
  * @author Edwin
- * @version 31.5.24
+ * @version 1
  */
 public class Ogre extends Enemy
 {
+    
+    // Animation arrays
     private static GreenfootImage[] idleFrames = {
         new GreenfootImage("Ogre/ogre_idle_anim_f0.png"),new GreenfootImage("Ogre/ogre_idle_anim_f1.png"),new GreenfootImage("Ogre/ogre_idle_anim_f2.png"),
         new GreenfootImage("Ogre/ogre_idle_anim_f3.png")
@@ -28,46 +30,50 @@ public class Ogre extends Enemy
     };
     private GameWorld gw;
     private Pair target;
+    private int damageTimer; // damage timer for red animation
     public Ogre(int centerX, int centerY) {
         super(50, 2, 2, 300, centerX, centerY);        
-        homeRadius = 60; 
+        homeRadius = 60; // can move in a radius of 60
         for (GreenfootImage img: idleFrames) {
-            img.scale(64, 64);
+            img.scale(64, 64); // scale the images to 64, 64
         }
         for (GreenfootImage img: runFrames) {
             img.scale(64, 64);
         }
-        setImage(idleFrames[0]);
+        for (GreenfootImage img: redIdleFrames) {
+            img.scale(64, 64);
+        }
+        for (GreenfootImage img: redRunFrames) {
+            img.scale(64, 64);
+        }
+        setImage(idleFrames[0]); 
+        // initialize variables to 0
         actNum = 0;
         frameNum = 0;
+        damageTimer = 0;
         tookDamage = false;
-        hitbox = new SimpleHitbox(this, getImage().getWidth()/2-11, getImage().getHeight()/2-9, 7, 0);
-        overlay = new Overlay(this, hitbox);
+        hitbox = new SimpleHitbox(this, getImage().getWidth()/2-11, getImage().getHeight()/2-9, 7, 0); // new hitbox
+        // overlay = new Overlay(this, hitbox);
     }
     
     public void addedToWorld(World w) {
-        w.addObject(overlay, getX(), getY());
-        super.addedToWorld(w);
-        //w.addObject(overlay, getX(), getY());
-        
+        // w.addObject(overlay, getX(), getY());
+        super.addedToWorld(w);        
     }
     
     public void act()
     { 
-        
-        if (!pursuing) {
-            // pathfind to this random position in radius
-            if (actNum % 400 == 0) {
-                target = getRandomPositionWithinRadius(homeRadius);
+        if (!pursuing) { // if attacking
+            if (actNum % 200 == 0) {
+                target = getRandomPositionWithinRadius(homeRadius); // get random position in the radius
             }
-            if (target != null) moveTowardsTarget(target.f, target.s);
-            if (actNum % 20 == 0) h = getHeroInRadius();
+            if (target != null) moveTowardsTarget(target.f, target.s); // move to this random position in radius
+            if (actNum % 20 == 0) h = getHeroInRadius(); // detect hero every 20 acts
         }
-        if (h != null && h.getWorld() != null) {
-            gw = (GameWorld) getWorld();
-            if (hasLineOfSight(new Pair(getX(), getY()), new Pair(h.getX(), h.getY()), processWalls(gw.getObstacles()))) {
-                pursuing = true;
-                // chase the hero
+        if (h != null && h.getWorld() != null) { // If the hero is in the world, and there is a hero detected
+            gw = (GameWorld) getWorld(); 
+            if (hasLineOfSight(new Pair(getX(), getY()), new Pair(h.getX(), h.getY()), processWalls(gw.getObstacles()))) { // if has line of sight with hero
+                pursuing = true; // chase the hero
                 // Calculate the direction vector from enemy to player
                 float dx = h.getX() - getX();
                 float dy = h.getY() - getY();
@@ -86,13 +92,13 @@ public class Ogre extends Enemy
                 if (calculateDistance(getX(), getY(), h.getX(), h.getY()) > targetRadius) {
                     pursuing = false;
                     h = null;
-                    isMoving = false;
-                    setRotation(0);
+                    isMoving = false; 
+                    setRotation(0); // set rotation to 0
                 }
             } else {
-                if (actNum % 60 == 0) aStar(h.getX(), h.getY(), 20, true);
+                if (actNum % 60 == 0) aStar(h.getX(), h.getY(), 20, true); // no line of sight, pathfind to enemy (prevent walking in walls)
                 if (currentPath.size() > 0) {
-                    int[] nextPosition = currentPath.peekFirst();
+                    int[] nextPosition = currentPath.peekFirst(); // get the next tile to move to in current path
                     float dx = nextPosition[0] - getX();
                     float dy = nextPosition[1] - getY();
                     float distance = (float) Math.sqrt(dx * dx + dy * dy);
@@ -113,7 +119,7 @@ public class Ogre extends Enemy
                         setLocation(nextPosition[0], nextPosition[1]);
                         currentPath.pollFirst(); // Remove the reached point
                     } else {
-                        // Move incrementally towards the waypoint
+                        // Move towards the point
                         setLocation((int) nextX, (int) nextY);
                         isMoving = true;
                     }
@@ -122,29 +128,33 @@ public class Ogre extends Enemy
         }
         if (getWorld().getObjects(Hero.class).size() != 0) {
             if (hitbox.intersectsOval(getWorld().getObjects(Hero.class).get(0))) {
-                h = getIntersectingObjects(Hero.class).get(0);
+                h = getIntersectingObjects(Hero.class).get(0); // if the enemy hitbox intersectsthe hero's
                 if (h != null && h.getWorld() != null) {
-                    h.takeDamage(damage);
+                    h.takeDamage(damage); // deal damage to the hero
                 }
-                // maybe red damage animation
             }
         }
-        if (tookDamage) {
-            // damage timer
+        if (tookDamage) { // switch to a red version of ogre if damaged
+            if (damageTimer == 0) damageTimer = actNum;
+            if (damageTimer != 0 && Math.abs(actNum - damageTimer) > 20) {
+                tookDamage = false;
+                damageTimer = 0;
+            }
         }
-        animate();
+        animate(); // handle animation
         actNum++;
-        super.act();
+        super.act(); // handle death
     }
         
     private void animate() {
+        // animate, modify with y = mx + b
         if (actNum % (speed !=0 ? (int) (-6 * speed + 25) : 10) == 0) {
             if (frameNum >= 3) {
                 frameNum = 0;
             } else {
                 frameNum++;
             }
-            if (isMoving) {
+            if (isMoving) { // if took damage set to red version, otherwise, use either idle image or running image based on isMoving
                 if (tookDamage) setImage(redRunFrames[frameNum]);
                 else setImage(runFrames[frameNum]);
             } else {
@@ -154,18 +164,28 @@ public class Ogre extends Enemy
         }
     }
     
+    /**
+     * Moves the object towards a specified target location.
+     * 
+     * <p>This method calculates the direction and distance to the target location
+     * and moves the object by a fixed speed in that direction. If the object is 
+     * very close to the target, it will snap to the target and stop moving.</p>
+     * 
+     * @param targetX The X coordinate of the target location
+     * @param targetY The Y coordinate of the target location
+     */
     private void moveTowardsTarget(int targetX, int targetY) {
         int currentX = getX();
         int currentY = getY();
         int diffX = targetX - currentX;
         int diffY = targetY - currentY;
     
-        double distance = Math.sqrt(diffX * diffX + diffY * diffY);
+        double distance = Math.sqrt(diffX * diffX + diffY * diffY); // euclidean distance
         double moveX = (diffX / distance) * speed;
         double moveY = (diffY / distance) * speed;
     
         currentX += moveX;
-        currentY += moveY;
+        currentY += moveY; // add movement to x and y coords
     
         setLocation(currentX, currentY);
         
@@ -179,7 +199,7 @@ public class Ogre extends Enemy
         }
     }
     
-    public SimpleHitbox getHitBox() {
+    public SimpleHitbox getHitBox() { // getter for the hitbox
         return hitbox;
     }
 }

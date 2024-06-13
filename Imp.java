@@ -1,15 +1,14 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class Imp here.
+ * One of the main enemies; Imps will move towards the player (faster)
  * 
- * @author (your name) 
- * @version (a version number or a date)
+ * @author Edwin
+ * @version 1
  */
 public class Imp extends Enemy
 {
-    
-    
+    // Animation frames (no need for red version since already red and dies in one shot)
     private static GreenfootImage[] idleFrames = {
         new GreenfootImage("Imp/imp_idle_anim_f0.png"),new GreenfootImage("Imp/imp_idle_anim_f1.png"),new GreenfootImage("Imp/imp_idle_anim_f2.png"),
         new GreenfootImage("Imp/imp_idle_anim_f3.png")
@@ -19,7 +18,7 @@ public class Imp extends Enemy
         new GreenfootImage("Imp/imp_run_anim_f3.png")
     };
     
-    private Pair target;
+    private Pair target; // target coords
     private GameWorld gw;
     
     /**
@@ -28,20 +27,17 @@ public class Imp extends Enemy
      */
     public void act()
     {
-        
         if (!pursuing) {
-            // pathfind to this random position in radius
-            if (actNum % 400 == 0) {
-                target = getRandomPositionWithinRadius(homeRadius);
+            if (actNum % 200 == 0) {
+                target = getRandomPositionWithinRadius(homeRadius); // get random position in radius
             }
-            if (target != null) moveTowardsTarget(target.f, target.s);
+            if (target != null) moveTowardsTarget(target.f, target.s); // pathfind to this random position in radius
             if (actNum % 20 == 0) h = getHeroInRadius();
         }
-        if (h != null && h.getWorld() != null) {
-            gw = (GameWorld) getWorld();
-            if (hasLineOfSight(new Pair(getX(), getY()), new Pair(h.getX(), h.getY()), processWalls(gw.getObstacles()))) {
-                pursuing = true;
-                // chase the hero
+        if (h != null && h.getWorld() != null) {// If the hero is in the world, and there is a hero
+            gw = (GameWorld) getWorld(); 
+            if (hasLineOfSight(new Pair(getX(), getY()), new Pair(h.getX(), h.getY()), processWalls(gw.getObstacles()))) { // if has line of sight with hero
+                pursuing = true;  // chase the hero
                 // Calculate the direction vector from enemy to player
                 float dx = h.getX() - getX();
                 float dy = h.getY() - getY();
@@ -61,12 +57,12 @@ public class Imp extends Enemy
                     pursuing = false;
                     h = null;
                     isMoving = false;
-                    setRotation(0);
+                    setRotation(0); // set rotation to 0
                 }
             } else {
-                if (actNum % 20 == 0) aStar(h.getX(), h.getY(), 20, true);
-                if (currentPath.size() > 0) {
-                    int[] nextPosition = currentPath.peekFirst();
+                if (actNum % 20 == 0) aStar(h.getX(), h.getY(), 20, true); // no line of sight, pathfind (avoid walls)
+                if (currentPath.size() > 0) { // if found a path
+                    int[] nextPosition = currentPath.peekFirst(); // get next tile to move to
                     float dx = nextPosition[0] - getX();
                     float dy = nextPosition[1] - getY();
                     float distance = (float) Math.sqrt(dx * dx + dy * dy);
@@ -95,23 +91,22 @@ public class Imp extends Enemy
             }
         }
         if (getWorld().getObjects(Hero.class).size() != 0) {
-            if (hitbox.intersectsOval(getWorld().getObjects(Hero.class).get(0))) {
+            if (hitbox.intersectsOval(getWorld().getObjects(Hero.class).get(0))) { // check intersection of hitboxes
                 h = getIntersectingObjects(Hero.class).get(0);
                 if (h != null && h.getWorld() != null) {
-                    h.takeDamage(damage);
+                    h.takeDamage(damage); // damage the hero
                 }
             }
         }
-        
-        System.out.println(health);
         animate();
         actNum++;
         super.act();
     }
     
     public Imp(int centerX, int centerY) {
-        super(20, 3, 1, 200, centerX, centerY);        
+        super(20, 3, 1, 300, centerX, centerY);        
         homeRadius = 60; 
+        // Scale image to appropriate size
         for (GreenfootImage img: idleFrames) {
             img.scale(40, 40);
         }
@@ -119,26 +114,28 @@ public class Imp extends Enemy
             img.scale(40, 40);
         }
         setImage(idleFrames[0]);
+        // Initialize variables
         actNum = 0;
         frameNum = 0;
         tookDamage = false;
-        hitbox = new SimpleHitbox(this, getImage().getWidth()/2-6, getImage().getHeight()/2-8, 5, 2);
-        overlay = new Overlay(this, hitbox);
+        hitbox = new SimpleHitbox(this, getImage().getWidth()/2-6, getImage().getHeight()/2-8, 5, 2); // init hitbox
+        //overlay = new Overlay(this, hitbox);
     }
     
     public void addedToWorld(World w) {
-        w.addObject(overlay, getX(), getY());
-        super.addedToWorld(w);
+        //w.addObject(overlay, getX(), getY());
+        super.addedToWorld(w); // see class Enemy for more info
     }
     
     private void animate() {
+        // animate, modify with y = mx + b
         if (actNum % (speed !=0 ? (int) (-6 * speed + 15) : 10) == 0) {
             if (frameNum >= 3) {
                 frameNum = 0;
             } else {
                 frameNum++;
             }
-            if (isMoving) {
+            if (isMoving) { // set run and idle frames depending on the state
                 setImage(runFrames[frameNum]);
             } else {
                 setImage(idleFrames[frameNum]);
