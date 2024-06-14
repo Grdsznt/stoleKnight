@@ -51,7 +51,7 @@ public class BuffWorld extends World
         setBackground(background);
         gameWorld = world;
         this.hero = hero;
-        if (gameWorld.getFloor() % 2 == 0) {
+        if (gameWorld.getFloor() % 3 == 0) {
             addObject(new Label("Select a Buff", 32), 600, 350);
             buffList = new ArrayList<BuffSelection>();
             Label buffName = new Label("", 32);
@@ -93,7 +93,7 @@ public class BuffWorld extends World
         }
         
         if (Greenfoot.mouseClicked(continueButton)) {
-            if (gameWorld.getFloor() % 2 == 0) {
+            if (gameWorld.getFloor() % 3 == 0) {
                 for (BuffSelection buff : buffList) {
                     if (buff.isSelected()) {
                         Greenfoot.setWorld(gameWorld);
