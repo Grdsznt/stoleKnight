@@ -22,9 +22,16 @@ import java.util.Arrays;
  * 
  * <h2> References </h2>
  * <h3> Art </h3>
- * https://0x72.itch.io/dungeontileset-ii - GrafxKid <br>
- * https://www.deviantart.com/kristyglas/art/Pixel-Art-Dungeon-Entrance-Door-835889504 - kristyglas <br>
- * https://whatoplay.com/post/prequel-soul-knight/ - Chilly Room <br>
+ * <ul>
+ * <li>https://0x72.itch.io/dungeontileset-ii - GrafxKid </li>
+ * <li>https://www.deviantart.com/kristyglas/art/Pixel-Art-Dungeon-Entrance-Door-835889504 - kristyglas </li>
+ * <li>https://whatoplay.com/post/prequel-soul-knight/ - Chilly Room </li>
+ * <li>https://0x72.itch.io/dungeontileset-ii - GrafxKid </li>
+ * <li>Start World cover image: https://www.vg247.com/soul-knight-codes</li>
+ * <li>Instruction World background image: https://wallpapercave.com/soul-knight-wallpapers</li>
+ * <li>Character with ax: https://wholesomedev.itch.io/kingfree</li>
+ * </ul>
+ * <br>
  * <h3> Sound </h3>
  * 
  * <h3> Code </h3>
@@ -73,7 +80,7 @@ public class GameWorld extends World
      * 
      */
     
-    public GameWorld()
+    public GameWorld(int floor)
     {    
         // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
         super(1200, 720, 1); 
@@ -105,10 +112,9 @@ public class GameWorld extends World
         
         background.drawImage(stats, 15, 15);
         setBackground(background);
-        floor = 1;
-        floorLabel = new Label("Floor 1", 30);
+        this.floor = floor;
+        floorLabel = new Label("Floor " + floor, 30);
         addObject(floorLabel, 104, 690);
-        
     }
     
     public ArrayList<Wall> getObstacles() {
@@ -417,7 +423,7 @@ public class GameWorld extends World
     public int[] getRoomPosition() {
         return new int[]{currentRoomRow, currentRoomCol};
     }
-    
+   
     /**
      * Returns the floor number
      *

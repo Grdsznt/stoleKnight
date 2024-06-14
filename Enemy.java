@@ -58,7 +58,7 @@ public abstract class Enemy extends SuperSmoothMover
         if (health <= 0) {
             getWorldOfType(GameWorld.class).enemyDied(this);
             SimpleHitbox.allHitboxesInWorld.remove(hitbox);
-            getWorld().getObjects(Hero.class).get(0).getGold(1); // add gold
+            if (getWorld().getObjects(Hero.class).size() != 0) getWorld().getObjects(Hero.class).get(0).getGold(1); // add gold
             //getWorld().removeObject(overlay);
             getWorld().removeObject(this); // remove enemy
         }

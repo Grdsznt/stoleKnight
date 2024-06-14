@@ -439,7 +439,6 @@ public abstract class Hero extends SuperSmoothMover
             getWorld().removeObject(this);
             return;
         }
-        
     }
     
     /**
