@@ -547,12 +547,10 @@ public abstract class Hero extends SuperSmoothMover
         if (weaponActionCooldown == 0) {
             boolean pickedUp = false;
             if (weaponsInInventory.size() < 2 && Greenfoot.isKeyDown("e")) {
-                System.out.println("Weapon picked up");
                 weaponsInInventory.add(weaponOnGround);
                 weaponActionCooldown = 20; // Adding cooldown to avoid multiple detections
                 pickedUp = true;
             } else if (weaponsInInventory.size() >= 2 && Greenfoot.isKeyDown("e")) {
-                System.out.println("Weapon switched");
                 pickUpAndSwitchCurrentWeapon(weaponOnGround);
                 weaponActionCooldown = 20; // Adding cooldown to avoid multiple detections
                 pickedUp = true;
@@ -570,7 +568,7 @@ public abstract class Hero extends SuperSmoothMover
                 double multiplier = 60.0 / weaponOne.getImage().getHeight();
                 weaponOne.getImage().scale((int)(multiplier * weaponOne.getImage().getWidth()), (int)(multiplier * weaponOne.getImage().getHeight()));
             }
-            if (weaponsInInventory.size() < 2) {
+            if (weaponsInInventory.size()   < 2) {
                 return;
             }
             weaponTwo = new Image(weaponsInInventory.get(1).getImage());

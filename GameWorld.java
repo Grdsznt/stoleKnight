@@ -61,7 +61,7 @@ public class GameWorld extends World
         // addObject(new Imp(400, 400), 400, 400);
         
         mouseHold = false;
-        setPaintOrder(Weapon.class, Hero.class, Overlay.class, Projectile.class, BallProjectile.class, SightlineOverlay.class, Enemy.class);
+        setPaintOrder(Weapon.class, Hero.class, Overlay.class, Projectile.class, BallProjectile.class, Enemy.class);
         // background stuff
         GreenfootImage background = new GreenfootImage(1200, 720);
         background.setColor(new Color(34, 34, 34));
@@ -194,16 +194,16 @@ public class GameWorld extends World
             }
         }
         
-        for (RoomData[] a : roomGrid) {
-            System.out.println(Arrays.toString(a));
-        }
+        // for (RoomData[] a : roomGrid) {
+            // System.out.println(Arrays.toString(a));
+        // }
         
-        System.out.println(startRow + " " + startCol);
-        for (int[] a : worldGrid) {
-            System.out.println(Arrays.toString(a));
-        }
+        // System.out.println(startRow + " " + startCol);
+        // for (int[] a : worldGrid) {
+            // System.out.println(Arrays.toString(a));
+        // }
         
-        System.out.println("");
+        // System.out.println("");
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 21; j++) {
                 
@@ -229,7 +229,7 @@ public class GameWorld extends World
             addObject(enemy, 500, 500);
         }
         
-        System.out.println("loaded");
+        
         if (enemyList.size() != 0) {
             for (Hero hero: getObjects(Hero.class)) {
                 hero.addHitboxList(RoomExit.class);
@@ -271,7 +271,6 @@ public class GameWorld extends World
         }
         
         // enemy things
-        
     }
     
     private void unloadRoom(int row, int col) {
@@ -283,6 +282,12 @@ public class GameWorld extends World
                     continue;
                 }
                 removeObject(room[i][j]);
+            }
+        }
+        ArrayList<Wand> wands = (ArrayList<Wand>) getObjects(Wand.class);
+        for (Wand w: wands) {
+            if (!(w.getHolder() instanceof Hero) && !(w.getHolder() instanceof Wizard)) {
+                removeObject(w);
             }
         }
         // just in case
@@ -307,6 +312,8 @@ public class GameWorld extends World
                 if (getObjects(Hero.class).get(0).getWeapons().contains(actor)) {
                     continue;
                 }
+            }
+            if (actor instanceof BallProjectileHero) {
                 removeObject(actor);
             }
         }

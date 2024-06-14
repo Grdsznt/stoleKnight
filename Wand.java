@@ -1,7 +1,7 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class Wand here.
+ * Wand weapon, shoots a red ball projectile
  * 
  * @author Edwin Dong, Andy Feng
  * @version (a version number or a date)
@@ -46,10 +46,16 @@ public class Wand extends Weapon
         // Convert radians to degrees
         double angleDegrees = Math.toDegrees(angleRadians);
     
-        // Adjust for Greenfoot's coordinate system (clockwise and 0-360)
+        // Get the clockwise angle
         clockwiseAngle = (angleDegrees + 360) % 360;
-        proj = new BallProjectile(20, 3, (int)clockwiseAngle); 
-        getWorld().addObject(proj, getX(), getY()-15);
+        if (getHolder() instanceof Hero) {
+            BallProjectileHero b = new BallProjectileHero(20, 5, (int)clockwiseAngle); 
+            getWorld().addObject(b, getX(), getY()-15);
+        } else {
+            proj = new BallProjectile(20, 3, (int)clockwiseAngle); 
+            getWorld().addObject(proj, getX(), getY()-15);
+        }
+        // make a red ball projectile and add it to world
     }
     
     public void attack() {
