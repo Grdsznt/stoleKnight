@@ -29,9 +29,9 @@ public class Sword extends Weapon {
         isSwinging = false;
         setImage(swordRightFrames[0]);
         recoverCounter = 0;
-        //effect = new Image("slasheffect/slash0.png");
-        hitbox = new SimpleHitbox(this, getImage().getWidth() / 2, getImage().getHeight() / 2, 0, 0);
-        overlay = new Overlay(this, hitbox);
+        
+        hitbox = new SimpleHitbox(this, getImage().getWidth() / 2-4, getImage().getHeight() / 2, 0, 0);
+        // overlay = new Overlay(this, hitbox);
     }
     
     /**
@@ -53,7 +53,6 @@ public class Sword extends Weapon {
             swordLeftFrames[i].mirrorHorizontally();
             swordLeftFrames[i].scale(60, 60);
         }
-        
         // for (int i = 0; i < slashFrames.length; i++) {
             // slashFrames[i] = new GreenfootImage("slasheffect/slash"+ i + ".png");
             // slashFrames[i].scale(60, 60);

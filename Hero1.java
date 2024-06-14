@@ -22,13 +22,13 @@ public class Hero1 extends Hero
         super(Hp, shield, speed, energy, new Sword());
         loadIdleFrames();
         setImage(idleFramesRight[0]);
-        hitbox = new SimpleHitbox(this, getImage().getWidth()/2, getImage().getHeight()/2-5, 10, 5);
-        overlay = new Overlay(this, hitbox);
+        hitbox = new SimpleHitbox(this, getImage().getWidth()/2-3, getImage().getHeight()/2-2, 3, 0);
+        // overlay = new Overlay(this, hitbox);
     }
     
     public void addedToWorld(World w) {
         super.addedToWorld(w);
-        w.addObject(overlay, getX(), getY());
+        // w.addObject(overlay, getX(), getY());
         SimpleHitbox.allHitboxesInWorld.add(hitbox);
     }
     

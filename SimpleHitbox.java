@@ -1,10 +1,10 @@
 import greenfoot.*;
 import java.util.ArrayList;
 /**
- * Write a description of class simpleHitbox here.
+ * Oval hitbox; used for everything
  * 
  * @author Edwin Dong
- * @version (a version number or a date)
+ * @version 1
  * 
  * Edited by Andy Feng
  */
@@ -57,7 +57,7 @@ public class SimpleHitbox
             double overlapY = radiusY * sinAngle + otherHitbox.getRadiusX() * sinAngle;
     
             return distance < Math.sqrt(overlapX * overlapX + overlapY * overlapY);
-        } else if(actor instanceof Enemy){
+        } else if(other instanceof Enemy){
             Enemy e = (Enemy) other;
             SimpleHitbox otherHitbox = e.getHitbox();
             int dx = (other.getX() + otherHitbox.getOffsetX()) - (actor.getX() + offsetX);

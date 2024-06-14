@@ -4,7 +4,7 @@
  * Used for coordinates in the world's tile system.
  * 
  * @author Edwin
- * @version (a version number or a date)
+ * @version 1
  */
 public class Pair  
 {
