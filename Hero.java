@@ -10,8 +10,9 @@ import java.util.ArrayList;
  * This is the main character of the game, the player can control control this character to pass the game
  * The main character will have various actions:
  * <ul>
- * <li> 
- * <ul>'
+ * <li> moving around
+ * <li> attack, pickup and switch weapon 
+ * <ul>
  */
 public abstract class Hero extends SuperSmoothMover
 {

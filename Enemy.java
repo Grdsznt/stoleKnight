@@ -1,4 +1,4 @@
-import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.Random;
 import java.util.List;
 import java.util.PriorityQueue;
@@ -38,6 +38,7 @@ public class Enemy extends SuperSmoothMover
     protected Overlay overlay;
     protected int actNum, frameNum;
     protected int homeRadius;
+    protected boolean takeDamageOnce = true;
     
     public Enemy(int health, int speed, int damage, double targetRadius, int centerX, int centerY) {
         this.health = health;
@@ -212,8 +213,10 @@ public class Enemy extends SuperSmoothMover
     }
     
     public void takeDamage(int damage) {
-        health -= damage;
-        System.out.println(this);
+        if(takeDamageOnce){
+            health -= damage;
+            takeDamageOnce = false;
+        }
     }
     
     public SimpleHitbox getHitbox() {

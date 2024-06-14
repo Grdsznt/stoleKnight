@@ -20,7 +20,7 @@ public class Ogre extends Enemy
     private GameWorld gw;
     private Pair target;
     public Ogre(int centerX, int centerY) {
-        super(50, 2, 2, 300, centerX, centerY);        
+        super(20, 2, 2, 300, centerX, centerY);        
         homeRadius = 60; 
         for (GreenfootImage img: idleFrames) {
             img.scale(64, 64);

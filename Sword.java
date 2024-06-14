@@ -9,7 +9,7 @@ import java.util.ArrayList;
  */
 public class Sword extends Weapon {
     private static final String IMAGE_PATH = "images/sword/sword";
-    private static final int DAMAGE = 100;
+    private static final int DAMAGE = 10;
     private static final int RECOVER_TIME = 60;
 
     protected GreenfootImage[] swordRightFrames = new GreenfootImage[6];
@@ -34,11 +34,17 @@ public class Sword extends Weapon {
         overlay = new Overlay(this, hitbox);
     }
     
+    /**
+     * Override addedToWorld method
+     */
     public void addedToWorld(World w) {
         //w.addObject(overlay, getX(), getY());
         SimpleHitbox.allHitboxesInWorld.add(hitbox);
     }
 
+    /**
+     * load all images of a Sword object, left and right
+     */
     private void loadImages() {
         for (int i = 0; i < swordRightFrames.length; i++) {
             swordRightFrames[i] = new GreenfootImage(IMAGE_PATH + i + ".png");
@@ -70,6 +76,12 @@ public class Sword extends Weapon {
         if(isSwinging) attack();
     }
 
+    /**
+     * handle sword object's animation. If the all conditions are met, swing the sword and set isSwinging to true
+     * 
+     * @ right: the drection of the holder, either Hero or Enemy, to update the 
+     * 
+     */
     private void animateSword(boolean right) {
         if(getHolder() instanceof Hero) {
             if (isAttacking && beingUsed && recoverCounter == 0) {
