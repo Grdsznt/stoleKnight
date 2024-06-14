@@ -11,7 +11,11 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class StartWorld extends World
 {
+    //Worlds
     private GameWorld gWorld;
+    private InstructionWorld instructionsWorld;
+    
+    //Image
     private GreenfootImage cover = new GreenfootImage("soul-knight-cover.jpg");
     
     //Game title
@@ -26,7 +30,7 @@ public class StartWorld extends World
      */
     public StartWorld()
     {    
-        // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
+        // Create a new world with 1200x720 cells with a cell size of 1x1 pixels.
         super(1200, 720, 1); 
         setBackground(cover);
         
@@ -58,11 +62,10 @@ public class StartWorld extends World
         }
         
         //Go to each world if pressed
-        /*if(Greenfoot.mousePressed(instructions))
-        {
-            instructionsWorld = new Instructions(this);
+        if(Greenfoot.mousePressed(instructions)) {
+            instructionsWorld = new InstructionWorld(this);
             Greenfoot.setWorld(instructionsWorld);
-        }*/
+        }
         if(Greenfoot.mousePressed(start)) {
             gWorld = new GameWorld();
             Greenfoot.setWorld(gWorld);
