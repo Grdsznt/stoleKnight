@@ -29,7 +29,7 @@ public class StartWorld extends World
         // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
         super(1200, 720, 1); 
         setBackground(cover);
-        Hero.damageSoundPlayer();
+        
         
         //Add title
         addObject(title, 600, 250);
@@ -37,6 +37,10 @@ public class StartWorld extends World
         //Add instruction and start boxes
         addObject(instructions, 600, 400);
         addObject(start, 600, 500);
+    }
+    
+    static {
+        Hero.damageSoundPlayer();
     }
     
     public void act(){

@@ -72,7 +72,7 @@ public class BuffWorld extends World
             addObject(buffList.get(1), 600, 550);
             addObject(buffList.get(2), 700, 550);
         } else {
-            addObject(new Label("Good Job! More buffs on the next floor", 32), 600, 500);
+            addObject(new Label("Good Job! More buffs Soon", 32), 600, 500);
             
         }
         
@@ -98,6 +98,7 @@ public class BuffWorld extends World
                     if (buff.isSelected()) {
                         Greenfoot.setWorld(gameWorld);
                         hero.addPower(buff.getPowerName());
+                        unselectedPowers.remove(buff.getPowerName());
                     }
                 }
             } else {

@@ -72,7 +72,7 @@ public class Wand extends Weapon
         
         if (getHolder() instanceof Hero) {
             // Create projectile for Hero
-            BallProjectileHero b = new BallProjectileHero(20, 5, (int)clockwiseAngle); 
+            BallProjectileHero b = new BallProjectileHero(20, damage, (int)clockwiseAngle); 
             getWorld().addObject(b, getX(), getY()-15); // Add projectile to world
         } else {
             // Create projectile for Enemy
