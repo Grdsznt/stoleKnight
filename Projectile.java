@@ -28,6 +28,7 @@ public class Projectile extends SuperSmoothMover
     private int damage;
     private Overlay overlay;
     protected SimpleHitbox hitbox;
+    private boolean dealDamageOnce = true;
 
     public Projectile(int direction_X, int direction_Y, int baseDamage, int maxChargeDamage, boolean chargeable) {
         setImage(arrow);
@@ -43,9 +44,15 @@ public class Projectile extends SuperSmoothMover
         chargeTime = 0; // Initialize charge time
         
         hitbox = new SimpleHitbox(this, getImage().getWidth() / 2, getImage().getHeight() / 2, 0 ,0);
-        overlay = new Overlay(this, hitbox);
+        //overlay = new Overlay(this, hitbox);
     }
 
+    
+    /**
+     * Constrcutor of the Projectile.class
+     * 
+     * 
+     */
     public Projectile(int direction_X, int direction_Y) {
         setImage(arrow);
         speed = 10;
@@ -64,7 +71,7 @@ public class Projectile extends SuperSmoothMover
     }
     
     public void addedToWorld(World w) {
-        w.addObject(overlay, getX(), getY());
+        //w.addObject(overlay, getX(), getY());
         SimpleHitbox.allHitboxesInWorld.add(hitbox);
     }
     
@@ -108,9 +115,10 @@ public class Projectile extends SuperSmoothMover
         ArrayList<SimpleHitbox> hitBoxes = SimpleHitbox.allHitboxesInWorld;
         if(chargeable) {
             for(SimpleHitbox target : hitBoxes) {
-                if(target.getActor() instanceof Enemy && hitbox.isHitBoxesIntersecting(target)) {
+                if(target.getActor() instanceof Enemy && hitbox.isHitBoxesIntersecting(target) && speed != 0 && dealDamageOnce) {
                     Enemy e = (Enemy) target.getActor();
                     e.health -= damage;
+                    dealDamageOnce = false;
                 }
             }
         } else {
@@ -121,7 +129,7 @@ public class Projectile extends SuperSmoothMover
                 }
             }
         }
-        if(isTouching(Wall.class)) {
+        if(isTouching(Wall.class) || isTouching(Void.class) || isTouching(RoomExit.class)) {
             speed = 0;
         }
     }

@@ -16,6 +16,7 @@ public class BallProjectile extends SuperSmoothMover
     private SimpleHitbox hitbox;
     private Overlay overlay;
     private boolean attackOnce;
+    private Actor intial;
     
     /**
      * Constructor for objects of class BallProjectile
@@ -30,11 +31,11 @@ public class BallProjectile extends SuperSmoothMover
         setImage(img);
         setRotation(rotation);
         hitbox = new SimpleHitbox(this, getImage().getWidth()/2-2, getImage().getHeight()/2-2, 0, 0);
-        overlay = new Overlay(this, hitbox);
+        //overlay = new Overlay(this, hitbox);
     }
     
     public void addedToWorld(World world) {
-        world.addObject(overlay, getX(), getY());
+        //world.addObject(overlay, getX(), getY());
         SimpleHitbox.allHitboxesInWorld.add(hitbox);
     }
     
@@ -42,14 +43,12 @@ public class BallProjectile extends SuperSmoothMover
         if (getWorld().getObjects(Hero.class).size() != 0) {
             if (hitbox.intersectsOval(getWorld().getObjects(Hero.class).get(0))) {
                 causeDamage();
+                getWorld().removeObject(overlay);
+                getWorld().removeObject(this);
+                return;
             }
         }
-        
-        // double angle = Math.toRadians(rotation);
-        // int newX = getX() + (int) (2 * Math.cos(angle));
-        // int newY = getY() + (int) (2 * Math.sin(angle));
-        // setLocation(newX, newY);
-        move(2);
+        move(3);
         if (isTouching(Wall.class) || getX() > 1180 || getY() > 700 || getX() < 10 || getY() < 10) {
             getWorld().removeObject(overlay);
             getWorld().removeObject(this);

@@ -2,6 +2,7 @@
  * Line is a utility class that stores 2 pairs. 
  * <p>
  * Used for Line of sight.
+ * 
  * @author Edwin
  * @version (a version number or a date)
  */

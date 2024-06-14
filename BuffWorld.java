@@ -1,4 +1,6 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import java.util.HashMap;
+import java.util.ArrayList;
 
 /**
  * Write a description of class BuffWorld here.
@@ -8,8 +10,14 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class BuffWorld extends World
 {
-    GameWorld gameWorld;
-    Hero hero;
+    private GameWorld gameWorld;
+    private Hero hero;
+    private static HashMap<String, String> descriptions = new HashMap<String, String>() {{
+        put("Extra HP", "Gain Extra 2 HP");
+        put("Faster Shield Recover", "Gain Extra 2 HP");
+    }};
+    private static ArrayList<String> unselectedPowers;
+    private ArrayList<BuffSelection> buffList;
     
     /**
      * Constructor for objects of class BuffWorld.
@@ -25,5 +33,10 @@ public class BuffWorld extends World
         background.setColor(new Color(34, 34, 34));
         background.fillRect(0, 0, 1200, 720);
         setBackground(background);
+        gameWorld = world;
+        this.hero = hero;
+        addObject(new Label("Select a Buff", 32), 600, 500);
+        buffList = new ArrayList<BuffSelection>();
+        
     }
 }

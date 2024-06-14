@@ -1,39 +1,40 @@
-import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.Random;
 import java.util.List;
-import java.util.PriorityQueue;
 import java.util.ArrayList;
+
+// for A* search
 import java.util.Collections;
+import java.util.PriorityQueue;
 import java.util.LinkedList;
-import java.util.Deque;
+import java.util.Deque; 
 
 /**
- * Write a description of class Enemy here.
+ * Main game enemy superclass
  * 
  * @author Edwin
- * @version (a version number or a date)
+ * @version 1
  */
-public class Enemy extends SuperSmoothMover
+public abstract class Enemy extends SuperSmoothMover
 {
-    protected boolean pursuing, isMoving;
-    protected int health, speed, damage;
-    protected double targetRadius;
-    protected int centerX, centerY;
-    protected Hero h = null;
+    protected boolean pursuing, isMoving, tookDamage; // utility booleans (attacking, animation then damage)
+    protected int health, speed, damage; // standard variables
+    protected double targetRadius; // target hero radius
+    protected int centerX, centerY; // home x, home y
+    protected Hero h = null; 
     protected int[][] directions = new int[][] {
             {-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}
-    };
-    protected Deque<int[]> currentPath;
-    // protected SightlineOverlay sl;
-    public static int GRID_CHECK = 24;
-    protected int spawnX;
-    protected int spawnY;
+    }; // used for pathfinding
+    protected Deque<int[]> currentPath; // path the enemy is tracing
+    public static int GRID_CHECK = 24; // individual square size (used for a*)
+    protected int spawnX; 
+    protected int spawnY; // spawn coordniates
     
     protected boolean right;
-    protected SimpleHitbox hitbox;
-    protected Overlay overlay;
-    protected int actNum, frameNum;
-    protected int homeRadius;
+    protected SimpleHitbox hitbox; // hitbox
+    protected Overlay overlay; // overlay that follows hitbox (debugging)
+    protected int actNum, frameNum; // used for animation and other misc things
+    protected int homeRadius; // radius in which it can move from its home
     
     public Enemy(int health, int speed, int damage, double targetRadius, int centerX, int centerY) {
         this.health = health;
@@ -41,21 +42,24 @@ public class Enemy extends SuperSmoothMover
         this.damage = damage;
         this.targetRadius = targetRadius;
         this.centerX = centerX; this.centerY = centerY;
-        currentPath = new LinkedList<int[]>();
-        // sl = new SightlineOverlay(new Pair(0, 0), new Pair(0, 0));
-        spawnX = centerX;
+        currentPath = new LinkedList<int[]>(); // initialize to prevent error
+        spawnX = centerX; // set the center coords to spawn coorss
         spawnY = centerY;
     }
      
-    
+    /**
+     * Act - do whatever the Enemy wants to do. This method is called whenever
+     * the 'Act' or 'Run' button gets pressed in the environment.
+     */
     public void act()
     {
+        // if the enemy isdead, remove the hitbox
         if (health <= 0) {
             getWorldOfType(GameWorld.class).enemyDied(this);
             SimpleHitbox.allHitboxesInWorld.remove(hitbox);
-            getWorld().getObjects(Hero.class).get(0).getGold(1);
-            getWorld().removeObject(overlay);
-            getWorld().removeObject(this);
+            getWorld().getObjects(Hero.class).get(0).getGold(1); // add gold
+            //getWorld().removeObject(overlay);
+            getWorld().removeObject(this); // remove enemy
         }
     }
     
@@ -63,6 +67,9 @@ public class Enemy extends SuperSmoothMover
         return overlay;
     }
     
+     /**
+     * Get the hero in the target radius
+     */
     protected Hero getHeroInRadius() {
         ArrayList<Hero> hero = (ArrayList<Hero>) getObjectsInRange((int)targetRadius, Hero.class);
         if (hero.size() != 0) {
@@ -77,7 +84,7 @@ public class Enemy extends SuperSmoothMover
      * @param radius - the enemy's home radius
      */
     protected Pair getRandomPositionWithinRadius(double radius) {
-        Random random = new Random();
+        Random random = new Random(); 
         boolean isValid = false;
         int curX = getX(), curY = getY();
         int newX = 0, newY = 0;
@@ -101,39 +108,56 @@ public class Enemy extends SuperSmoothMover
             }
             
         }
-        setLocation(curX, curY);
+        setLocation(curX, curY); // set back to current locatoin
         
         return new Pair(newX, newY);
     }
     
-    
+     /**
+     * Process the path to be used in pathfinding
+     *
+     * @param cellData - 2d array of cells, which contain data about a singular tile in the world
+     * @param target - one array with 2 elements, x and y coordinate
+     */
     protected ArrayList<int[]> tracePath(Cell[][] cellData, int[] target) {
-        ArrayList<int[]> path = new ArrayList<int[]>();
+        ArrayList<int[]> path = new ArrayList<int[]>(); 
         int row = target[0];
         int col = target[1];
-       
+        
         while (!(cellData[row][col].getParent()[0] == row && cellData[row][col].getParent()[1] == col)) {
             // reveresed as cols is the x-axis and row is the y-axis
             path.add(new int[]{col*GRID_CHECK, row*GRID_CHECK});
             int tempRow = cellData[row][col].getParent()[0];
-            int tempCol = cellData[row][col].getParent()[1];
+            int tempCol = cellData[row][col].getParent()[1]; 
             row = tempRow;
             col = tempCol;
            
         }
        
-        Collections.reverse(path);
+        Collections.reverse(path); //reverse the path to use for moving
         return path;
     }
-    
+    /**
+     * Euclidean distance calculator
+     *
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     */
     protected double calculateDistance(int x1, int y1, int x2, int y2)
     {
         int dx = x2 - x1;
         int dy = y2 - y1;
         return Math.sqrt(dx*dx + dy*dy);
     }
-   
-    // Method to check if two line segments intersect
+    
+    /**
+     * Method to check if two line segments intersect
+     *
+     * @param l1 - first line
+     * @param l2 - second line
+     */
     protected boolean doLinesIntersect(Line l1, Line l2) {
         int o1 = orientation(l1.start, l1.end, l2.start);
         int o2 = orientation(l1.start, l1.end, l2.end);
@@ -159,13 +183,25 @@ public class Enemy extends SuperSmoothMover
         return false;
     }
 
-    // Helper method to find the orientation of the ordered triplet (p, q, r)
+    /**
+     * Helper method to find the orientation of the ordered triplet (p, q, r)
+     *
+     * @param p - first point
+     * @param q - second point
+     * @param r - third point
+     */
     protected int orientation(Pair p, Pair q, Pair r) {
         int val = (q.s - p.s) * (r.f - q.f) - (q.f - p.f) * (r.s - q.s);
         if (val == 0) return 0; // collinear
         return (val > 0) ? 1 : 2; // clockwise : counterclockwise
     }
 
+    /**
+     * Method to check line of sight
+     * @param enemy - coords of enemy
+     * @param player - coords of player
+     * @param obstacles - List of wall lines
+     */
     // Method to check line of sight
     protected boolean hasLineOfSight(Pair enemy, Pair player, List<Line> obstacles) {
         Line sightLine = new Line(enemy, player);
@@ -178,8 +214,12 @@ public class Enemy extends SuperSmoothMover
         }
         return true;
     }
-    
-    // Check if point q lies on segment pr
+    /**
+     * Method to check pt q lies on segment pr
+     * @param p 
+     * @param q
+     * @param r
+     */
     protected boolean onSegment(Pair p, Pair q, Pair r) {
         if (q.f <= Math.max(p.f, r.f) && q.f >= Math.min(p.f, r.f) &&
             q.s <= Math.max(p.s, r.s) && q.s >= Math.min(p.s, r.s)) {
@@ -187,7 +227,10 @@ public class Enemy extends SuperSmoothMover
         }
         return false;
     }
-
+    /**
+     * Method to unload walls into a list of lines
+     * @param a - arraylist of walls
+     */
     protected List<Line> processWalls(ArrayList<Wall> a) {
         List<Line> obstacles = new ArrayList<Line>();
         for (Wall w: a) {
@@ -199,20 +242,28 @@ public class Enemy extends SuperSmoothMover
         return obstacles;
     }
     
+    // getter for health
     public int getHealth(){
         return health;
     }
     
+    // setter for health
     public void setHealth(int health) {
         this.health = health;
     }
     
+    // Damage the enemy
     public void takeDamage(int damage) {
-        health -= damage;
-        System.out.println(this);
+        if (!tookDamage && (this instanceof Ogre || this instanceof Wizard)) {
+            health -= damage;
+            tookDamage = true;
+        } else if (this instanceof Imp){
+            health -= damage;
+            tookDamage = true;
+        }
     }
     
-    public SimpleHitbox getHitbox() {
+    public SimpleHitbox getHitbox() { // getter for hitbox
         return hitbox;
     }
 
@@ -232,7 +283,7 @@ public class Enemy extends SuperSmoothMover
      */
     public void addedToWorld(World w) {
         setLocation(spawnX, spawnY);
-        SimpleHitbox.allHitboxesInWorld.add(hitbox);
+        SimpleHitbox.allHitboxesInWorld.add(hitbox); // add hitbox to list
     }
 
     
@@ -340,7 +391,9 @@ public class Enemy extends SuperSmoothMover
             }
         }
     }
-    
+    /**
+     * Helper Class for a* search
+     */ 
     class Cell {
         private int parent_i, parent_j;
         private double f, g, h;

@@ -1,74 +1,120 @@
-import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import greenfoot.*;  // Greenfoot classes
 
 /**
- * Write a description of class Wand here.
+ * Wand weapon, shoots a red ball projectile.
+ * This class handles the behavior of the wand, including animation and shooting projectiles.
+ * Extends from Weapon class.
  * 
- * @author Edwin Dong, Andy Feng
- * @version (a version number or a date)
+ * Authors: Edwin Dong, Andy Feng
+ * Version: (a version number or a date)
  */
 public class Wand extends Weapon
 {
+    GreenfootImage wand = new GreenfootImage("weapon_red_magic_staff.png"); // Image of the wand
+    private int damage, actNum; // Damage value and action number for timing
+    private BallProjectile proj; // Projectile object
+    private boolean attackOnce; // Flag to ensure attack happens only once per click
+    
     /**
-     * Act - do whatever the Wand wants to do. This method is called whenever
-     * the 'Act' or 'Run' button gets pressed in the environment.
+     * Constructor for Wand class.
+     * Initializes damage, image, and other variables.
+     * 
+     * @param damage The damage value inflicted by the wand.
      */
+    public Wand(int damage) {
+        super(damage); // Call superclass constructor with damage value
+        this.damage = damage; // Initialize damage
+        setImage(wand); // Set wand image
+        actNum = 0; // Initialize action number
+        attackOnce = true; // Initialize attack flag
+    }
     
-    GreenfootImage wand = new GreenfootImage("weapon_red_magic_staff.png");
-    private int damage, actNum;
-    private BallProjectile proj;
-    private boolean attackOnce;
-    
+    /**
+     * Act method for wand behavior.
+     * Controls animation, shooting, and attack logic based on holder (Hero or Enemy).
+     */
     public void act()
     {
-        super.act();
-        animate();
-        if (getHolder() instanceof Enemy && isAttacking == true && actNum % 22 == 0) isAttacking = false;
-        if (getHolder() instanceof Hero) isAttacking = GameWorld.isMouseHolding();
-        if(!GameWorld.isMouseHolding()) attackOnce = true;
-        attack();
-        actNum++;
+        super.act(); // Call superclass act method
+        animate(); // Animate wand based on attack state
+        // Prevent continuous attack for enemies, ensure attack once for heroes
+        if (getHolder() instanceof Enemy && isAttacking == true && actNum % 22 == 0) {
+            isAttacking = false;
+        }
+        if (getHolder() instanceof Hero) {
+            isAttacking = GameWorld.isMouseHolding(); // Set attack state based on mouse click
+        }
+        if (!GameWorld.isMouseHolding()) {
+            attackOnce = true; // Reset attack flag when mouse is released
+        }
+        attack(); // Perform attack logic
+        actNum++; // Increment action number
     }
     
-    public Wand(int damage) {
-        super(damage);
-        this.damage = damage;
-        setImage(wand);
-        actNum = 0;
-        attackOnce = true;
-    }
-    
+    /**
+     * Method to shoot a projectile from the wand.
+     * Calculates direction and creates a projectile object accordingly.
+     * 
+     * @param dx Horizontal distance from wand to target
+     * @param dy Vertical distance from wand to target
+     */
     public void shoot(int dx, int dy) {
-        isAttacking = true;
+        isAttacking = true; // Set attacking flag
         double clockwiseAngle = 0;
         // Calculate angle in radians from enemy to hero
         double angleRadians = Math.atan2(dy, dx);
-    
+        
         // Convert radians to degrees
         double angleDegrees = Math.toDegrees(angleRadians);
-    
-        // Adjust for Greenfoot's coordinate system (clockwise and 0-360)
+        
+        // Get the clockwise angle
         clockwiseAngle = (angleDegrees + 360) % 360;
-        proj = new BallProjectile(20, 3, (int)clockwiseAngle); 
-        getWorld().addObject(proj, getX(), getY()-15);
-    }
-    
-    public void attack() {
-        if(getHolder() instanceof Hero && beingUsed && isAttacking && attackOnce) {
-            attackOnce = false;
-            shoot(GameWorld.getMouseX() - getX(), GameWorld.getMouseY() - getY());
-        }
-    }
-    
-    private void animate(){
-        if(isAttacking)  {
-            if(getHolder() instanceof Hero) setRotation(((Hero)getHolder()).right ? 20 : -20); 
-            else setRotation(20);
+        
+        if (getHolder() instanceof Hero) {
+            // Create projectile for Hero
+            BallProjectileHero b = new BallProjectileHero(20, 5, (int)clockwiseAngle); 
+            getWorld().addObject(b, getX(), getY()-15); // Add projectile to world
         } else {
-            setRotation(0);
+            // Create projectile for Enemy
+            proj = new BallProjectile(20, 3, (int)clockwiseAngle); 
+            getWorld().addObject(proj, getX(), getY()-15); // Add projectile to world
         }
     }
     
-    public void followWizard(Wizard w){
-        setLocation(w.getX()-4, w.getY()+17);
+    /**
+     * Perform attack logic when the wand is used.
+     * Trigger shooting if held by Hero and attack condition is met.
+     */
+    public void attack() {
+        if (getHolder() instanceof Hero && beingUsed && isAttacking && attackOnce) {
+            attackOnce = false; // Ensure attack happens only once
+            shoot(GameWorld.getMouseX() - getX(), GameWorld.getMouseY() - getY()); // Shoot towards mouse position
+        }
+    }
+    
+    /**
+     * Animate the wand based on its attack state.
+     * Adjust rotation for Hero's direction.
+     */
+    private void animate() {
+        if (isAttacking) {
+            if (getHolder() instanceof Hero && beingUsed) {
+                setRotation(((Hero)getHolder()).right ? 20 : -20); // Rotate for Hero's direction
+            } else {
+                setRotation(20); // Default rotation for other holders
+            }
+        } else {
+            setRotation(0); // Reset rotation when not attacking
+        }
+    }
+    
+    /**
+     * Method to make the wand follow a Wizard actor.
+     * Adjusts the wand's position relative to the Wizard.
+     * 
+     * @param w The Wizard actor to follow.
+     */
+    public void followWizard(Wizard w) {
+        setLocation(w.getX()-4, w.getY()+17); // Adjust wand's position relative to Wizard
     }
 }

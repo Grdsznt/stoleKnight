@@ -62,7 +62,7 @@ public class RoomData
         } else if ((roomType & 64) != 0) {
             roomGrid[7][10] = new Chest(this, 7, 10);
         } else if ((roomType & 128) != 0) {
-            
+            roomGrid[7][10] = new Shop(this, 7, 10);
         }
         String[][] innerTiles = getRandomRoom(roomType);
         // (r, c) pairs
@@ -311,8 +311,8 @@ public class RoomData
             {null, null, null, null, "Wall", null, null, null, null, null, "Wall", null, null, null, null},
             {null, null, null, null, "Wall", "Wall", null, null, null, "Wall", "Wall", null, null, null, null},
             {null, null, null, null, null, "Wall", null, null, null, "Wall", null, null, null, null, null},
-            {null, null, null, null, null, "Wall", "Wall", null, "Wall",  "Wall", null, null, null, null, null},
-            {null, null, null, null, null, null,  "Wall", null,  "Wall", null, null, null, null, null, null},
+            {null, null, null, null, null, "Wall", "Wall", "Void", "Wall",  "Wall", null, null, null, null, null},
+            {null, null, null, null, null, null,  "Wall", "Void",  "Wall", null, null, null, null, null, null},
             {null, null, null, null, null, null,  "Wall",  "Wall",  "Wall", null, null, null, null, null, null},
             {null, null, null, null, null, null, null,  "Wall", null, null, null, null, null, null, null},
             
