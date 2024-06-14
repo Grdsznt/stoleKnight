@@ -73,7 +73,6 @@ public class Chest extends Tile
        
         GreenfootImage image = new GreenfootImage("Tiles/chest3.png");
         
-
         setImage(image);
         getImage().scale(48, 48);
     }

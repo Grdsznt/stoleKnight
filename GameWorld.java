@@ -1,6 +1,12 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Scanner;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Scanner;
 
 /**
  * <p>
@@ -384,9 +390,18 @@ public class GameWorld extends World
         return true;
     }
     
-    public void nextMap(Hero hero) {
+    public void nextMap(Hero hero){
         if (floor == 10) {
-            Greenfoot.setWorld(new EndWorld(1));
+            try {
+                FileWriter out = new FileWriter("Data.txt");
+                PrintWriter output = new PrintWriter(out);
+                output.println("1");
+                output.close();
+            } catch (IOException e) {
+                System.out.println("Error: " + e); // otherwise, if there is an IOException, let the user know
+            } finally {
+                Greenfoot.setWorld(new StartWorld());
+            }
             return;
         }
         unloadRoom(currentRoomRow, currentRoomCol);

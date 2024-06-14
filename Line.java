@@ -4,7 +4,7 @@
  * Used for Line of sight.
  * 
  * @author Edwin
- * @version (a version number or a date)
+ * @version 1
  */
 public class Line  
 {
