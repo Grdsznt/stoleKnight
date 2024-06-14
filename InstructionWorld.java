@@ -91,7 +91,7 @@ public class InstructionWorld extends World
             Greenfoot.setWorld(sw);
         }
         if(Greenfoot.mousePressed(start)) {
-            gw = new GameWorld();
+            gw = new GameWorld(1);
             Greenfoot.setWorld(gw);
         }
     }
