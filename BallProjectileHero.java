@@ -1,7 +1,7 @@
 import greenfoot.*;
 import java.util.ArrayList;
 /**
- * Write a description of class BallProjectile here.
+ * Red glowing projectile (for heroes to use)
  * 
  * @author Edwin Dong, Andy Feng
  * @version (a version number or a date)
