@@ -3,8 +3,6 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 /**
  * Instructions of how to play the game.
  * 
- * Background image: https://wallpapercave.com/soul-knight-wallpapers
- * 
  * @author Jean P
  * @version June 2024
  */
@@ -91,7 +89,7 @@ public class InstructionWorld extends World
             Greenfoot.setWorld(sw);
         }
         if(Greenfoot.mousePressed(start)) {
-            gw = new GameWorld(1);
+            gw = new GameWorld(sw.getFloor());
             Greenfoot.setWorld(gw);
         }
     }
