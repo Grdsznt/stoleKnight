@@ -10,8 +10,9 @@ import java.util.ArrayList;
  * This is the main character of the game, the player can control control this character to pass the game
  * The main character will have various actions:
  * <ul>
- * <li> 
- * <ul>'
+ * <li> moving around
+ * <li> attack, pickup and switch weapon 
+ * <ul>
  */
 public abstract class Hero extends SuperSmoothMover
 {
@@ -451,31 +452,44 @@ public abstract class Hero extends SuperSmoothMover
     
     public abstract void animation();
     
+    /**
+     * Updates the facing direction of the hero based on user input or mouse position.
+     */
     private void updateFacingDirection() {
         if (GameWorld.isMouseHolding()) {
+            // If mouse is being held, determine facing direction based on mouse position
             right = GameWorld.getMouseX() >= getX();
         } else {
+            // If keys 'a' or 'd' are pressed, set facing direction accordingly
             if (Greenfoot.isKeyDown("a")) right = false;
             if (Greenfoot.isKeyDown("d")) right = true;
         }
     }
-
+    
+    /**
+     * Updates the position and orientation of the current weapon.
+     * Adjusts offsets based on the type of weapon equipped.
+     */
     private void updateWeaponPosition() {
         if(currentWeapon != null) {
             int offsetX;
             int offsetY;
-
+    
+            // Determine offsets based on facing direction and weapon type
             if(right) {
-                offsetX = currentWeapon instanceof Sword ? 15 : 5; // Adjusted offset
+                offsetX = currentWeapon instanceof Sword ? 15 : 5; // Adjusted offset for right-facing
                 offsetY = currentWeapon instanceof Sword ? 10 : 5;
                 currentWeapon.setRotation(0);
             } else {
-                offsetX = currentWeapon instanceof Sword ? -15 : -5; // Adjusted offset
+                offsetX = currentWeapon instanceof Sword ? -15 : -5; // Adjusted offset for left-facing
                 offsetY = currentWeapon instanceof Sword ? 10 : 5;
                 currentWeapon.setRotation(0);
             }
+    
+            // Set weapon location relative to hero
             currentWeapon.setLocation(getX() + offsetX, getY() + offsetY);
-
+    
+            // Set weapon image based on facing direction, only if not attacking
             if (!attack) {
                 if(currentWeapon instanceof Sword) {
                     currentWeapon.setImage(right ? ((Sword) currentWeapon).swordRightFrames[0] : ((Sword) currentWeapon).swordLeftFrames[0]);
@@ -485,7 +499,8 @@ public abstract class Hero extends SuperSmoothMover
                 }
             }
         }
-
+    
+        // Position other weapons in inventory
         for (Weapon weapon : weaponsInInventory) {
             if (weapon != currentWeapon) {
                 weapon.setLocation(getX() + (right ? -10 : 10), getY());
@@ -493,32 +508,44 @@ public abstract class Hero extends SuperSmoothMover
             }
         }
     }
-
-
+    
+    /**
+     * Switches the current weapon in the hero's inventory based on key inputs.
+     * Provides cooldown to avoid rapid switching.
+     */
     private void switchWeaponInInventory() {
         if (weaponActionCooldown == 0) {
             try {
+                // Switch weapon based on key presses ('1' for first weapon, '2' for second)
                 if(Greenfoot.isKeyDown("1")){
                     currentWeapon = weaponsInInventory.get(0);
                     currentWeapon.beingUsed = true;
-                    weaponActionCooldown = 5; // Adding cooldown to avoid multiple detections
+                    weaponActionCooldown = 5; // Cooldown period to prevent rapid switches
                 }
                 if(Greenfoot.isKeyDown("2")){
                     currentWeapon = weaponsInInventory.get(1);
                     currentWeapon.beingUsed = true;
-                    weaponActionCooldown = 5; // Adding cooldown to avoid multiple detections
+                    weaponActionCooldown = 5; // Cooldown period to prevent rapid switches
                 }
             } catch (IndexOutOfBoundsException e) {
                 System.out.println("No weapon there.");
             }
         }
     }
-
+    
+    /**
+     * Drops the current weapon from the hero's inventory onto the game world.
+     */
     private void dropWeapon() {
         currentWeapon.beingUsed = false;
         getWorld().addObject(currentWeapon, getX(), getY());
     }
-
+    
+    /**
+     * Picks up a weapon from the ground and switches it with the current weapon in inventory.
+     * Maintains the weapon's state and updates inventory accordingly.
+     * @param weaponOnGround The weapon object to be picked up.
+     */
     private void pickUpAndSwitchCurrentWeapon(Weapon weaponOnGround) {
         int currentWeaponIndex = weaponsInInventory.indexOf(currentWeapon);
         dropWeapon();
@@ -526,7 +553,11 @@ public abstract class Hero extends SuperSmoothMover
         currentWeapon = weaponOnGround;
         currentWeapon.beingUsed = true;
     }
-
+    
+    /**
+     * Handles actions related to weapons, such as picking up new weapons from the ground.
+     * Manages cooldowns to prevent rapid actions.
+     */
     private void handleWeaponActions() {
         ArrayList<Weapon> weaponsOnGround = (ArrayList<Weapon>) getIntersectingObjects(Weapon.class);
         for(Weapon weaponOnGround : weaponsOnGround) {
@@ -535,60 +566,96 @@ public abstract class Hero extends SuperSmoothMover
             }
         }
     }
-
+    
+    /**
+     * Handles the specific action of picking up a weapon from the ground.
+     * Determines whether to add the weapon to inventory or switch it with the current weapon.
+     * @param weaponOnGround The weapon object to be picked up.
+     */
     private void handleWeaponPickup(Weapon weaponOnGround) {
         if (weaponActionCooldown == 0) {
             boolean pickedUp = false;
             if (weaponsInInventory.size() < 2 && Greenfoot.isKeyDown("e")) {
                 weaponsInInventory.add(weaponOnGround);
-                weaponActionCooldown = 20; // Adding cooldown to avoid multiple detections
+                weaponActionCooldown = 20; // Cooldown period to prevent rapid pickups
                 pickedUp = true;
             } else if (weaponsInInventory.size() >= 2 && Greenfoot.isKeyDown("e")) {
                 pickUpAndSwitchCurrentWeapon(weaponOnGround);
-                weaponActionCooldown = 20; // Adding cooldown to avoid multiple detections
+                weaponActionCooldown = 20; // Cooldown period to prevent rapid pickups
                 pickedUp = true;
             }
             if (!pickedUp) {
                 return;
             }
-            getWorld().removeObject(weaponOne);
-            getWorld().removeObject(weaponTwo);
-            weaponOne = new Image(weaponsInInventory.get(0).getImage());
-            if (weaponOne.getImage().getWidth() > weaponOne.getImage().getWidth()) {
-                double multiplier = 60.0 / weaponOne.getImage().getWidth();
-                weaponOne.getImage().scale((int)(multiplier * weaponOne.getImage().getWidth()), (int)(multiplier * weaponOne.getImage().getHeight()));
-            } else {
-                double multiplier = 60.0 / weaponOne.getImage().getHeight();
-                weaponOne.getImage().scale((int)(multiplier * weaponOne.getImage().getWidth()), (int)(multiplier * weaponOne.getImage().getHeight()));
-            }
-            if (weaponsInInventory.size()   < 2) {
-                return;
-            }
-            weaponTwo = new Image(weaponsInInventory.get(1).getImage());
-            if (weaponTwo.getImage().getWidth() > weaponTwo.getImage().getWidth()) {
-                double multiplier = 60.0 / weaponTwo.getImage().getWidth();
-                weaponTwo.getImage().scale((int)(multiplier * weaponTwo.getImage().getWidth()), (int)(multiplier * weaponTwo.getImage().getHeight()));
-            } else {
-                double multiplier = 60.0 / weaponTwo.getImage().getHeight();
-                weaponTwo.getImage().scale((int)(multiplier * weaponTwo.getImage().getWidth()), (int)(multiplier * weaponTwo.getImage().getHeight()));
-            }
-            getWorld().addObject(weaponOne, weaponLabelOne.getX(), weaponLabelOne.getY());
-            getWorld().addObject(weaponTwo, weaponLabelTwo.getX(), weaponLabelTwo.getY());
+    
+            // Update UI representation of inventory weapons
+            // Assuming weaponOne and weaponTwo are UI elements representing inventory weapons
+            // Update their images and positions based on the new inventory state
+            updateWeaponUIRepresentation();
         }
     }
     
+    /**
+     * Interacts with specific tiles on the map, such as portals or chests.
+     * Executes actions based on user input.
+     */
     private void tileInteraction() {
         Portal portal = (Portal)getOneIntersectingObject(Portal.class);
         if (portal != null) {
             if (Greenfoot.isKeyDown("e")) {
+                // Interact with portal (e.g., transition to next map)
                 getWorldOfType(GameWorld.class).nextMap(this);
             }
         }
         Chest chest = (Chest)getOneIntersectingObject(Chest.class);
         if (chest != null) {
             if (Greenfoot.isKeyDown("e")) {
+                // Interact with chest (e.g., open chest and obtain rewards)
                 chest.interact(this);
             }
+        }
+    }
+    
+    /**
+     * Updates the UI representation of the hero's weapons in the game world.
+     * Assumes existence of UI elements weaponOne and weaponTwo.
+     */
+    private void updateWeaponUIRepresentation() {
+        // Remove existing UI representations
+        getWorld().removeObject(weaponOne);
+        getWorld().removeObject(weaponTwo);
+    
+        // Update UI representation for weapon one
+        weaponOne = new Image(weaponsInInventory.get(0).getImage());
+        scaleImageToFit(weaponOne);
+    
+        // Add weapon one to the world at appropriate location
+        getWorld().addObject(weaponOne, weaponLabelOne.getX(), weaponLabelOne.getY());
+    
+        // If only one weapon in inventory, return as no need to update UI for second weapon
+        if (weaponsInInventory.size() < 2) {
+            return;
+        }
+    
+        // Update UI representation for weapon two
+        weaponTwo = new Image(weaponsInInventory.get(1).getImage());
+        scaleImageToFit(weaponTwo);
+    
+        // Add weapon two to the world at appropriate location
+        getWorld().addObject(weaponTwo, weaponLabelTwo.getX(), weaponLabelTwo.getY());
+    }
+    
+    /**
+     * Scales the given image to fit within a fixed size (60x60 pixels).
+     * @param image The image to be scaled.
+     */
+    private void scaleImageToFit(Image image) {
+        if (image.getImage().getWidth() > image.getImage().getWidth()) {
+            double multiplier = 60.0 / image.getImage().getWidth();
+            image.getImage().scale((int)(multiplier * image.getImage().getWidth()), (int)(multiplier * image.getImage().getHeight()));
+        } else {
+            double multiplier = 60.0 / image.getImage().getHeight();
+            image.getImage().scale((int)(multiplier * image.getImage().getWidth()), (int)(multiplier * image.getImage().getHeight()));
         }
     }
     
@@ -618,7 +685,6 @@ public abstract class Hero extends SuperSmoothMover
         }   
 
     }
-    
     
     /**
      * Adds to the hitboxList
