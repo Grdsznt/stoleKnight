@@ -16,11 +16,6 @@ import java.util.ArrayList;
  */
 public abstract class Hero extends SuperSmoothMover
 {
-    /**
-     * Act - do whatever the MainCharacter wants to do. This method is called whenever
-     * the 'Act' or 'Run' button gets pressed in the environment.
-     */
-    
     //ArrayList<Power> powerList;
     protected ArrayList<Weapon> weaponsInInventory = new ArrayList<Weapon>();
     protected int hp;
