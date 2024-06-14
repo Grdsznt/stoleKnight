@@ -13,9 +13,6 @@ import java.util.StringTokenizer;
 /**
  * This is the StartWorld where the user will see first.
  * 
- * Cover image: https://www.vg247.com/soul-knight-codes
- * Characters: https://wholesomedev.itch.io/kingfree
- * 
  * @author Jean P, Edwin Dong
  * @version June 2024
  */
@@ -137,5 +134,9 @@ public class StartWorld extends World
             System.out.println("File not found.");
         }
         return d;
+    }
+    
+    public int getFloor(){
+        return floor;
     }
 }

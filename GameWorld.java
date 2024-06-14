@@ -28,7 +28,11 @@ import java.util.Scanner;
  * 
  * <h2> References </h2>
  * <h3> Art </h3>
- * https://0x72.itch.io/dungeontileset-ii - GrafxKid <br>
+ * <ul>https://0x72.itch.io/dungeontileset-ii - GrafxKid 
+ * <ul>Start World cover image: https://www.vg247.com/soul-knight-codes
+ * <ul>Instruction World background image: https://wallpapercave.com/soul-knight-wallpapers
+ * <ul>Character with ax: https://wholesomedev.itch.io/kingfree
+ * <br>
  * <h3> Sound </h3>
  * 
  * <h3> Code </h3>
