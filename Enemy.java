@@ -15,10 +15,6 @@ import java.util.Deque;
  */
 public class Enemy extends SuperSmoothMover
 {
-    /**
-     * Act - do whatever the Enemy wants to do. This method is called whenever
-     * the 'Act' or 'Run' button gets pressed in the environment.
-     */
     protected boolean pursuing, isMoving;
     protected int health, speed, damage;
     protected double targetRadius;

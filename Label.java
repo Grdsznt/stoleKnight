@@ -42,12 +42,12 @@ public class Label extends Actor
     /**
      * Create a new label, initialise it with the needed text, the font size, the text color and background color.
      */
-    public Label(String value, int fontSize, Color textColor, Color bgdColor)
+    public Label(String value, int fontSize, Color lineColor, Color fillColor)
     {
         this.value = value;
         this.fontSize = fontSize;
-        this.lineColor = textColor;
-        this.fillColor = bgdColor;
+        this.lineColor = lineColor;
+        this.fillColor = fillColor;
         updateImage();
     }
 
