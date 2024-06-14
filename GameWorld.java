@@ -40,7 +40,7 @@ public class GameWorld extends World
      * 
      */
     
-    public GameWorld()
+    public GameWorld(int floor)
     {    
         // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
         super(1200, 720, 1); 
@@ -72,10 +72,9 @@ public class GameWorld extends World
         
         background.drawImage(stats, 15, 15);
         setBackground(background);
-        floor = 1;
-        floorLabel = new Label("Floor 1", 30);
+        this.floor = floor;
+        floorLabel = new Label("Floor " + floor, 30);
         addObject(floorLabel, 104, 690);
-        
     }
     
     public ArrayList<Wall> getObstacles() {
@@ -379,6 +378,9 @@ public class GameWorld extends World
         return new int[]{currentRoomRow, currentRoomCol};
     }
     
+    public int getFloor() {
+        return floor;
+    }
     
     
     public void act() {
