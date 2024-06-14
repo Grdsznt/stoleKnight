@@ -1,5 +1,6 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.ArrayList;
+import java.util.HashSet;
 /**
  * Write a description of class MainCharacter here.
  * 
@@ -20,12 +21,13 @@ public abstract class Hero extends SuperSmoothMover
      * the 'Act' or 'Run' button gets pressed in the environment.
      */
     
-    //ArrayList<Power> powerList;
+    protected HashSet<String> powerList = new HashSet<String>();
     protected ArrayList<Weapon> weaponsInInventory = new ArrayList<Weapon>();
     protected int hp;
     protected int maxHP;
     protected int shield;
     protected int maxShield;
+    protected int shieldRecoverTime;
     protected double speed;
     protected int gold;
     private boolean mouseHold;
@@ -111,10 +113,11 @@ public abstract class Hero extends SuperSmoothMover
         weaponLabelOne = new Image("weaponslot.png");
         weaponLabelTwo = new Image("weaponslot.png");
         
+        
         hitboxList = new ArrayList<Class<?>>();
         hitboxList.add(Wall.class);
         hitboxList.add(Chest.class);
-        
+        shieldRecoverTime = 300;
         damageSoundPlayer();
     }
     
@@ -131,6 +134,7 @@ public abstract class Hero extends SuperSmoothMover
         world.addObject(weaponLabelOne, 56, 230);
         world.addObject(weaponLabelTwo, 152, 230);
         world.addObject(weaponOne, 56, 230);
+        world.addObject(new Label("Buffs", 32), 56, 300);
     }
     
     public void act() {
@@ -141,7 +145,7 @@ public abstract class Hero extends SuperSmoothMover
                 isInvincible = false;
             }
         }
-        if (lastHitCounter >= 300 && shield < maxShield) {
+        if (lastHitCounter >= shieldRecoverTime && shield < maxShield) {
             if (lastHitCounter % 60 == 0) {
                 shield++;
                 shieldBar.update(shield);
@@ -435,6 +439,9 @@ public abstract class Hero extends SuperSmoothMover
     
     public void getGold(int amount) {
         gold += amount;
+        if (powerList.contains("Better Loot")) {
+            gold += amount;
+        }
         goldLabel.setValue(gold);
     }
     
@@ -470,7 +477,7 @@ public abstract class Hero extends SuperSmoothMover
                 offsetY = currentWeapon instanceof Sword ? 10 : 5;
                 currentWeapon.setRotation(0);
             } else {
-                offsetX = currentWeapon instanceof Sword ? -15 : -5; // Adjusted offset
+                offsetX = currentWeapon instanceof Sword ? -10 : -5; // Adjusted offset
                 offsetY = currentWeapon instanceof Sword ? 10 : 5;
                 currentWeapon.setRotation(0);
             }
@@ -639,5 +646,61 @@ public abstract class Hero extends SuperSmoothMover
      */
     public void removeHitboxList(Class<?> cls) {
         hitboxList.remove(cls);
+    }
+    
+    
+    /**
+     * Adds a power to the player
+     *
+     * @param power The power
+     */
+    public void addPower(String power) {
+        Image buffImage = new Image("buffs/"+power+".png");
+        int powerSize = powerList.size();
+        buffImage.getImage().scale(48, 48);
+        getWorld().addObject(buffImage, 48 + (powerSize % 3) * 64, 350 + (powerSize/3)*64);
+        powerList.add(power);
+        // Better loot is handled at the chest
+        switch (power) {
+            case "Extra HP":
+                maxHP += 2;
+                hp += 2;
+                hpBar.setMaxVal(maxHP);
+                hpBar.update(hp);
+                hpNumber.setValue(hp + "/" + maxHP);
+                break;
+            case "Swiftness":
+                speed += 2;
+                break;
+            case "More Shield":
+                shield+=2;
+                maxShield+=2;
+                shieldBar.setMaxVal(maxHP);
+                shieldBar.update(hp);
+                shieldNumber.setValue(shield + "/" + maxShield);
+                break;
+            case "Faster Shield Recover":
+                shieldRecoverTime /= 2;
+                break;
+            case "Longer Immunity":
+                invincibleDuration *= 2;
+                break;
+        }
+        
+        
+    }
+    
+    
+    /**
+     * Returns the hero's current powers
+     *
+     * @return Returns the powerList
+     */
+    public HashSet<String> getPowerList() {
+        return powerList;
+    }
+    
+    public ArrayList<Weapon> getWeapons() {
+        return weaponsInInventory;
     }
 }

@@ -67,27 +67,31 @@ public class Sword extends Weapon {
             animateSword(right);
         }
         
-        if(isSwinging) attack();
+        if(isSwinging) {
+            boolean right = holder instanceof Hero ? ((Hero) holder).right : ((Enemy) holder).right;
+            attack();
+            swing(right ? swordRightFrames : swordLeftFrames);
+        }
     }
 
     private void animateSword(boolean right) {
         if(getHolder() instanceof Hero) {
             if (isAttacking && beingUsed && recoverCounter == 0) {
                 isSwinging = true;
-                swing(right ? swordRightFrames : swordLeftFrames);
+                
             } else if (beingUsed && !isSwinging && recoverCounter != 0) {
+                System.out.println("bro");
                 setImage(right ? swordRightFrames[0] : swordLeftFrames[0]);
             }
         }
     }
 
     private void swing(GreenfootImage[] swingFrames) {
-        if(animationTimer.millisElapsed() > 1200) {
+        if(animationTimer.millisElapsed() > 15) {
             setImage(swingFrames[frameNumber]);
             frameNumber++;
-        } else {
             animationTimer.mark();
-        }
+        } 
         if(frameNumber >= swingFrames.length) {
             frameNumber = 0;
             recoverCounter = RECOVER_TIME;

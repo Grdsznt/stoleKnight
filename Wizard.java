@@ -47,7 +47,7 @@ public class Wizard extends Enemy
         w.followWizard(this);
         if (getWorld().getObjects(Hero.class).size() != 0) {
             if (hitbox.intersectsOval(getWorld().getObjects(Hero.class).get(0))) {
-                h = getIntersectingObjects(Hero.class).get(0);
+                h = getWorld().getObjects(Hero.class).get(0);
                 if (h != null && h.getWorld() != null) {
                     h.takeDamage(damage);
                 }

@@ -8,10 +8,12 @@ import java.util.ArrayList;
  */
 public class BuffSelection extends Actor
 {
-    
+    private Label nameLabel;
+    private Label descLabel;
     private String buffName;
     private String description;
     private ArrayList<BuffSelection> otherOptions;
+    private boolean selected;
     
     /**
      * Creates a button for the user to select
@@ -20,12 +22,15 @@ public class BuffSelection extends Actor
      * @param desc The description
      * @param otherOptions The other buffs to choose from
      */
-    public BuffSelection(String buff, String desc, ArrayList<BuffSelection> otherOptions) {
+    public BuffSelection(String buff, String desc, ArrayList<BuffSelection> otherOptions, Label nameLabel, Label descLabel) {
         buffName = buff;
         description = desc;
         this.otherOptions = otherOptions;
-        setImage("buffs/" + buff);
-        getImage().scale(48, 48);
+        setImage("buffs/" + buff + ".png");
+        getImage().scale(64, 64);
+        selected = false;
+        this.nameLabel = nameLabel;
+        this.descLabel = descLabel;
     }
     /**
      * Act - do whatever the BuffSelection wants to do. This method is called whenever
@@ -33,6 +38,41 @@ public class BuffSelection extends Actor
      */
     public void act()
     {
-        // Add your action code here.
+        if (Greenfoot.mousePressed(this)) {
+            selected = true;
+            for (BuffSelection buff : otherOptions) {
+                if (buff != this) {
+                    buff.unselect();
+                }
+            }
+            nameLabel.setValue(buffName);
+            descLabel.setValue(description);
+        }
+    }
+    
+    /**
+     * Returns if the power is currently selected 
+     *
+     * @return Returns if the power is currently selected 
+     */
+    public boolean isSelected() {
+        return selected;
+    }
+    
+    /**
+     * Deactivates the button
+     *
+     */
+    public void unselect() {
+        selected = false;
+    }
+    
+    /**
+     * Returns the buff Name
+     *
+     * @return Returns the buff name
+     */
+    public String getPowerName() {
+        return buffName;
     }
 }

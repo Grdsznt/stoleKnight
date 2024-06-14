@@ -34,7 +34,25 @@ public class Chest extends Tile
             return;
         }
         opened = true;
-        hero.getGold(5);
+        if (Greenfoot.getRandomNumber(3) == 0) {
+            int choice = Greenfoot.getRandomNumber(3);
+            Weapon newWeapon = new Sword();
+            switch (choice) {
+                case 0:
+                    newWeapon = new Sword();
+                    break;
+                case 1:
+                    newWeapon = new Bow();
+                    break;
+                case 2:
+                    newWeapon = new Wand(3);
+                    break;
+            }
+            getWorld().addObject(newWeapon, getX(), getY()+50);
+        } else {
+            hero.getGold(5);
+        }
+       
         GreenfootImage image = new GreenfootImage("Tiles/chest3.png");
         
 

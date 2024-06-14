@@ -50,7 +50,7 @@ public class BallProjectile extends SuperSmoothMover
         // int newY = getY() + (int) (2 * Math.sin(angle));
         // setLocation(newX, newY);
         move(2);
-        if (isTouching(Wall.class) || getX() > 1180 || getY() > 700 || getX() < 10 || getY() < 10) {
+        if (isTouching(Wall.class) || getX() > 1180 || getY() > 700 || getX() < 150 || getY() < 10) {
             getWorld().removeObject(overlay);
             getWorld().removeObject(this);
         }

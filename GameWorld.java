@@ -303,6 +303,12 @@ public class GameWorld extends World
             if (actor instanceof BallProjectile) {
                 removeObject(actor);
             }
+            if (actor instanceof Weapon) {
+                if (getObjects(Hero.class).get(0).getWeapons().contains(actor)) {
+                    continue;
+                }
+                removeObject(actor);
+            }
         }
     }
     
@@ -371,7 +377,14 @@ public class GameWorld extends World
         return new int[]{currentRoomRow, currentRoomCol};
     }
     
-    
+    /**
+     * Returns the floor number
+     *
+     * @return Returns the floor number
+     */
+    public int getFloor() {
+        return floor;
+    }
     
     public void act() {
         mouse = Greenfoot.getMouseInfo();

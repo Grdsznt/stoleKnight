@@ -95,6 +95,10 @@ public class Projectile extends SuperSmoothMover
         }
         
         disappear();
+        if (getX() > 1180 || getY() > 700 || getX() < 150 || getY() < 10) {
+            getWorld().removeObject(overlay);
+            getWorld().removeObject(this);
+        }
     }
 
     private int calculateRotation() {
