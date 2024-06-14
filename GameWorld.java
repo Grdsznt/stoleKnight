@@ -421,7 +421,7 @@ public class GameWorld extends World
      */
     public int getFloor() {
         return floor;
-
+    }
     
     public void act() {
         mouse = Greenfoot.getMouseInfo();
