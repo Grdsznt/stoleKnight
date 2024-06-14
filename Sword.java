@@ -9,8 +9,8 @@ import java.util.ArrayList;
  */
 public class Sword extends Weapon {
     private static final String IMAGE_PATH = "images/sword/sword";
-    private static final int DAMAGE = 10;
-    private static final int RECOVER_TIME = 60;
+    private static final int DAMAGE = 15;
+    private static final int RECOVER_TIME = 40;
 
     protected GreenfootImage[] swordRightFrames = new GreenfootImage[6];
     protected GreenfootImage[] swordLeftFrames = new GreenfootImage[6];
@@ -23,6 +23,10 @@ public class Sword extends Weapon {
     private Overlay overlay;
     //private Image effect;
     
+    /**
+     * Creates a sword
+     *
+     */
     public Sword() {
         super(DAMAGE);
         loadImages();
@@ -79,7 +83,6 @@ public class Sword extends Weapon {
                 isSwinging = true;
                 
             } else if (beingUsed && !isSwinging && recoverCounter != 0) {
-                System.out.println("bro");
                 setImage(right ? swordRightFrames[0] : swordLeftFrames[0]);
             }
         }

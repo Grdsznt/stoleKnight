@@ -1,10 +1,10 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Just an image that can be used for multiple purposes
+ * Just an actor that is used for displaying images that can move and change
  * 
- * @author (your name) 
- * @version (a version number or a date)
+ * @author Felix Zhao
+ * @version 0.1
  */
 public class Image extends Actor
 {
@@ -29,8 +29,8 @@ public class Image extends Actor
     /**
      * Creates empty image with a width and a height
      *
-     * @param width A parameter
-     * @param height A parameter
+     * @param width The width of the image
+     * @param height The height of the image
      */
     public Image(int width, int height) {
         setImage(new GreenfootImage(width, height));

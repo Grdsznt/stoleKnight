@@ -12,7 +12,8 @@ import java.util.Deque;
 /**
  * Main game enemy superclass
  * 
- * @author Edwin
+ * @author Edwin Dong
+ * @author Felix Zhao
  * @version 1
  */
 public abstract class Enemy extends SuperSmoothMover
@@ -287,20 +288,15 @@ public abstract class Enemy extends SuperSmoothMover
     }
 
     
+    
     /**
-    * <div>
-    * All people in the simulation are a subclass of this class
-    * This class gives the basic methods to all people
-    * </div>
-    * Uses A* for path finding. <br>
-    * Some information on the algorithm: <a href="https://en.wikipedia.org/wiki/A*_search_algorithm"> A* Star</a><br>
-    *
-    * Slightly Edited by Andy Feng (path find and avoid algorithm)
-    * Edit for this game (Edwin)
-    *
-    * @author Felix Zhao
-    * @version April 8th 2024
-    */
+     * Path finding algorithim
+     *
+     * @param targetX The x destination
+     * @param targetY The y destination
+     * @param radius The min radius/distance the actor has to get in before it counts as found
+     * @param overWrite if true, the current path will be overwritten
+     */
     protected void aStar(int targetX, int targetY, double radius, boolean overWrite) {
         boolean pathFound = false;
         int exactStartX = getX();
@@ -362,7 +358,7 @@ public abstract class Enemy extends SuperSmoothMover
                 setLocation(newCol*GRID_CHECK, newRow*GRID_CHECK);
                 setRotation(0);
                 boolean valid = true;
-                if (isTouching(Wall.class)) valid = false;
+                if (isTouching(Wall.class) ||isTouching(Void.class)) valid = false;
                 setLocation(currentX, currentY);
                 setRotation(currentRotation);
                 if (!valid) {

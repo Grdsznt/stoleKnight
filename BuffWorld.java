@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- * Write a description of class BuffWorld here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
+ * <p>
+ * This world is after the player enters the portal. Every other completion the player can select from a few different buffs
+ * </p>
+ * @author Felix Zhao
+ * @version 0.1
  */
 public class BuffWorld extends World
 {
@@ -35,6 +36,8 @@ public class BuffWorld extends World
     /**
      * Constructor for objects of class BuffWorld.
      * 
+     * @param world The GameWorld that created this world
+     * @param hero The hero actor
      */
     public BuffWorld(GameWorld world, Hero hero)
     {    
@@ -68,6 +71,9 @@ public class BuffWorld extends World
             addObject(buffList.get(0), 500, 550);
             addObject(buffList.get(1), 600, 550);
             addObject(buffList.get(2), 700, 550);
+        } else {
+            addObject(new Label("Good Job! More buffs on the next floor", 32), 600, 500);
+            
         }
         
         
@@ -75,6 +81,10 @@ public class BuffWorld extends World
         addObject(continueButton, 600, 620);
     }
     
+    /**
+     * Checks for clicks
+     *
+     */
     public void act() {
         if (Greenfoot.mouseMoved(continueButton)) {
             continueButton.setFillColor(new Color(200, 200, 200));

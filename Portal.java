@@ -1,10 +1,10 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class Portal here.
+ * The portal brings the player to the next floor but also the BuffWorld
  * 
- * @author (your name) 
- * @version (a version number or a date)
+ * @author Felix Zhao
+ * @version 0.1
  */
 public class Portal extends Tile
 {
@@ -13,6 +13,13 @@ public class Portal extends Tile
     private int frame = 0;
     private Label interactionLabel;
     
+    /**
+     * Creates a portal to the next floor
+     *
+     * @param parent The room it belongs to
+     * @param row The row it is in
+     * @param col The col it is in
+     */
     public Portal(RoomData parent, int row, int col) {
         super(parent, row, col);
         
@@ -26,6 +33,10 @@ public class Portal extends Tile
         setImage(animationFrames[0]);
     }
     
+    /**
+     * Animates and tracks if the player is nearby
+     *
+     */
     public void act() {
         animate();
         
@@ -37,9 +48,6 @@ public class Portal extends Tile
         
     }
     
-    public void interact() {
-        
-    }
     
     private void animate() {
         if(animationTimer.millisElapsed() < 100) return;

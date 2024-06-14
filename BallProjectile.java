@@ -40,7 +40,6 @@ public class BallProjectile extends SuperSmoothMover
         if (getWorld().getObjects(Hero.class).size() != 0) {
             if (hitbox.intersectsOval(getWorld().getObjects(Hero.class).get(0))) {
                 causeDamage();
-                getWorld().removeObject(overlay);
                 getWorld().removeObject(this);
                 return;
             }

@@ -1,14 +1,23 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class RoomExit here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
+ * This tile is used to change rooms for the player
+ * <br>
+ * It has different states depending on if the rooms can be changed or not
+ * @author Felix Zhao
+ * @version 0.1
  */
 public class RoomExit extends Tile
 {
     private String direction;
+    /**
+     * Creates a tile that can change rooms
+     *
+     * @param parent The room it belongs to
+     * @param row The row it is in
+     * @param col The col it is in
+     * @param direction This decides which room to switch to relative to the current room position
+     */
     public RoomExit(RoomData parent, int row, int col, String direction) {
         super(parent, row, col);
         GreenfootImage image = new GreenfootImage("Tiles/notinbattle.png");
@@ -17,14 +26,7 @@ public class RoomExit extends Tile
         setImage(image);
         this.direction = direction;
     }
-    /**
-     * Act - do whatever the RoomExit wants to do. This method is called whenever
-     * the 'Act' or 'Run' button gets pressed in the environment.
-     */
-    public void act()
-    {
-        // Add your action code here.
-    }
+    
     
     /**
      * Sets the images of the object depending on if a battle is currently going on
@@ -45,6 +47,11 @@ public class RoomExit extends Tile
         }
     }
     
+    /**
+     * Returns the direction of the room change
+     *
+     * @return Returns the direction of the room change
+     */
     public String activate() {
         GameWorld world = getWorldOfType(GameWorld.class);
         int[] pos = world.getRoomPosition();

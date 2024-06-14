@@ -2,10 +2,10 @@ import java.util.Arrays;
 import java.util.ArrayList;
 import greenfoot.*;
 /**
- * This class is used to store all the rooms
+ * This class is used to store all the rooms. Additionally, it is used to store indiviual rooms for the gameworld
  * 
  * @author Felix Zhao
- * @version (a version number or a date)
+ * @version 0.1
  */
 public class RoomData  
 {
@@ -13,6 +13,11 @@ public class RoomData
     protected ArrayList<Enemy> enemyList = new ArrayList<Enemy>();
     // 0000 - up, down, left, right
     // add unique room shapes later - special rooms e.x chest/shop/special room should be all the same
+    /**
+     * Creates a new room with all the data.
+     *
+     * @param roomType The type of room 
+     */
     public RoomData(int roomType) {
         
         roomGrid = new Tile[15][21]; 
@@ -137,7 +142,7 @@ public class RoomData
             }
         }
         if (roomType < 16 && possibleLocations.size() > 0) {
-            int numberOfEnemies = 5;
+            int numberOfEnemies = Greenfoot.getRandomNumber(5)+4;
             for (int i = 0; i < numberOfEnemies; i++) {
                 int[] location = possibleLocations.get(Greenfoot.getRandomNumber(possibleLocations.size()));
                 int random = Greenfoot.getRandomNumber(3);
@@ -149,6 +154,11 @@ public class RoomData
         
     }
     
+    /**
+     * Returns the grid of the room
+     *
+     * @return Returns the grid of the room
+     */
     public Tile[][] getTileData() {
         return roomGrid;
     }
@@ -163,6 +173,12 @@ public class RoomData
     }
     
     // 0000 - special rooms - start - end - loot/shop - special
+    /**
+     * Method getRandomRoom
+     *
+     * @param type The type of room
+     * @return Returns a random room layout depending on the type
+     */
     public static String[][] getRandomRoom(int type) {
         if (type >= 16) {
             return null;

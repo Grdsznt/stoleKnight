@@ -114,19 +114,20 @@ public class Projectile extends SuperSmoothMover
             for(SimpleHitbox target : hitBoxes) {
                 if(target.getActor() instanceof Enemy && hitbox.isHitBoxesIntersecting(target)) {
                     Enemy e = (Enemy) target.getActor();
-                    e.health -= damage;
+                    e.takeDamage(damage);
                 }
             }
         } else {
             for(SimpleHitbox target : hitBoxes) {
                 if(target.getActor() instanceof Hero && hitbox.isHitBoxesIntersecting(target)) {
                     Hero h = (Hero) target.getActor();
-                    h.hp -= damage;
+                    h.takeDamage(damage);
                 }
             }
         }
         if(isTouching(Wall.class)) {
             speed = 0;
+            damage = 0;
         }
     }
 

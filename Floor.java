@@ -1,13 +1,20 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class Floor here.
+ * The floor class doesn't do much other than for art
  * 
- * @author (your name) 
- * @version (a version number or a date)
+ * @author Felix Zhao
+ * @version 0.1
  */
 public class Floor extends Tile
 {
+    /**
+     * Floor construtor
+     *
+     * @param parent The room it belongs to
+     * @param row The row it is in
+     * @param col The col it is in
+     */
     public Floor(RoomData parent, int row, int col) {
         super(parent, row, col);
          GreenfootImage image = new GreenfootImage("Tiles/floor.png");
