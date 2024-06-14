@@ -11,8 +11,8 @@ import java.util.ArrayList;
  */
 public class Sword extends Weapon {
     private static final String IMAGE_PATH = "images/sword/sword"; // Path to sword images
-    private static final int DAMAGE = 10; // Damage inflicted by sword
-    private static final int RECOVER_TIME = 60; // Recovery time after swinging
+    private static final int DAMAGE = 15; // Damage inflicted by sword
+    private static final int RECOVER_TIME = 40; // Recovery time after swinging
 
     // Image frames for sword animations
     protected GreenfootImage[] swordRightFrames = new GreenfootImage[6];
@@ -79,8 +79,10 @@ public class Sword extends Weapon {
             animateSword(right); // Animate sword based on holder's direction
         }
         
-        if (isSwinging) {
+        if(isSwinging) {
+            boolean right = holder instanceof Hero ? ((Hero) holder).right : ((Enemy) holder).right;
             attack(); // Perform attack logic if sword is swinging
+            swing(right ? swordRightFrames : swordLeftFrames); // Swing sword frames based on direction
         }
     }
 
@@ -93,8 +95,8 @@ public class Sword extends Weapon {
     private void animateSword(boolean right) {
         if (getHolder() instanceof Hero) {
             if (isAttacking && beingUsed && recoverCounter == 0) {
-                isSwinging = true; // Start swinging animation
-                swing(right ? swordRightFrames : swordLeftFrames); // Swing sword frames based on direction
+                isSwinging = true;// Start swinging animation
+                
             } else if (beingUsed && !isSwinging && recoverCounter != 0) {
                 setImage(right ? swordRightFrames[0] : swordLeftFrames[0]); // Set default image
             }
@@ -108,13 +110,11 @@ public class Sword extends Weapon {
      * @param swingFrames Array of frames for swinging animation.
      */
     private void swing(GreenfootImage[] swingFrames) {
-        if (animationTimer.millisElapsed() > 1200) { // Control animation speed
+        if(animationTimer.millisElapsed() > 15) { // Control animation speed
             setImage(swingFrames[frameNumber]); // Set current animation frame
             frameNumber++; // Move to next frame
-        } else {
             animationTimer.mark(); // Reset animation timer
-        }
-        
+        } 
         if (frameNumber >= swingFrames.length) { // Check if end of animation frames
             frameNumber = 0; // Reset frame number for next swing
             recoverCounter = RECOVER_TIME; // Set recovery time

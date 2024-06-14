@@ -55,12 +55,16 @@ public class Wizard extends Enemy
         w.followWizard(this); // make the wizard follow the wand
         if (getWorld().getObjects(Hero.class).size() != 0) {
             if (hitbox.intersectsOval(getWorld().getObjects(Hero.class).get(0))) {
-                h = getIntersectingObjects(Hero.class).get(0); // if hitboxes intersect, get hero and damage hero
+                h = getWorld().getObjects(Hero.class).get(0);
                 if (h != null && h.getWorld() != null) {
                     h.takeDamage(damage);
                 }
                 // maybe red damage animation
             }
+        }
+        // additional thing to remove
+        if (health <= 0) {
+            getWorld().removeObject(w);
         }
         super.act(); // handle dying
         
@@ -98,7 +102,7 @@ public class Wizard extends Enemy
         tookDamage = false;
         homeRadius = 60;
         // Create a new Wand
-        w = new Wand(3);
+        w = new Wand(2);
         hitbox = new SimpleHitbox(this, getImage().getWidth()/2-2, getImage().getHeight()/2-9, 10, 2); // Make a hitbox that matches the size of the wizard
         // overlay = new Overlay(this, hitbox); // hitbox overlay for debugging
     }

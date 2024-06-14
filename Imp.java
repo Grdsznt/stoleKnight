@@ -60,7 +60,7 @@ public class Imp extends Enemy
                     setRotation(0); // set rotation to 0
                 }
             } else {
-                if (actNum % 20 == 0) aStar(h.getX(), h.getY(), 20, true); // no line of sight, pathfind (avoid walls)
+                if (actNum % 30 == 0) aStar(h.getX(), h.getY(), 25, true); // no line of sight, pathfind (avoid walls)
                 if (currentPath.size() > 0) { // if found a path
                     int[] nextPosition = currentPath.peekFirst(); // get next tile to move to
                     float dx = nextPosition[0] - getX();
@@ -157,6 +157,12 @@ public class Imp extends Enemy
         currentY += moveY;
     
         setLocation(currentX, currentY);
+        if (isTouching(Wall.class) || isTouching(Void.class)) {
+            setLocation(currentX-moveX, currentY-moveY);
+            isMoving = false;
+            target = null;
+            return;
+        }
         
         // Check if target is reached
         if (Math.abs(diffX) <= speed && Math.abs(diffY) <= speed) {

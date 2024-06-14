@@ -1,18 +1,17 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.ArrayList;
+import java.util.HashSet;
 /**
- * Write a description of class MainCharacter here.
+ * <p>
+ * This is the superclass of the actors the player takes contorl of. The player can attack, move and also dash
+ * </p>
+ * 
+ * Edited by Jean Pan, Edwin Dong
  * 
  * @author Andy Feng, Felix Zhao
  * @version 1.0
- * Edited by Jean Pan, Edwin Dong
  * 
- * This is the main character of the game, the player can control control this character to pass the game
- * The main character will have various actions:
- * <ul>
- * <li> moving around
- * <li> attack, pickup and switch weapon 
- * <ul>
+ * 
  */
 public abstract class Hero extends SuperSmoothMover
 {
@@ -21,12 +20,13 @@ public abstract class Hero extends SuperSmoothMover
      * the 'Act' or 'Run' button gets pressed in the environment.
      */
     
-    //ArrayList<Power> powerList;
+    protected HashSet<String> powerList = new HashSet<String>();
     protected ArrayList<Weapon> weaponsInInventory = new ArrayList<Weapon>();
     protected int hp;
     protected int maxHP;
     protected int shield;
     protected int maxShield;
+    protected int shieldRecoverTime;
     protected double speed;
     protected int gold;
     private boolean mouseHold;
@@ -38,7 +38,7 @@ public abstract class Hero extends SuperSmoothMover
     protected int invincibleDuration;
     protected boolean isTransparent;
     protected int lastHitCounter = 0;
-    protected int timeForShieldToHeal;
+    
     
     protected boolean canMove = true;
     protected double xMoveVel = 0;
@@ -112,10 +112,12 @@ public abstract class Hero extends SuperSmoothMover
         weaponLabelOne = new Image("weaponslot.png");
         weaponLabelTwo = new Image("weaponslot.png");
         
+        
         hitboxList = new ArrayList<Class<?>>();
         hitboxList.add(Wall.class);
+        hitboxList.add(Void.class);
         hitboxList.add(Chest.class);
-        
+        shieldRecoverTime = 300;
         damageSoundPlayer();
     }
     
@@ -132,6 +134,7 @@ public abstract class Hero extends SuperSmoothMover
         world.addObject(weaponLabelOne, 56, 230);
         world.addObject(weaponLabelTwo, 152, 230);
         world.addObject(weaponOne, 56, 230);
+        world.addObject(new Label("Buffs", 32), 56, 300);
     }
     
     public void act() {
@@ -142,7 +145,7 @@ public abstract class Hero extends SuperSmoothMover
                 isInvincible = false;
             }
         }
-        if (lastHitCounter >= 300 && shield < maxShield) {
+        if (lastHitCounter >= shieldRecoverTime && shield < maxShield) {
             if (lastHitCounter % 60 == 0) {
                 shield++;
                 shieldBar.update(shield);
@@ -406,6 +409,11 @@ public abstract class Hero extends SuperSmoothMover
         }
     }
     
+    /**
+     * Causes the player to take damage
+     *
+     * @param damage The damage to take
+     */
     public void takeDamage(int damage) {
         // implement later
         if (!isInvincible) {
@@ -419,7 +427,7 @@ public abstract class Hero extends SuperSmoothMover
                 hpBar.update(hp);
                 hpNumber.setValue(hp + "/" + maxHP);
             }
-            //playDamageSound();
+            playDamageSound();
             lastHitCounter = 0;
             isInvincible = true;
             invincibleStart = System.currentTimeMillis();
@@ -434,9 +442,34 @@ public abstract class Hero extends SuperSmoothMover
         }
     }
     
+    /**
+     * Gives gold to the player
+     *
+     * @param amount The gold gained
+     */
     public void getGold(int amount) {
         gold += amount;
+        if (powerList.contains("Better Loot")) {
+            gold += amount;
+        }
         goldLabel.setValue(gold);
+    }
+    
+    /**
+     * Removes gold from the player
+     *
+     * @param amount The amount of gold to take away
+     */
+    public void removeGold(int amount) {
+        gold -= amount;
+        goldLabel.setValue(gold);
+    }
+    
+    /**
+     * Returns how much gold the player has
+     */
+    public int getAmountOfGold() {
+        return gold;
     }
     
     public void renderHero() {
@@ -481,7 +514,7 @@ public abstract class Hero extends SuperSmoothMover
                 offsetY = currentWeapon instanceof Sword ? 10 : 5;
                 currentWeapon.setRotation(0);
             } else {
-                offsetX = currentWeapon instanceof Sword ? -15 : -5; // Adjusted offset for left-facing
+                offsetX = currentWeapon instanceof Sword ? -10 : -5; // Adjusted offset
                 offsetY = currentWeapon instanceof Sword ? 10 : 5;
                 currentWeapon.setRotation(0);
             }
@@ -614,6 +647,12 @@ public abstract class Hero extends SuperSmoothMover
                 chest.interact(this);
             }
         }
+        Shop shop = (Shop)getOneIntersectingObject(Shop.class);
+        if (shop != null) {
+            if (Greenfoot.isKeyDown("e")) {
+                shop.interact(this);
+            }
+        }
     }
     
     /**
@@ -658,30 +697,50 @@ public abstract class Hero extends SuperSmoothMover
             image.getImage().scale((int)(multiplier * image.getImage().getWidth()), (int)(multiplier * image.getImage().getHeight()));
         }
     }
-    
+    /**
+     * Reset the X velocity
+     */
     public void resetXVelocity() {
         xMoveVel = 0;
         xAddedVel = 0;
     }
     
+    
+    /**
+     * Reset the Y Velocity
+     *
+     */
     public void resetYVelocity() {
         yMoveVel = 0;
         yAddedVel = 0;
     }
     
+    /**
+     * Plays the damage sound
+     *
+     */
     public void playDamageSound(){
-        damageSounds[damageSoundsIndex].setVolume(80);
+        damageSounds[damageSoundsIndex].setVolume(30);
         damageSounds[damageSoundsIndex].play();
         damageSoundsIndex++; 
         if (damageSoundsIndex >= damageSounds.length){
             damageSoundsIndex = 0;
         }
     }
+    
+    /**
+     * Loads the sounds
+     *
+     */
     public static void damageSoundPlayer(){
         damageSoundsIndex = 0;
-        damageSounds = new GreenfootSound[20]; 
+        damageSounds = new GreenfootSound[5]; 
         for (int i = 0; i < damageSounds.length; i++){
-            damageSounds[i] = new GreenfootSound("");
+            damageSounds[i] = new GreenfootSound("damageSound.mp3");
+            damageSounds[i].play();
+            Greenfoot.delay(1);
+            damageSounds[i].stop();
+            
         }   
 
     }
@@ -703,5 +762,78 @@ public abstract class Hero extends SuperSmoothMover
      */
     public void removeHitboxList(Class<?> cls) {
         hitboxList.remove(cls);
+    }
+    
+    
+    /**
+     * Adds a power to the player
+     *
+     * @param power The power
+     */
+    public void addPower(String power) {
+        Image buffImage = new Image("buffs/"+power+".png");
+        int powerSize = powerList.size();
+        buffImage.getImage().scale(48, 48);
+        getWorld().addObject(buffImage, 48 + (powerSize % 3) * 64, 350 + (powerSize/3)*64);
+        powerList.add(power);
+        // Better loot is handled at the chest
+        switch (power) {
+            case "Extra HP":
+                maxHP += 2;
+                hp += 2;
+                hpBar.setMaxVal(maxHP);
+                hpBar.update(hp);
+                hpNumber.setValue(hp + "/" + maxHP);
+                break;
+            case "Swiftness":
+                speed += 2;
+                break;
+            case "More Shield":
+                shield+=2;
+                maxShield+=2;
+                shieldBar.setMaxVal(maxHP);
+                shieldBar.update(hp);
+                shieldNumber.setValue(shield + "/" + maxShield);
+                break;
+            case "Faster Shield Recover":
+                shieldRecoverTime /= 2;
+                break;
+            case "Longer Immunity":
+                invincibleDuration *= 2;
+                break;
+        }
+        
+        
+    }
+    
+    
+    /**
+     * Returns the hero's current powers
+     *
+     * @return Returns the powerList
+     */
+    public HashSet<String> getPowerList() {
+        return powerList;
+    }
+    
+    /**
+     * Returns the weapons the user has
+     *
+     * @return Returns the weapons the user has
+     */
+    public ArrayList<Weapon> getWeapons() {
+        return weaponsInInventory;
+    }
+    
+    /**
+     * Heals the player a certain amount
+     *
+     * @param amount The amount to heal
+     */
+    public void heal(int amount) {
+        hp += amount;
+        hp = Math.min(hp, maxHP);
+        hpBar.update(hp);
+        hpNumber.setValue(hp + "/" + maxHP);
     }
 }

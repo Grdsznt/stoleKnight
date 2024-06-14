@@ -102,6 +102,10 @@ public class Projectile extends SuperSmoothMover
         }
         
         disappear();
+        if (getX() > 1180 || getY() > 700 || getX() < 150 || getY() < 10) {
+            getWorld().removeObject(overlay);
+            getWorld().removeObject(this);
+        }
     }
 
     private int calculateRotation() {
@@ -117,7 +121,7 @@ public class Projectile extends SuperSmoothMover
             for(SimpleHitbox target : hitBoxes) {
                 if(target.getActor() instanceof Enemy && hitbox.isHitBoxesIntersecting(target) && speed != 0 && dealDamageOnce) {
                     Enemy e = (Enemy) target.getActor();
-                    e.health -= damage;
+                    e.takeDamage(damage);
                     dealDamageOnce = false;
                 }
             }
@@ -125,12 +129,13 @@ public class Projectile extends SuperSmoothMover
             for(SimpleHitbox target : hitBoxes) {
                 if(target.getActor() instanceof Hero && hitbox.isHitBoxesIntersecting(target)) {
                     Hero h = (Hero) target.getActor();
-                    h.hp -= damage;
+                    h.takeDamage(damage);
                 }
             }
         }
         if(isTouching(Wall.class) || isTouching(Void.class) || isTouching(RoomExit.class)) {
             speed = 0;
+            damage = 0;
         }
     }
 

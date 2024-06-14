@@ -1,17 +1,24 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
- * Write a description of class Wall here.
+ * Creates a wall that blocks enemies and the player
  * 
- * @author (your name) 
- * @version (a version number or a date)
+ * @author Felix Zhao
+ * @author Edwin Dong
+ * @version 0.1
  */
 public class Wall extends Tile
 {
     
-    Line topBoundary, leftBoundary, rightBoundary, bottomBoundary;
+    private Line topBoundary, leftBoundary, rightBoundary, bottomBoundary;
     
-    
+    /**
+     * Chest Constructor
+     *
+     * @param parent The room it belongs to
+     * @param row The row it is in
+     * @param col The col it is in
+     */
     public Wall(RoomData parent, int row, int col) {
         super(parent, row, col);
          GreenfootImage image = new GreenfootImage("Tiles/wall0.png");
@@ -22,14 +29,7 @@ public class Wall extends Tile
          
        
     }
-    /**
-     * Act - do whatever the Wall wants to do. This method is called whenever
-     * the 'Act' or 'Run' button gets pressed in the environment.
-     */
-    public void act()
-    {
-       
-    }
+    
     
     public void addedToWorld(World w) {
         int centerX = getX(), centerY = getY();
@@ -38,15 +38,35 @@ public class Wall extends Tile
         leftBoundary = new Line(new Pair(centerX-44, centerY-44), new Pair(centerX-44, centerY+44));
         rightBoundary = new Line(new Pair(centerX+44, centerY-44), new Pair(centerX+44, centerY+44));
     }
+    /**
+     * Get the top boundary
+     *
+     * @return Get the top boundary
+     */
     public Line getTopBoundary() {
         return topBoundary;
     }
+    /**
+     * Get the bottom boundary
+     *
+     * @return Get the bottom boundary
+     */
     public Line getBottomBoundary() {
         return bottomBoundary;
     }
+    /**
+     * Get the left boundary
+     *
+     * @return Get the left boundary
+     */
     public Line getLeftBoundary() {
         return leftBoundary;
     }
+    /**
+     * Get the right boundary
+     *
+     * @return Get the right boundary
+     */
     public Line getRightBoundary() {
         return rightBoundary;
     }

@@ -67,7 +67,10 @@ public class Ogre extends Enemy
             if (actNum % 200 == 0) {
                 target = getRandomPositionWithinRadius(homeRadius); // get random position in the radius
             }
-            if (target != null) moveTowardsTarget(target.f, target.s); // move to this random position in radius
+            if (target != null) {
+                moveTowardsTarget(target.f, target.s); // move to this random position in radius
+                
+            }
             if (actNum % 20 == 0) h = getHeroInRadius(); // detect hero every 20 acts
         }
         if (h != null && h.getWorld() != null) { // If the hero is in the world, and there is a hero detected
@@ -96,7 +99,7 @@ public class Ogre extends Enemy
                     setRotation(0); // set rotation to 0
                 }
             } else {
-                if (actNum % 60 == 0) aStar(h.getX(), h.getY(), 20, true); // no line of sight, pathfind to enemy (prevent walking in walls)
+                if (actNum % 60 == 0) aStar(h.getX(), h.getY(), 55, true); // no line of sight, pathfind to enemy (prevent walking in walls)
                 if (currentPath.size() > 0) {
                     int[] nextPosition = currentPath.peekFirst(); // get the next tile to move to in current path
                     float dx = nextPosition[0] - getX();
@@ -188,6 +191,12 @@ public class Ogre extends Enemy
         currentY += moveY; // add movement to x and y coords
     
         setLocation(currentX, currentY);
+        if (isTouching(Wall.class) || isTouching(Void.class)) {
+            setLocation(currentX-moveX, currentY-moveY);
+            isMoving = false;
+            target = null;
+            return;
+        }
         
         // Check if target is reached
         if (Math.abs(diffX) <= speed && Math.abs(diffY) <= speed) {

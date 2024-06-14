@@ -3,12 +3,42 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
- * Write a description of class MyWorld here.
+ * <p>
+ * This is where the main games is held. It generates and controls the floor
+ * </p>
+ * <br>
  * 
- * @author Felix Zhao 
- * @version (a version number or a date)
+ * 
+ * <h2> List of Features </h2>
+ * <p>
+ * You control a player and fight through many floors of dungeons. 
+ * Currently, there are 3 different enemies with different behaviours.
+ * Additionally, there's 3 different weapons in the game with different mechanics. (Sword, Bow, Wand)
+ * The player has 2 different "hitpoints" - HP and Shield. Shield can regenerate but HP cannot without other factors
+ * The layout of the floor are randomized will the rooms themselves are layouts/premade.
+ * There are speical rooms throughout a floor. A chest room, A ! room and a portal room.
+ * For the player, every third floor completed you can pick a buff which buffs the player
+ * </p>
+ * 
+ * <h2> References </h2>
+ * <h3> Art </h3>
+ * https://0x72.itch.io/dungeontileset-ii - GrafxKid <br>
+ * <h3> Sound </h3>
+ * 
+ * <h3> Code </h3>
+ * SuperStatbar, SuperTextBox and SuperSmoothMover is taken from Jordan Cohen <br>
+ * 
+ * <h2> Bugs </h2>
+ * <ul>
+ *  <li> Sometimes enemies can get stuck on walls</li>
+ *  <li> Enemies won't properly target somtimes but this due to fact because the pathfinding is at lower accuracy for performance</li>
+ * </ul>
  * 
  * Edited by Andy Feng
+ * @author Felix Zhao 
+ * @version 0.1
+ * 
+ * 
  */
 public class GameWorld extends World
 {
@@ -283,12 +313,7 @@ public class GameWorld extends World
                 removeObject(room[i][j]);
             }
         }
-        ArrayList<Wand> wands = (ArrayList<Wand>) getObjects(Wand.class);
-        for (Wand w: wands) {
-            if (!(w.getHolder() instanceof Hero) && !(w.getHolder() instanceof Wizard)) {
-                removeObject(w);
-            }
-        }
+       
         // just in case
         for (Enemy enemy : roomGrid[row][col].getEnemies()) {
             if (enemy instanceof Wizard) {
@@ -305,6 +330,12 @@ public class GameWorld extends World
                 removeObject(actor);
             }
             if (actor instanceof BallProjectile) {
+                removeObject(actor);
+            }
+            if (actor instanceof Weapon) {
+                if (getObjects(Hero.class).get(0).getWeapons().contains(actor)) {
+                    continue;
+                }
                 removeObject(actor);
             }
             if (actor instanceof BallProjectileHero) {
@@ -344,6 +375,10 @@ public class GameWorld extends World
     }
     
     public void nextMap(Hero hero) {
+        if (floor == 10) {
+            Greenfoot.setWorld(new StartWorld());
+            return;
+        }
         unloadRoom(currentRoomRow, currentRoomCol);
         map.resetMap();
         worldGrid = new int[5][5];
@@ -355,6 +390,7 @@ public class GameWorld extends World
         hero.setLocation(500, 500);
         
         floor++;
+        
         floorLabel.setValue("Floor " + floor);
         Greenfoot.setWorld(new BuffWorld(this, hero));
     }
@@ -377,11 +413,15 @@ public class GameWorld extends World
     public int[] getRoomPosition() {
         return new int[]{currentRoomRow, currentRoomCol};
     }
-    
+   
+    /**
+     * Returns the floor number
+     *
+     * @return Returns the floor number
+     */
     public int getFloor() {
         return floor;
-    }
-    
+
     
     public void act() {
         mouse = Greenfoot.getMouseInfo();

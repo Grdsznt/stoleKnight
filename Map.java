@@ -1,14 +1,19 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.ArrayList;
 /**
- * Write a description of class Map here.
- * 
- * @author (your name) 
- * @version (a version number or a date)
+ * The map allows the player to know where they are within the floor
+ * <br>
+ * It updates dynamically depending on where the player has been. Also it shows special rooms
+ * @author Felix Zhao
+ * @version 0.1
  */
 public class Map extends Actor
 {
     private ArrayList<Image> usedImages;
+    /**
+     * Creates a new map
+     *
+     */
     public Map() {
         GreenfootImage image = new GreenfootImage(144, 144);
         image.setColor(new Color(100, 100, 100));
