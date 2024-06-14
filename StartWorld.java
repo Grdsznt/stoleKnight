@@ -138,4 +138,8 @@ public class StartWorld extends World
         }
         return d;
     }
+    
+    public int getFloor(){
+        return floor;
+    }
 }
