@@ -23,10 +23,12 @@ import java.util.Arrays;
  * <h2> References </h2>
  * <h3> Art </h3>
  * https://0x72.itch.io/dungeontileset-ii - GrafxKid <br>
+ * https://www.deviantart.com/kristyglas/art/Pixel-Art-Dungeon-Entrance-Door-835889504 - kristyglas <br>
  * <h3> Sound </h3>
  * 
  * <h3> Code </h3>
  * SuperStatbar, SuperTextBox and SuperSmoothMover is taken from Jordan Cohen <br>
+ * 
  * 
  * <h2> Bugs </h2>
  * <ul>
@@ -377,7 +379,7 @@ public class GameWorld extends World
     
     public void nextMap(Hero hero) {
         if (floor == 10) {
-            Greenfoot.setWorld(new StartWorld());
+            Greenfoot.setWorld(new EndWorld(1));
             return;
         }
         unloadRoom(currentRoomRow, currentRoomCol);
