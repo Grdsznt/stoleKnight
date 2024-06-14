@@ -32,7 +32,7 @@ public class Ogre extends Enemy
     private Pair target;
     private int damageTimer; // damage timer for red animation
     public Ogre(int centerX, int centerY) {
-        super(20, 2, 2, 300, centerX, centerY);        
+        super(40, 2, 2, 300, centerX, centerY);        
         homeRadius = 60; 
         for (GreenfootImage img: idleFrames) {
             img.scale(64, 64); // scale the images to 64, 64
