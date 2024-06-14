@@ -28,15 +28,21 @@ import java.util.Scanner;
  * 
  * <h2> References </h2>
  * <h3> Art </h3>
- * <ul>https://0x72.itch.io/dungeontileset-ii - GrafxKid 
- * <ul>Start World cover image: https://www.vg247.com/soul-knight-codes
- * <ul>Instruction World background image: https://wallpapercave.com/soul-knight-wallpapers
- * <ul>Character with ax: https://wholesomedev.itch.io/kingfree
+ * <ul>
+ * <li>https://0x72.itch.io/dungeontileset-ii - GrafxKid </li>
+ * <li>https://www.deviantart.com/kristyglas/art/Pixel-Art-Dungeon-Entrance-Door-835889504 - kristyglas </li>
+ * <li>https://whatoplay.com/post/prequel-soul-knight/ - Chilly Room </li>
+ * <li>https://0x72.itch.io/dungeontileset-ii - GrafxKid </li>
+ * <li>Start World cover image: https://www.vg247.com/soul-knight-codes</li>
+ * <li>Instruction World background image: https://wallpapercave.com/soul-knight-wallpapers</li>
+ * <li>Character with ax: https://wholesomedev.itch.io/kingfree</li>
+ * </ul>
  * <br>
  * <h3> Sound </h3>
  * 
  * <h3> Code </h3>
  * SuperStatbar, SuperTextBox and SuperSmoothMover is taken from Jordan Cohen <br>
+ * 
  * 
  * <h2> Bugs </h2>
  * <ul>

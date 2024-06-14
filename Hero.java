@@ -435,8 +435,7 @@ public abstract class Hero extends SuperSmoothMover
         
         if(hp <= 0){
             //game over
-            GameWorld gw = (GameWorld) getWorld();
-            Greenfoot.setWorld(new StartWorld(gw.getFloor()));
+            Greenfoot.setWorld(new EndWorld(0));
             getWorld().removeObject(this);
             return;
         }
