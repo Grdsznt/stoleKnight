@@ -3,8 +3,6 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 /**
  * Instructions of how to play the game.
  * 
- * Background image: https://wallpapercave.com/soul-knight-wallpapers
- * 
  * @author Jean P
  * @version June 2024
  */
