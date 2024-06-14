@@ -15,6 +15,7 @@ public class BallProjectile extends SuperSmoothMover
     private int rotation;
     private SimpleHitbox hitbox;
     private boolean attackOnce;
+    private Actor intial;
     
     /**
      * Constructor for objects of class BallProjectile
