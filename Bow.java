@@ -63,13 +63,13 @@ public class Bow extends Weapon
         if(GameWorld.isMouseHolding() && arrow != null && beingUsed) updateProjectilePosition(arrow);
         
         // Handle charge bar creation and update
-        if(GameWorld.isMouseHolding() && beingUsed && recoverTimer == 0 && getHolder() instanceof Hero && addOne) {
+        if(GameWorld.isMouseHolding() && beingUsed && recoverTimer == 0 && getHolder() instanceof Hero && addOne && !addOneArrow) {
             Hero hero = (Hero) getHolder();
-            if (hero.getEnergyAmount() >= energyUsage) {
-                chargeBar = new SuperStatBar(100, chargeValue, hero, 25, 3, hero.getImage().getHeight() / 2 + 10);
-                getWorld().addObject(chargeBar, hero.getX(), hero.getY());
-                addOne = false;
-            }
+            
+            chargeBar = new SuperStatBar(100, chargeValue, hero, 25, 3, hero.getImage().getHeight() / 2 + 10);
+            getWorld().addObject(chargeBar, hero.getX(), hero.getY());
+            addOne = false;
+            
         }
         
         // Update charge value and charge bar
@@ -108,7 +108,11 @@ public class Bow extends Weapon
             }
             if(!GameWorld.isMouseHolding() && !addOneArrow){
                 addOneArrow = true;
-                recoverTimer = RECOVER_TIME;
+                recoverTimer = RECOVER_TIME; // Set recovery time
+                // checks for the buff
+                if (getHolder() instanceof Hero && ((Hero)getHolder()).getPowerList().contains("More Attack Speed")) {
+                    recoverTimer /= 2;
+                }
                 arrow = null;
             }
         } else if (holder instanceof Enemy) {

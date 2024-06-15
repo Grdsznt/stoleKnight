@@ -65,5 +65,14 @@ public abstract class Weapon extends Actor {
             // return holder;
         // }
     }
+    
+    /**
+     * Returns how much energy the weapon uses
+     *
+     * @return Returns how much energy the weapon uses
+     */
+    public int getEnergyUsage() {
+        return energyUsage;
+    }
 }
 

@@ -112,7 +112,7 @@ public class Sword extends Weapon {
      * @param swingFrames Array of frames for swinging animation.
      */
     private void swing(GreenfootImage[] swingFrames) {
-        if(animationTimer.millisElapsed() > 15) { // Control animation speed
+        if(animationTimer.millisElapsed() > 10) { // Control animation speed
             setImage(swingFrames[frameNumber]); // Set current animation frame
             frameNumber++; // Move to next frame
             animationTimer.mark(); // Reset animation timer
@@ -120,6 +120,11 @@ public class Sword extends Weapon {
         if (frameNumber >= swingFrames.length) { // Check if end of animation frames
             frameNumber = 0; // Reset frame number for next swing
             recoverCounter = RECOVER_TIME; // Set recovery time
+            // checks for the buff
+            if (getHolder() instanceof Hero && ((Hero)getHolder()).getPowerList().contains("More Attack Speed")) {
+                recoverCounter /= 2;
+            }
+            
             isSwinging = false; // Stop swinging flag
         }
     }

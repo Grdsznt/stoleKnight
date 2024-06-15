@@ -39,7 +39,7 @@ import java.util.Scanner;
  * </ul>
  * <br>
  * <h3> Sound </h3>
- * 
+ * https://downloads.khinsider.com/game-soundtracks/album/soul-knight-ost - Chilly Room <br>
  * <h3> Code </h3>
  * SuperStatbar, SuperTextBox and SuperSmoothMover is taken from Jordan Cohen <br>
  * 
@@ -59,6 +59,7 @@ import java.util.Scanner;
  */
 public class GameWorld extends World
 {
+    public final static GreenfootSound gameplayMusic = new GreenfootSound("Deep In The Forest.mp3");
     // for testing purposes
     public final static int BLOCK_SIZE = 48;
     // The number represents the openings. 0000 - up, down, left, rigth - 1-15
@@ -80,7 +81,6 @@ public class GameWorld extends World
     private int floor;
     
     private static boolean mouseHold;
-    
     private static MouseInfo mouse;
     /**
      * Constructor for objects of class GameWorld.
@@ -100,6 +100,14 @@ public class GameWorld extends World
         map = new Map();
         
         addObject(map, 104, 590);
+        // generate the floor
+        for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 21; j++) {
+                
+                // add 192 because there's 4 tiles of extra size to the left
+                addObject(new Floor(null, i, j), j*BLOCK_SIZE+BLOCK_SIZE/2+192, i*BLOCK_SIZE+BLOCK_SIZE/2);
+            }
+        }
         generateRooms(2, 2);
         setActOrder(Hero.class);
         // setPaintOrder(Wall.class, Chest.class, Weapon.class, Hero.class);
@@ -125,6 +133,9 @@ public class GameWorld extends World
         this.floor = floor;
         floorLabel = new Label("Floor " + floor, 30);
         addObject(floorLabel, 104, 690);
+        playMusic();
+        // generating the floor
+        
     }
     
     
@@ -260,13 +271,7 @@ public class GameWorld extends World
         // }
         
         // System.out.println("");
-        for (int i = 0; i < 15; i++) {
-            for (int j = 0; j < 21; j++) {
-                
-                // add 192 because there's 4 tiles of extra size to the left
-                addObject(new Floor(null, i, j), j*BLOCK_SIZE+BLOCK_SIZE/2+192, i*BLOCK_SIZE+BLOCK_SIZE/2);
-            }
-        }
+        
         loadRoom(startRow, startCol);
     }
     
@@ -382,6 +387,18 @@ public class GameWorld extends World
                 tile.setState(false);
             }
         }
+        if (getObjects(Hero.class).size() == 0) {
+            return;
+        }
+        Hero hero = (Hero) getObjects(Hero.class).get(0);
+        if (hero.getPowerList().contains("Energy Steal")) {
+            hero.gainEnergy(3);
+        }
+        if (hero.getPowerList().contains("Life Steal")) {
+            if (Greenfoot.getRandomNumber(50) == 0) {
+                hero.heal(1);
+            }
+        }
     }
 
     /**
@@ -411,7 +428,7 @@ public class GameWorld extends World
             } catch (IOException e) {
                 System.out.println("Error: " + e); // otherwise, if there is an IOException, let the user know
             } finally {
-                Greenfoot.setWorld(new StartWorld());
+                Greenfoot.setWorld(new EndWorld(1));
             }
             return;
         }
@@ -497,5 +514,39 @@ public class GameWorld extends World
         if(mouseHold && (hasMouseDragEnded(null) || isMouseClicked(null))) mouseHold = false;
         if(!mouseHold && isMousePressed(null)) mouseHold = true;
         return mouseHold;
+    }
+    
+    
+    /**
+     * Plays the music
+     *
+     */
+    public static void playMusic() {
+        gameplayMusic.setVolume(30);
+        gameplayMusic.playLoop();
+    }
+    
+    /**
+     * Stops the music
+     *
+     */
+    public static void stopMusic() {
+        gameplayMusic.stop();
+    }
+    
+    /**
+     * Pauses music when world is stopped
+     *
+     */
+    public void stopped() {
+        gameplayMusic.pause();
+    }
+    
+    /**
+     * Starts the music back up when unpaused
+     *
+     */
+    public void started() {
+        gameplayMusic.playLoop();
     }
 }

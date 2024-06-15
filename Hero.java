@@ -68,6 +68,8 @@ public abstract class Hero extends SuperSmoothMover
     protected Image weaponLabelTwo;
     protected Image weaponOne;
     protected Image weaponTwo;
+    protected Image energyCostOne;
+    protected Image energyCostTwo;
     
     private GreenfootSound damageSound;
     private static GreenfootSound[] damageSounds;
@@ -80,12 +82,15 @@ public abstract class Hero extends SuperSmoothMover
         
         weaponOne = new Image(weaponsInInventory.get(0).getImage());
         if (weaponOne.getImage().getWidth() > weaponOne.getImage().getWidth()) {
-            double multiplier = 60.0 / weaponOne.getImage().getWidth();
+            double multiplier = 48.0 / weaponOne.getImage().getWidth();
             weaponOne.getImage().scale((int)(multiplier * weaponOne.getImage().getWidth()), (int)(multiplier * weaponOne.getImage().getHeight()));
         } else {
-            double multiplier = 60.0 / weaponOne.getImage().getHeight();
+            double multiplier = 48.0 / weaponOne.getImage().getHeight();
             weaponOne.getImage().scale((int)(multiplier * weaponOne.getImage().getWidth()), (int)(multiplier * weaponOne.getImage().getHeight()));
         }
+        energyCostOne = new Image(10, 10);
+        energyCostOne.setImage(new GreenfootImage(" " + weaponsInInventory.get(0).getEnergyUsage()+" ", 20, Color.WHITE, new Color(135, 206, 235)));
+        energyCostTwo = new Image(10, 10);
         weaponTwo = null;
         
         currentWeapon = initialWeapon;
@@ -139,7 +144,9 @@ public abstract class Hero extends SuperSmoothMover
         // world.addObject(weaponLabelOne, 64, 210);
         // world.addObject(weaponLabelTwo, 144, 210);
         world.addObject(weaponLabelOne, 56, 230);
+        world.addObject(energyCostOne, 56, 270);
         world.addObject(weaponLabelTwo, 152, 230);
+        world.addObject(energyCostTwo, 152, 270);
         world.addObject(weaponOne, 56, 230);
         world.addObject(new Label("Buffs", 32), 56, 300);
     }
@@ -547,6 +554,9 @@ public abstract class Hero extends SuperSmoothMover
             if (weapon != currentWeapon) {
                 weapon.setLocation(getX() + (right ? -10 : 10), getY());
                 weapon.beingUsed = false;
+                if(weapon instanceof Sword) {
+                    weapon.setImage(right ? ((Sword) weapon).swordRightFrames[0] : ((Sword) weapon).swordLeftFrames[0]);
+                }
             }
         }
     }
@@ -672,14 +682,15 @@ public abstract class Hero extends SuperSmoothMover
         // Remove existing UI representations
         getWorld().removeObject(weaponOne);
         getWorld().removeObject(weaponTwo);
+        
     
         // Update UI representation for weapon one
         weaponOne = new Image(weaponsInInventory.get(0).getImage());
         scaleImageToFit(weaponOne);
-    
+        energyCostOne.setImage(new GreenfootImage(" " + weaponsInInventory.get(0).getEnergyUsage()+" ", 20, Color.WHITE, new Color(135, 206, 235)));
         // Add weapon one to the world at appropriate location
         getWorld().addObject(weaponOne, weaponLabelOne.getX(), weaponLabelOne.getY());
-    
+        
         // If only one weapon in inventory, return as no need to update UI for second weapon
         if (weaponsInInventory.size() < 2) {
             return;
@@ -688,7 +699,7 @@ public abstract class Hero extends SuperSmoothMover
         // Update UI representation for weapon two
         weaponTwo = new Image(weaponsInInventory.get(1).getImage());
         scaleImageToFit(weaponTwo);
-    
+        energyCostTwo.setImage(new GreenfootImage(" " + weaponsInInventory.get(1).getEnergyUsage()+" ", 20, Color.WHITE, new Color(135, 206, 235)));
         // Add weapon two to the world at appropriate location
         getWorld().addObject(weaponTwo, weaponLabelTwo.getX(), weaponLabelTwo.getY());
     }
@@ -699,10 +710,10 @@ public abstract class Hero extends SuperSmoothMover
      */
     private void scaleImageToFit(Image image) {
         if (image.getImage().getWidth() > image.getImage().getWidth()) {
-            double multiplier = 60.0 / image.getImage().getWidth();
+            double multiplier = 48.0 / image.getImage().getWidth();
             image.getImage().scale((int)(multiplier * image.getImage().getWidth()), (int)(multiplier * image.getImage().getHeight()));
         } else {
-            double multiplier = 60.0 / image.getImage().getHeight();
+            double multiplier = 48.0 / image.getImage().getHeight();
             image.getImage().scale((int)(multiplier * image.getImage().getWidth()), (int)(multiplier * image.getImage().getHeight()));
         }
     }
@@ -783,7 +794,7 @@ public abstract class Hero extends SuperSmoothMover
         Image buffImage = new Image("buffs/"+power+".png");
         int powerSize = powerList.size();
         buffImage.getImage().scale(48, 48);
-        getWorld().addObject(buffImage, 48 + (powerSize % 3) * 64, 350 + (powerSize/3)*64);
+        getWorld().addObject(buffImage, 36 + (powerSize % 3) * 64, 350 + (powerSize/3)*64);
         powerList.add(power);
         // Some power ups are handled in different spots
         switch (power) {
@@ -812,6 +823,7 @@ public abstract class Hero extends SuperSmoothMover
                 break;
             case "More Energy":
                 maxEnergy += 100;
+                energyBar.setMaxVal(maxEnergy);
                 gainEnergy(100);
         }
         

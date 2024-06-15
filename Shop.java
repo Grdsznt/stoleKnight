@@ -52,7 +52,7 @@ public class Shop extends Tile
      *
      */
     public void act() {
-        if (getOneIntersectingObject(Hero.class) != null) {
+        if (getOneIntersectingObject(Hero.class) != null && !bought) {
             getWorld().addObject(interactionLabel, getX(), getY()-50);
         } else {
             getWorld().removeObject(interactionLabel);
@@ -74,10 +74,14 @@ public class Shop extends Tile
         }
         
         hero.removeGold(cost);
+        int multiplier = 1;
+        if (hero.getPowerList().contains("Effective Potions")) {
+            multiplier = 2;
+        }
         if (type == 0) {
-            hero.heal(3);
+            hero.heal(3 * multiplier);
         } else {
-            hero.gainEnergy(30);
+            hero.gainEnergy(30 * multiplier);
         }
         
         bought = true;

@@ -76,7 +76,11 @@ public class Wand extends Weapon
         
         if (getHolder() instanceof Hero) {
             // Create projectile for Hero
-            recoverTimer = RECOVER_TIME;
+            recoverTimer = RECOVER_TIME; // Set recovery time
+            // checks for the buff
+            if (getHolder() instanceof Hero && ((Hero)getHolder()).getPowerList().contains("More Attack Speed")) {
+                recoverTimer /= 2;
+            }
             ((Hero)getHolder()).useEnergy(energyUsage);
             BallProjectileHero b = new BallProjectileHero(20, damage, (int)clockwiseAngle); 
             getWorld().addObject(b, getX(), getY()-15); // Add projectile to world

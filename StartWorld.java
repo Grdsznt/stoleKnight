@@ -115,10 +115,11 @@ public class StartWorld extends World
             Greenfoot.setWorld(instructionsWorld);
         }
         if(Greenfoot.mousePressed(start)) {
+            BuffWorld.resetUnselectedList();
             gWorld = new GameWorld(1);
             Greenfoot.setWorld(gWorld);
         }
-        if (Greenfoot.mousePressed(continueGame)) {
+        if (Greenfoot.mousePressed(continueGame) && floor != 1) {
             gWorld = new GameWorld(floor);
             Greenfoot.setWorld(gWorld);
         }
