@@ -5,16 +5,18 @@ import greenfoot.*;  // Greenfoot classes
  * This class handles the behavior of the wand, including animation and shooting projectiles.
  * Extends from Weapon class.
  * 
- * Authors: Edwin Dong, Andy Feng
- * Version: (a version number or a date)
+ * @author Edwin Dong
+ * @author Andy Feng
+ * @version 0.1
  */
 public class Wand extends Weapon
 {
     GreenfootImage wand = new GreenfootImage("weapon_red_magic_staff.png"); // Image of the wand
     private int damage, actNum; // Damage value and action number for timing
     private BallProjectile proj; // Projectile object
-    private boolean attackOnce; // Flag to ensure attack happens only once per click
     
+    private static final int RECOVER_TIME = 20;
+    private int recoverTimer;
     /**
      * Constructor for Wand class.
      * Initializes damage, image, and other variables.
@@ -26,7 +28,8 @@ public class Wand extends Weapon
         this.damage = damage; // Initialize damage
         setImage(wand); // Set wand image
         actNum = 0; // Initialize action number
-        attackOnce = true; // Initialize attack flag
+        
+        energyUsage = 1;
     }
     
     /**
@@ -43,10 +46,11 @@ public class Wand extends Weapon
         }
         if (getHolder() instanceof Hero) {
             isAttacking = GameWorld.isMouseHolding(); // Set attack state based on mouse click
+                if(recoverTimer > 0) {
+                recoverTimer--;
+            }
         }
-        if (!GameWorld.isMouseHolding()) {
-            attackOnce = true; // Reset attack flag when mouse is released
-        }
+        
         attack(); // Perform attack logic
         actNum++; // Increment action number
     }
@@ -72,6 +76,8 @@ public class Wand extends Weapon
         
         if (getHolder() instanceof Hero) {
             // Create projectile for Hero
+            recoverTimer = RECOVER_TIME;
+            ((Hero)getHolder()).useEnergy(energyUsage);
             BallProjectileHero b = new BallProjectileHero(20, damage, (int)clockwiseAngle); 
             getWorld().addObject(b, getX(), getY()-15); // Add projectile to world
         } else {
@@ -86,8 +92,10 @@ public class Wand extends Weapon
      * Trigger shooting if held by Hero and attack condition is met.
      */
     public void attack() {
-        if (getHolder() instanceof Hero && beingUsed && isAttacking && attackOnce) {
-            attackOnce = false; // Ensure attack happens only once
+        if (getHolder() instanceof Hero && beingUsed && isAttacking && recoverTimer == 0) {
+            if (((Hero)getHolder()).getEnergyAmount() < energyUsage) {
+                return;
+            }
             shoot(GameWorld.getMouseX() - getX(), GameWorld.getMouseY() - getY()); // Shoot towards mouse position
         }
     }

@@ -13,7 +13,8 @@ import java.util.StringTokenizer;
 /**
  * This is the StartWorld where the user will see first.
  * 
- * @author Jean P, Edwin Dong
+ * @author Jean P
+ * @author Edwin Dong
  * @version June 2024
  */
 public class StartWorld extends World
@@ -31,7 +32,7 @@ public class StartWorld extends World
     //Two boxes
     private SuperTextBox instructions = new SuperTextBox("Instructions", new Color(150,75,0), Color.WHITE, new Font(30), true, 400, 0, Color.WHITE);
     private SuperTextBox start = new SuperTextBox("Start", new Color(150,75,0), Color.WHITE, new Font(30), true, 400, 0, Color.WHITE);
-    
+    private SuperTextBox continueGame = new SuperTextBox("Continue Game", new Color(150,75,0), Color.WHITE, new Font(30), true, 400, 0, Color.WHITE);
     private int floor;
     
     /**
@@ -50,6 +51,7 @@ public class StartWorld extends World
         //Add instruction and start boxes
         addObject(instructions, 600, 400);
         addObject(start, 600, 500);
+        addObject(continueGame, 600, 600);
         
         ArrayList<String> al = readData();
         if (al.size() > 0) {
@@ -96,12 +98,15 @@ public class StartWorld extends World
             instructions.updateFont(new Font(40), 450);
         } else if(Greenfoot.mouseMoved(start)) {
             start.updateFont(new Font(40), 450);
+        } else if (Greenfoot.mouseMoved(continueGame)) {
+            continueGame.updateFont(new Font(40), 450);
         }
         
         //Return to normal if not hovering on them
         if(Greenfoot.mouseMoved(this)) {
             instructions.updateFont(new Font(30), 400);
             start.updateFont(new Font(30), 400);
+            continueGame.updateFont(new Font(30), 400);
         }
         
         //Go to each world if pressed
@@ -110,6 +115,10 @@ public class StartWorld extends World
             Greenfoot.setWorld(instructionsWorld);
         }
         if(Greenfoot.mousePressed(start)) {
+            gWorld = new GameWorld(1);
+            Greenfoot.setWorld(gWorld);
+        }
+        if (Greenfoot.mousePressed(continueGame)) {
             gWorld = new GameWorld(floor);
             Greenfoot.setWorld(gWorld);
         }

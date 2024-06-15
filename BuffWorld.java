@@ -21,6 +21,10 @@ public class BuffWorld extends World
         put("Longer Immunity", "Invincibility frames last longer");
         put("Swiftness", "Extra Speed");
         put("Better Loot", "Get more gold everywhere");
+        put("Effective Regen", "Potions are more effective");
+        put("More Energy", "Have 100 more Energy");
+        put("More Attack Speed", "The time between attacks decreases");
+        put("Energy Regen", "Energy automactially regens at a slow pace");
     }};
     private static ArrayList<String> unselectedPowers = new ArrayList<String>(Arrays.asList(
         "Extra HP",
@@ -28,7 +32,11 @@ public class BuffWorld extends World
         "More Shield",
         "Longer Immunity",
         "Swiftness",
-        "Better Loot"
+        "Better Loot",
+        "Effective Regen",
+        "More Energy",
+        "More Attack Speed",
+        "Energy Regen"
     ));
     private ArrayList<BuffSelection> buffList;
     private Label continueButton;
@@ -51,7 +59,7 @@ public class BuffWorld extends World
         setBackground(background);
         gameWorld = world;
         this.hero = hero;
-        if (gameWorld.getFloor() % 3 == 0) {
+        if (gameWorld.getFloor() % 2 == 0) {
             addObject(new Label("Select a Buff", 32), 600, 350);
             buffList = new ArrayList<BuffSelection>();
             Label buffName = new Label("", 32);
@@ -93,7 +101,7 @@ public class BuffWorld extends World
         }
         
         if (Greenfoot.mouseClicked(continueButton)) {
-            if (gameWorld.getFloor() % 3 == 0) {
+            if (gameWorld.getFloor() % 2 == 0) {
                 for (BuffSelection buff : buffList) {
                     if (buff.isSelected()) {
                         Greenfoot.setWorld(gameWorld);

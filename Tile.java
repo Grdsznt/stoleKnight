@@ -2,7 +2,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 
 /**
  * <p>
- * The abstract superclass for the tiles
+ * The abstract superclass for the tiles. Some subclasses have a static final GreenfootImage to be more memory efficent
  * </p>
  * Different tiles have different interactions with other things in the world
  * 

@@ -47,10 +47,11 @@ import java.util.Scanner;
  * <h2> Bugs </h2>
  * <ul>
  *  <li> Sometimes enemies can get stuck on walls</li>
- *  <li> Enemies won't properly target somtimes but this due to fact because the pathfinding is at lower accuracy for performance</li>
+ *  <li> Enemies won't properly target somtimes,  it's due to the line of sight</li>
  * </ul>
  * 
  * Edited by Andy Feng
+ * 
  * @author Felix Zhao 
  * @version 0.1
  * 
@@ -66,7 +67,7 @@ public class GameWorld extends World
     // 4x4 max
     int[][] worldGrid = new int[5][5];
     RoomData[][] roomGrid = new RoomData[5][5];
-    private int level;
+    
     private int currentRoomRow = -1;
     private int currentRoomCol = -1;
     private boolean canChangeRooms = true;
@@ -84,13 +85,16 @@ public class GameWorld extends World
     /**
      * Constructor for objects of class GameWorld.
      * 
+     * @param floor The floor
      */
     
     public GameWorld(int floor)
     {    
         // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
         super(1200, 720, 1); 
-        level = 1;
+                
+        
+        
         // int spawnRow = Greenfoot.getRandomNumber(2)+1;
         // int spawnCol = Greenfoot.getRandomNumber(2)+1;
         map = new Map();
@@ -123,6 +127,13 @@ public class GameWorld extends World
         addObject(floorLabel, 104, 690);
     }
     
+    
+    
+    /**
+     * Returns all the walls in the world
+     *
+     * @return Returns all the walls in the world
+     */
     public ArrayList<Wall> getObstacles() {
         obstacles = (ArrayList<Wall>) getObjects(Wall.class);
         return obstacles;

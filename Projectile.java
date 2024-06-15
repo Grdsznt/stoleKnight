@@ -122,7 +122,7 @@ public class Projectile extends SuperSmoothMover
                 if(target.getActor() instanceof Enemy && hitbox.isHitBoxesIntersecting(target) && speed != 0 && dealDamageOnce) {
                     Enemy e = (Enemy) target.getActor();
                     e.takeDamage(damage);
-                    dealDamageOnce = false;
+                    //dealDamageOnce = false;
                 }
             }
         } else {
@@ -133,7 +133,7 @@ public class Projectile extends SuperSmoothMover
                 }
             }
         }
-        if(isTouching(Wall.class) || isTouching(Void.class) || isTouching(RoomExit.class)) {
+        if(isTouching(Wall.class) || isTouching(Void.class)) {
             speed = 0;
             damage = 0;
         }

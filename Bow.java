@@ -4,10 +4,13 @@ import java.util.ArrayList;
 /**
  * One of the weapons: bow. This is coupled with an arrow.
  * This class handles the behavior of the bow, including charging and shooting arrows.
- * It extends from Weapon class.
+ * It extends from Weapon class. <br>
  * 
- * Authors: Jean Pan, Andy Feng
- * Version: May 2024
+ * Edited By Felix Zhao
+ * 
+ * @author Jean Pan
+ * @author Andy Feng
+ * @version May 2024
  */
 public class Bow extends Weapon
 {
@@ -39,6 +42,7 @@ public class Bow extends Weapon
         for(int i = 0; i < bowLeftFrames.length; i++){
             bowLeftFrames[i].mirrorHorizontally();
         }
+        energyUsage = 3;
     }
 
     /**
@@ -61,9 +65,11 @@ public class Bow extends Weapon
         // Handle charge bar creation and update
         if(GameWorld.isMouseHolding() && beingUsed && recoverTimer == 0 && getHolder() instanceof Hero && addOne) {
             Hero hero = (Hero) getHolder();
-            chargeBar = new SuperStatBar(100, chargeValue, hero, 25, 3, hero.getImage().getHeight() / 2 + 10);
-            getWorld().addObject(chargeBar, hero.getX(), hero.getY());
-            addOne = false;
+            if (hero.getEnergyAmount() >= energyUsage) {
+                chargeBar = new SuperStatBar(100, chargeValue, hero, 25, 3, hero.getImage().getHeight() / 2 + 10);
+                getWorld().addObject(chargeBar, hero.getX(), hero.getY());
+                addOne = false;
+            }
         }
         
         // Update charge value and charge bar
@@ -91,13 +97,19 @@ public class Bow extends Weapon
         if (holder instanceof Hero) {
             // Hero logic: shoot arrow if conditions are met
             if (GameWorld.isMouseHolding() && addOneArrow && recoverTimer == 0) {
-                arrow = new Projectile(GameWorld.getMouseX(), GameWorld.getMouseY(), 1, 10, true);
-                getWorld().addObject(arrow, getX(), getY());
-                updateProjectilePosition(arrow);
-                addOneArrow = false;
+                Hero hero = (Hero)holder;
+                if (hero.getEnergyAmount() >= energyUsage) {
+                    arrow = new Projectile(GameWorld.getMouseX(), GameWorld.getMouseY(), 1, 10, true);
+                    getWorld().addObject(arrow, getX(), getY());
+                    updateProjectilePosition(arrow);
+                    addOneArrow = false;
+                    hero.useEnergy(energyUsage);
+                }
             }
-            if(!GameWorld.isMouseHolding()){
+            if(!GameWorld.isMouseHolding() && !addOneArrow){
                 addOneArrow = true;
+                recoverTimer = RECOVER_TIME;
+                arrow = null;
             }
         } else if (holder instanceof Enemy) {
             // Enemy logic: shoot arrow towards the nearest Hero

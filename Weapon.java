@@ -13,6 +13,7 @@ public abstract class Weapon extends Actor {
     protected Enemy enemy;
     protected boolean beingUsed;
     protected Hero hero;
+    protected int energyUsage;
 
     public Weapon(int damage) {
         isAttacking = false;
@@ -40,22 +41,29 @@ public abstract class Weapon extends Actor {
      * get the current user of the weapon, if the enemy is holding the weapon, return enemy. 
      * Otherwise, return hero has the user.
      * 
-     * @ return Actor: the current user of the weapon
+     * @return Actor: the current user of the weapon
      */
     protected Actor getHolder() {
-        if (this instanceof Wand) {
-            Actor holder = getOneIntersectingObject(Wizard.class);
-            if (holder == null) {
-                holder = getOneIntersectingObject(Hero.class);
+        if (getWorld().getObjects(Hero.class).size() > 0) {
+            if (getWorld().getObjects(Hero.class).get(0).getWeapons().contains(this)) {
+                return getWorld().getObjects(Hero.class).get(0);
             }
-            return holder;
-        } else {
-            Actor holder = getOneIntersectingObject(Hero.class);
-            if (holder == null) {
-                holder = getOneIntersectingObject(Enemy.class);
-            }
-            return holder;
         }
+        Actor holder = getOneIntersectingObject(Enemy.class);
+        return holder;
+        // if (this instanceof Wand) {
+            // Actor holder = getOneIntersectingObject(Wizard.class);
+            // if (holder == null) {
+                // holder = getOneIntersectingObject(Hero.class);
+            // }
+            // return holder;
+        // } else {
+            // Actor holder = getOneIntersectingObject(Hero.class);
+            // if (holder == null) {
+                // holder = getOneIntersectingObject(Enemy.class);
+            // }
+            // return holder;
+        // }
     }
 }
 

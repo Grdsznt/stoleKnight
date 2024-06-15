@@ -6,8 +6,10 @@ import java.util.ArrayList;
  * including animation of attacks and damage calculation upon hitting enemies.
  * Extends from Weapon class.
  * 
- * Author: Andy Feng
- * Version: June 10th, 2024
+ * Edited by Felix Zhao
+ * 
+ * @author Andy Feng
+ * @version June 10th, 2024
  */
 public class Sword extends Weapon {
     private static final String IMAGE_PATH = "images/sword/sword"; // Path to sword images
