@@ -24,9 +24,9 @@ public class StartWorld extends World
     
     //Image
     private GreenfootImage cover = new GreenfootImage("soul-knight-cover.jpg");
-    
-    //Game title
-    private SuperTextBox title = new SuperTextBox("Stole Knight", new Color(150,75,0,0), Color.BLACK, new Font(70), true, 400, 0, Color.WHITE);
+    private GreenfootImage title = new GreenfootImage("gameTitle.png");
+    private int titleX = (getWidth() - title.getWidth())/2;
+    private int titleY = 140;
     
     //Two boxes
     private SuperTextBox instructions = new SuperTextBox("Instructions", new Color(150,75,0), Color.WHITE, new Font(30), true, 400, 0, Color.WHITE);
@@ -45,11 +45,11 @@ public class StartWorld extends World
         
         
         //Add title
-        addObject(title, 600, 250);
+        getBackground().drawImage(title, titleX, titleY);
         
         //Add instruction and start boxes
-        addObject(instructions, 600, 400);
-        addObject(start, 600, 500);
+        addObject(instructions, 600, 420);
+        addObject(start, 600, 520);
         
         ArrayList<String> al = readData();
         if (al.size() > 0) {
@@ -64,11 +64,11 @@ public class StartWorld extends World
         setBackground(cover);
         
         //Add title
-        addObject(title, 600, 250);
+        getBackground().drawImage(title, titleX, titleY);
         
         //Add instruction and start boxes
-        addObject(instructions, 600, 400);
-        addObject(start, 600, 500);
+        addObject(instructions, 600, 420);
+        addObject(start, 600, 520);
         this.floor = floor;
         ArrayList<String> data = new ArrayList<String>();
         data.add(Integer.toString(floor));
