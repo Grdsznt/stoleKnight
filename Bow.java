@@ -24,6 +24,7 @@ public class Bow extends Weapon
     private int chargeValue;
     private SuperStatBar chargeBar;
     private boolean addOne;
+    private GreenfootSound charging;
 
     /**
      * Constructor of Bow to initialize its image frames.

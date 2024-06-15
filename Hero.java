@@ -66,7 +66,6 @@ public abstract class Hero extends SuperSmoothMover
     protected Image weaponOne;
     protected Image weaponTwo;
     
-    private GreenfootSound damageSound;
     private static GreenfootSound[] damageSounds;
     private static int damageSoundsIndex;
     protected SimpleHitbox hitbox;
@@ -719,7 +718,7 @@ public abstract class Hero extends SuperSmoothMover
      *
      */
     public void playDamageSound(){
-        damageSounds[damageSoundsIndex].setVolume(30);
+        damageSounds[damageSoundsIndex].setVolume(70);
         damageSounds[damageSoundsIndex].play();
         damageSoundsIndex++; 
         if (damageSoundsIndex >= damageSounds.length){
@@ -735,11 +734,10 @@ public abstract class Hero extends SuperSmoothMover
         damageSoundsIndex = 0;
         damageSounds = new GreenfootSound[5]; 
         for (int i = 0; i < damageSounds.length; i++){
-            damageSounds[i] = new GreenfootSound("damageSound.mp3");
+            damageSounds[i] = new GreenfootSound("heroTakeDamage.mp3");
             damageSounds[i].play();
             Greenfoot.delay(1);
             damageSounds[i].stop();
-            
         }   
 
     }
