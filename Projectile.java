@@ -29,6 +29,9 @@ public class Projectile extends SuperSmoothMover
     private Overlay overlay;
     protected SimpleHitbox hitbox;
     private boolean dealDamageOnce = true;
+    
+    private static GreenfootSound[] impactSounds;
+    private static int soundFrames;
 
     public Projectile(int direction_X, int direction_Y, int baseDamage, int maxChargeDamage, boolean chargeable) {
         setImage(arrow);
@@ -45,6 +48,11 @@ public class Projectile extends SuperSmoothMover
         
         hitbox = new SimpleHitbox(this, getImage().getWidth() / 2, getImage().getHeight() / 2, 0 ,0);
         //overlay = new Overlay(this, hitbox);
+        impactSounds = new GreenfootSound[5];
+        soundFrames = 0;
+        for(int i = 0; i < impactSounds.length; i++) {
+            impactSounds[i] = new GreenfootSound("sounds/arrowImpact.mp3");
+        }
     }
 
     
@@ -123,6 +131,7 @@ public class Projectile extends SuperSmoothMover
                     Enemy e = (Enemy) target.getActor();
                     e.takeDamage(damage);
                     dealDamageOnce = false;
+                    playImpactSound();
                 }
             }
         } else {
@@ -133,7 +142,7 @@ public class Projectile extends SuperSmoothMover
                 }
             }
         }
-        if(isTouching(Wall.class) || isTouching(Void.class) || isTouching(RoomExit.class)) {
+        if(isTouching(Wall.class) || isTouching(Void.class)) {
             speed = 0;
             damage = 0;
         }
@@ -155,5 +164,14 @@ public class Projectile extends SuperSmoothMover
     private void updateTarget() {
         direction_X = GameWorld.getMouseX();
         direction_Y = GameWorld.getMouseY();
+    }
+    
+    private static void playImpactSound() {
+        impactSounds[soundFrames].setVolume(50);
+        impactSounds[soundFrames].play();
+        soundFrames++;
+        if(soundFrames > impactSounds.length) {
+            soundFrames = 0;
+        }
     }
 }

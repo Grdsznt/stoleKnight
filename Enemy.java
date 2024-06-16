@@ -14,10 +14,17 @@ import java.util.Deque;
  * 
  * @author Edwin Dong
  * @author Felix Zhao
+ * 
+ * Edited by Jean Pan
+ * 
  * @version 1
  */
 public abstract class Enemy extends SuperSmoothMover
 {
+    //Current game world
+    protected GameWorld gameWorld;
+    protected int floor;
+    
     protected boolean pursuing, isMoving, tookDamage; // utility booleans (attacking, animation then damage)
     protected int health, speed, damage; // standard variables
     protected double targetRadius; // target hero radius
@@ -37,21 +44,48 @@ public abstract class Enemy extends SuperSmoothMover
     protected int actNum, frameNum; // used for animation and other misc things
     protected int homeRadius; // radius in which it can move from its home
     
-    public Enemy(int health, int speed, int damage, double targetRadius, int centerX, int centerY) {
+    public Enemy(int health, int speed, int damage, double targetRadius, int centerX, int centerY) {        
+        //Health
         this.health = health;
-        this.speed = speed;
+        
+        //Damage
         this.damage = damage;
+        
+        //Others
+        this.speed = speed;
         this.targetRadius = targetRadius;
         this.centerX = centerX; this.centerY = centerY;
         currentPath = new LinkedList<int[]>(); // initialize to prevent error
         spawnX = centerX; // set the center coords to spawn coorss
         spawnY = centerY;
     }
-     
-    /**
-     * Act - do whatever the Enemy wants to do. This method is called whenever
-     * the 'Act' or 'Run' button gets pressed in the environment.
-     */
+    
+    public void addedToWorld(World w){
+        //If meet conditions, increase HP & damage points
+        if(w instanceof GameWorld){
+            this.gameWorld = (GameWorld)w;
+            this.floor = gameWorld.getFloor();
+            
+            //Health
+            int bonusHealth = 0;
+            if(floor>=3){
+                bonusHealth = 5*(floor-2);
+            }
+            this.health += bonusHealth;
+            
+            //Damage
+            int bonusDamage = 0;
+            if(floor>=6){
+                bonusDamage = (floor-4)/2;
+            }
+            this.damage += bonusDamage;
+        }
+        
+        //Sets the locations to the spawnX and spawnY
+        setLocation(spawnX, spawnY);
+        SimpleHitbox.allHitboxesInWorld.add(hitbox); // add hitbox to list
+    }
+    
     public void act()
     {
         // if the enemy isdead, remove the hitbox
@@ -275,16 +309,6 @@ public abstract class Enemy extends SuperSmoothMover
     public void setSpawnPosition(int x, int y) {
         spawnX = x;
         spawnY = y;
-    }
-    
-    
-    /**
-     * Sets the locations to the spawnX and spawnY
-     *
-     */
-    public void addedToWorld(World w) {
-        setLocation(spawnX, spawnY);
-        SimpleHitbox.allHitboxesInWorld.add(hitbox); // add hitbox to list
     }
 
     

@@ -122,4 +122,6 @@ public class Label extends Actor
     {
         setImage(new GreenfootImage(text, fontSize, textColor, transparent, bgdColor));
     }
+    
+    
 }

@@ -13,7 +13,8 @@ import java.util.StringTokenizer;
 /**
  * This is the StartWorld where the user will see first.
  * 
- * @author Jean P, Edwin Dong
+ * @author Jean P
+ * @author Edwin Dong
  * @version June 2024
  */
 public class StartWorld extends World
@@ -24,14 +25,14 @@ public class StartWorld extends World
     
     //Image
     private GreenfootImage cover = new GreenfootImage("soul-knight-cover.jpg");
-    
-    //Game title
-    private SuperTextBox title = new SuperTextBox("Stole Knight", new Color(150,75,0,0), Color.BLACK, new Font(70), true, 400, 0, Color.WHITE);
+    private GreenfootImage title = new GreenfootImage("gameTitle.png");
+    private int titleX = (getWidth() - title.getWidth())/2;
+    private int titleY = 140;
     
     //Two boxes
     private SuperTextBox instructions = new SuperTextBox("Instructions", new Color(150,75,0), Color.WHITE, new Font(30), true, 400, 0, Color.WHITE);
     private SuperTextBox start = new SuperTextBox("Start", new Color(150,75,0), Color.WHITE, new Font(30), true, 400, 0, Color.WHITE);
-    
+    private SuperTextBox continueGame = new SuperTextBox("Continue Game", new Color(150,75,0), Color.WHITE, new Font(30), true, 400, 0, Color.WHITE);
     private int floor;
     
     /**
@@ -45,11 +46,12 @@ public class StartWorld extends World
         
         
         //Add title
-        addObject(title, 600, 250);
+        getBackground().drawImage(title, titleX, titleY);
         
         //Add instruction and start boxes
-        addObject(instructions, 600, 400);
-        addObject(start, 600, 500);
+        addObject(instructions, 600, 420);
+        addObject(start, 600, 520);
+        addObject(continueGame, 600, 620);
         
         ArrayList<String> al = readData();
         if (al.size() > 0) {
@@ -64,11 +66,11 @@ public class StartWorld extends World
         setBackground(cover);
         
         //Add title
-        addObject(title, 600, 250);
+        getBackground().drawImage(title, titleX, titleY);
         
         //Add instruction and start boxes
-        addObject(instructions, 600, 400);
-        addObject(start, 600, 500);
+        addObject(instructions, 600, 420);
+        addObject(start, 600, 520);
         this.floor = floor;
         ArrayList<String> data = new ArrayList<String>();
         data.add(Integer.toString(floor));
@@ -96,12 +98,15 @@ public class StartWorld extends World
             instructions.updateFont(new Font(40), 450);
         } else if(Greenfoot.mouseMoved(start)) {
             start.updateFont(new Font(40), 450);
+        } else if (Greenfoot.mouseMoved(continueGame)) {
+            continueGame.updateFont(new Font(40), 450);
         }
         
         //Return to normal if not hovering on them
         if(Greenfoot.mouseMoved(this)) {
             instructions.updateFont(new Font(30), 400);
             start.updateFont(new Font(30), 400);
+            continueGame.updateFont(new Font(30), 400);
         }
         
         //Go to each world if pressed
@@ -110,6 +115,11 @@ public class StartWorld extends World
             Greenfoot.setWorld(instructionsWorld);
         }
         if(Greenfoot.mousePressed(start)) {
+            BuffWorld.resetUnselectedList();
+            gWorld = new GameWorld(1);
+            Greenfoot.setWorld(gWorld);
+        }
+        if (Greenfoot.mousePressed(continueGame) && floor != 1) {
             gWorld = new GameWorld(floor);
             Greenfoot.setWorld(gWorld);
         }

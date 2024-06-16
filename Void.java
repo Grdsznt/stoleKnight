@@ -8,6 +8,7 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class Void extends Tile
 {
+    private static final GreenfootImage image  = new GreenfootImage("Tiles/void.png");
     /**
      * Creates a void tile
      *
@@ -17,8 +18,6 @@ public class Void extends Tile
      */
     public Void(RoomData parent, int row, int col) {
         super(parent, row, col);
-        GreenfootImage image = new GreenfootImage("Tiles/void.png");
-        
         
         setImage(image);
         getImage().scale(48, 48);
