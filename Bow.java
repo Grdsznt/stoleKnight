@@ -33,7 +33,7 @@ public class Bow extends Weapon
      * Constructor of Bow to initialize its image frames.
      */
     public Bow(){
-        super(0); // Call superclass constructor
+        super(5); // Call superclass constructor
         setImage(bowRightFrames[0]); // Set initial image
         addOneArrow = true; // Flag to control arrow addition
         chargeValue = 0; // Initial charge value
