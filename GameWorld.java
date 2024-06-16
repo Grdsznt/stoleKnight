@@ -88,7 +88,7 @@ public class GameWorld extends World
      * @param floor The floor
      */
     
-    public GameWorld(int floor)
+    public GameWorld(int floor, int health, int energy, int slot1, int slot2)
     {    
         // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
         super(1200, 720, 1); 
@@ -111,12 +111,8 @@ public class GameWorld extends World
         generateRooms(2, 2);
         setActOrder(Hero.class);
         // setPaintOrder(Wall.class, Chest.class, Weapon.class, Hero.class);
-        
-        // testing
-        // addObject(new Ogre(500, 500), 500, 500);
-        addObject(new Hero1(), 800, 600);
-        // addObject(new Wizard(800, 200), 800, 200);
-        // addObject(new Imp(400, 400), 400, 400);
+    
+        addObject(new Hero1(health, energy, slot1, slot2), 800, 600);
         
         mouseHold = false;
         setPaintOrder(Weapon.class, Hero.class, Overlay.class, Projectile.class, BallProjectile.class, Enemy.class);
@@ -134,7 +130,6 @@ public class GameWorld extends World
         floorLabel = new Label("Floor " + floor, 30);
         addObject(floorLabel, 104, 690);
         playMusic();
-        // generating the floor
         
     }
     
@@ -428,7 +423,7 @@ public class GameWorld extends World
             } catch (IOException e) {
                 System.out.println("Error: " + e); // otherwise, if there is an IOException, let the user know
             } finally {
-                Greenfoot.setWorld(new EndWorld(1));
+                Greenfoot.setWorld(new EndWorld(1, 1, 10, 100, 0, 3));
             }
             return;
         }

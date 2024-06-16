@@ -33,10 +33,10 @@ public class Wall extends Tile
     
     public void addedToWorld(World w) {
         int centerX = getX(), centerY = getY();
-        topBoundary = new Line(new Pair(centerX-44, centerY+44), new Pair(centerX+44, centerY+44));
-        bottomBoundary = new Line(new Pair(centerX-44, centerY-44), new Pair(centerX+44, centerY-44));
-        leftBoundary = new Line(new Pair(centerX-44, centerY-44), new Pair(centerX-44, centerY+44));
-        rightBoundary = new Line(new Pair(centerX+44, centerY-44), new Pair(centerX+44, centerY+44));
+        topBoundary = new Line(new Pair(centerX-30, centerY+30), new Pair(centerX+30, centerY+30));
+        bottomBoundary = new Line(new Pair(centerX-30, centerY-30), new Pair(centerX+30, centerY-30));
+        leftBoundary = new Line(new Pair(centerX-30, centerY-30), new Pair(centerX-30, centerY+30));
+        rightBoundary = new Line(new Pair(centerX+30, centerY-30), new Pair(centerX+30, centerY+30));
     }
     /**
      * Get the top boundary

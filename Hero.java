@@ -33,6 +33,7 @@ public abstract class Hero extends SuperSmoothMover
     protected boolean right;
     protected int energy;
     protected int maxEnergy;
+    protected int slot1, slot2;
     protected boolean attack;
     protected boolean isInvincible;
     protected long invincibleStart;
@@ -76,23 +77,93 @@ public abstract class Hero extends SuperSmoothMover
     protected SimpleHitbox hitbox;
     protected Overlay overlay;
 
-    public Hero(int hp, int shieldValue, int speed, int initialEnergy, Weapon initialWeapon) {
-        weaponsInInventory.add(initialWeapon);
+    public Hero(int hp, int shieldValue, int speed, int initialEnergy, int slot1, int slot2) {
         
-        weaponOne = new Image(weaponsInInventory.get(0).getImage());
-        if (weaponOne.getImage().getWidth() > weaponOne.getImage().getWidth()) {
-            double multiplier = 48.0 / weaponOne.getImage().getWidth();
-            weaponOne.getImage().scale((int)(multiplier * weaponOne.getImage().getWidth()), (int)(multiplier * weaponOne.getImage().getHeight()));
+        this.slot1 = slot1;
+        this.slot2 = slot2;
+        if (slot2 != 3) {
+            if (slot1 == 0) {
+                if (slot2 == 0) {
+                    weaponsInInventory.add(new Sword());
+                    weaponsInInventory.add(new Sword());
+                } else if (slot2 == 1) {
+                    weaponsInInventory.add(new Sword());
+                    weaponsInInventory.add(new Bow());
+                } else {
+                    weaponsInInventory.add(new Sword());
+                    weaponsInInventory.add(new Wand(5));
+                }
+            } else if (slot1 == 1) {
+                if (slot2 == 0) {
+                    weaponsInInventory.add(new Bow());
+                    weaponsInInventory.add(new Sword());
+                } else if (slot2 == 1) {
+                    weaponsInInventory.add(new Bow());
+                    weaponsInInventory.add(new Bow());
+                } else {
+                    weaponsInInventory.add(new Bow());
+                    weaponsInInventory.add(new Wand(5));
+                }
+            } else {
+                if (slot2 == 0) {
+                    weaponsInInventory.add(new Wand(5));
+                    weaponsInInventory.add(new Sword());
+                } else if (slot2 == 1) {
+                    weaponsInInventory.add(new Wand(5));
+                    weaponsInInventory.add(new Bow());
+                } else {
+                    weaponsInInventory.add(new Wand(5));
+                    weaponsInInventory.add(new Wand(5));
+                }
+            }
         } else {
-            double multiplier = 48.0 / weaponOne.getImage().getHeight();
-            weaponOne.getImage().scale((int)(multiplier * weaponOne.getImage().getWidth()), (int)(multiplier * weaponOne.getImage().getHeight()));
+            if (slot1 == 0) {
+                weaponsInInventory.add(new Sword());
+            } else if (slot1 == 1) {
+                weaponsInInventory.add(new Bow());
+            } else {
+                weaponsInInventory.add(new Wand(5));
+            }
         }
-        energyCostOne = new Image(10, 10);
-        energyCostOne.setImage(new GreenfootImage(" " + weaponsInInventory.get(0).getEnergyUsage()+" ", 20, Color.WHITE, new Color(135, 206, 235)));
-        energyCostTwo = new Image(10, 10);
-        weaponTwo = null;
+        if (weaponsInInventory.size() > 1) {
+            weaponOne = new Image(weaponsInInventory.get(0).getImage());
+            weaponTwo = new Image(weaponsInInventory.get(1).getImage());
+            if (weaponOne.getImage().getWidth() > weaponOne.getImage().getWidth()) {
+                double multiplier = 48.0 / weaponOne.getImage().getWidth();
+                weaponOne.getImage().scale((int)(multiplier * weaponOne.getImage().getWidth()), (int)(multiplier * weaponOne.getImage().getHeight()));
+            } else {
+                double multiplier = 48.0 / weaponOne.getImage().getHeight();
+                weaponOne.getImage().scale((int)(multiplier * weaponOne.getImage().getWidth()), (int)(multiplier * weaponOne.getImage().getHeight()));
+            }
+            if (weaponTwo.getImage().getWidth() > weaponTwo.getImage().getWidth()) {
+                double multiplier = 48.0 / weaponTwo.getImage().getWidth();
+                weaponTwo.getImage().scale((int)(multiplier * weaponTwo.getImage().getWidth()), (int)(multiplier * weaponTwo.getImage().getHeight()));
+            } else {
+                double multiplier = 48.0 / weaponTwo.getImage().getHeight();
+                weaponTwo.getImage().scale((int)(multiplier * weaponTwo.getImage().getWidth()), (int)(multiplier * weaponTwo.getImage().getHeight()));
+            }
+            energyCostOne = new Image(10, 10);
+            energyCostOne.setImage(new GreenfootImage(" " + weaponsInInventory.get(0).getEnergyUsage()+" ", 20, Color.WHITE, new Color(135, 206, 235)));
+            energyCostTwo = new Image(10, 10);
+            energyCostTwo.setImage(new GreenfootImage(" " + weaponsInInventory.get(1).getEnergyUsage()+" ", 20, Color.WHITE, new Color(135, 206, 235)));
+        } else {
+            weaponOne = new Image(weaponsInInventory.get(0).getImage());
+            if (weaponOne.getImage().getWidth() > weaponOne.getImage().getWidth()) {
+                double multiplier = 48.0 / weaponOne.getImage().getWidth();
+                weaponOne.getImage().scale((int)(multiplier * weaponOne.getImage().getWidth()), (int)(multiplier * weaponOne.getImage().getHeight()));
+            } else {
+                double multiplier = 48.0 / weaponOne.getImage().getHeight();
+                weaponOne.getImage().scale((int)(multiplier * weaponOne.getImage().getWidth()), (int)(multiplier * weaponOne.getImage().getHeight()));
+            }
+            energyCostOne = new Image(10, 10);
+            energyCostOne.setImage(new GreenfootImage(" " + weaponsInInventory.get(0).getEnergyUsage()+" ", 20, Color.WHITE, new Color(135, 206, 235)));
+            energyCostTwo = new Image(10, 10);
+            weaponTwo = null;
+        }
         
-        currentWeapon = initialWeapon;
+        
+        
+        currentWeapon = weaponsInInventory.get(0);
         currentWeapon.beingUsed = true;
         this.hp = hp;
         maxHP = hp;
@@ -100,7 +171,7 @@ public abstract class Hero extends SuperSmoothMover
         maxShield = shieldValue;
         this.speed = speed;
         this.energy = initialEnergy;
-        maxEnergy = initialEnergy;
+        maxEnergy = 100;
         attack = false;
         right = true;
         mouseHold = false;
@@ -112,8 +183,8 @@ public abstract class Hero extends SuperSmoothMover
         hpNumber = new Label(hp + "/" + hp, 24);
         shieldBar = new SuperStatBar(shield, shield, null, 105, 18, 0, Color.GRAY, Color.BLACK);
         shieldNumber = new Label(shield + "/" + shield, 24);
-        energyBar = new SuperStatBar(energy, energy, null, 105, 18, 0, new Color(135, 206, 235), Color.BLACK);
-        energyNumber = new Label(energy + "/" + energy, 24);
+        energyBar = new SuperStatBar(maxEnergy, energy, null, 105, 18, 0, new Color(135, 206, 235), Color.BLACK);
+        energyNumber = new Label(energy + "/" + maxEnergy, 24);
         gold = 10;
         goldLabel = new Label("10", 32);
         goldCoin = new Image("coins/coin0.png");
@@ -131,7 +202,11 @@ public abstract class Hero extends SuperSmoothMover
     }
     
     public void addedToWorld(World world) {
-        world.addObject(currentWeapon, getX(), getY());
+        for (Weapon w : weaponsInInventory) {
+            world.addObject(w, getX(), getY());
+            
+        }
+
         world.addObject(hpBar, 118, 38);
         world.addObject(hpNumber, 118, 38);
         world.addObject(shieldBar, 118, 69);
@@ -146,7 +221,13 @@ public abstract class Hero extends SuperSmoothMover
         world.addObject(energyCostOne, 56, 270);
         world.addObject(weaponLabelTwo, 152, 230);
         world.addObject(energyCostTwo, 152, 270);
-        world.addObject(weaponOne, 56, 230);
+        if (weaponsInInventory.size() > 1) {
+            world.addObject(weaponOne, 56, 230);
+            world.addObject(weaponTwo, 152, 230);
+        } else {
+            world.addObject(weaponOne, 56, 230);
+        }
+        
         world.addObject(new Label("Buffs", 32), 56, 300);
     }
     
@@ -451,7 +532,46 @@ public abstract class Hero extends SuperSmoothMover
         
         if(hp <= 0){
             //game over
-            Greenfoot.setWorld(new EndWorld(0));
+            GameWorld gw = (GameWorld) getWorld();
+            if (weaponsInInventory.size() == 1) {
+                Weapon w = weaponsInInventory.get(0);
+                if (w instanceof Sword) {
+                    Greenfoot.setWorld(new EndWorld(0, gw.getFloor(), 10, energy, 0, 3)); // 3 means no weapon
+                } else if (w instanceof Bow) {
+                    Greenfoot.setWorld(new EndWorld(0, gw.getFloor(), 10, energy, 1, 3));
+                } else {
+                    Greenfoot.setWorld(new EndWorld(0, gw.getFloor(), 10, energy, 2, 3));
+                }
+            } else {
+                Weapon w = weaponsInInventory.get(0), w2 = weaponsInInventory.get(1);
+                if (w instanceof Sword) {
+                    if (w2 instanceof Sword) {
+                        Greenfoot.setWorld(new EndWorld(0, gw.getFloor(), 10, energy, 0, 0));
+                    } else if (w2 instanceof Bow) {
+                        Greenfoot.setWorld(new EndWorld(0, gw.getFloor(), 10, energy, 0, 1));
+                    } else {
+                        Greenfoot.setWorld(new EndWorld(0, gw.getFloor(), 10, energy, 0, 2));
+                    }
+                    
+                } else if (w instanceof Bow) {
+                    if (w2 instanceof Sword) {
+                        Greenfoot.setWorld(new EndWorld(0, gw.getFloor(), 10, energy, 1, 0));
+                    } else if (w2 instanceof Bow) {
+                        Greenfoot.setWorld(new EndWorld(0, gw.getFloor(), 10, energy, 1, 1));
+                    } else {
+                        Greenfoot.setWorld(new EndWorld(0, gw.getFloor(), 10, energy, 1, 2));
+                    }
+                } else {
+                    if (w2 instanceof Sword) {
+                        Greenfoot.setWorld(new EndWorld(0, gw.getFloor(), 10, energy, 2, 0));
+                    } else if (w2 instanceof Bow) {
+                        Greenfoot.setWorld(new EndWorld(0, gw.getFloor(), 10, energy, 2, 1));
+                    } else {
+                        Greenfoot.setWorld(new EndWorld(0, gw.getFloor(), 10, energy, 2, 2));
+                    }
+                }
+            }
+            
             getWorld().removeObject(this);
             return;
         }
@@ -579,7 +699,7 @@ public abstract class Hero extends SuperSmoothMover
                     weaponActionCooldown = 5; // Cooldown period to prevent rapid switches
                 }
             } catch (IndexOutOfBoundsException e) {
-                System.out.println("No weapon there.");
+                // System.out.println("No weapon there.");
             }
         }
     }

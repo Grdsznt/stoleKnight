@@ -99,7 +99,7 @@ public class Ogre extends Enemy
                     setRotation(0); // set rotation to 0
                 }
             } else {
-                if (actNum % 60 == 0) aStar(h.getX(), h.getY(), 55, true); // no line of sight, pathfind to enemy (prevent walking in walls)
+                if (actNum % 60 == 0) aStar(h.getX(), h.getY(), 30, true); // no line of sight, pathfind to enemy (prevent walking in walls)
                 if (currentPath.size() > 0) {
                     int[] nextPosition = currentPath.peekFirst(); // get the next tile to move to in current path
                     float dx = nextPosition[0] - getX();

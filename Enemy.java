@@ -289,13 +289,10 @@ public abstract class Enemy extends SuperSmoothMover
     
     // Damage the enemy
     public void takeDamage(int damage) {
-        if (!tookDamage && (this instanceof Ogre || this instanceof Wizard)) {
+        if (!tookDamage) {
             health -= damage;
             tookDamage = true;
-        } else if (this instanceof Imp){
-            health -= damage;
-            tookDamage = true;
-        }
+        } 
     }
     
     public SimpleHitbox getHitbox() { // getter for hitbox
