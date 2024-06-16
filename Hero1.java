@@ -19,11 +19,20 @@ public class Hero1 extends Hero
     private SimpleTimer animationTimer = new SimpleTimer();
     
     public Hero1() {
-        super(Hp, shield, speed, energy, new Sword());
+        super(Hp, shield, speed, energy, 0, 3);
         loadIdleFrames();
         setImage(idleFramesRight[0]);
         hitbox = new SimpleHitbox(this, getImage().getWidth()/2-3, getImage().getHeight()/2-2, 3, 0);
         // overlay = new Overlay(this, hitbox);
+    }
+    
+    public Hero1(int health, int energy, int slot1, int slot2) {
+        super(health, shield, speed, energy, slot1, slot2);
+        Hp = health;
+        this.energy = energy;
+        loadIdleFrames();
+        setImage(idleFramesRight[0]);
+        hitbox = new SimpleHitbox(this, getImage().getWidth()/2-3, getImage().getHeight()/2-2, 3, 0);
     }
     
     public void addedToWorld(World w) {

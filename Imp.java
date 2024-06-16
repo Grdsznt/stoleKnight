@@ -18,9 +18,18 @@ public class Imp extends Enemy
         new GreenfootImage("Imp/imp_run_anim_f3.png")
     };
     
+    private static GreenfootImage[] redIdleFrames = {
+        new GreenfootImage("Imp/imp_run_anim_f0_red.png"),new GreenfootImage("Imp/imp_run_anim_f1_red.png"),new GreenfootImage("Imp/imp_run_anim_f2_red.png"),
+        new GreenfootImage("Imp/imp_run_anim_f3_red.png")
+    };
+    private static GreenfootImage[] redRunFrames = {
+        new GreenfootImage("Imp/imp_run_anim_f0_red.png"),new GreenfootImage("Imp/imp_run_anim_f1_red.png"),new GreenfootImage("Imp/imp_run_anim_f2_red.png"),
+        new GreenfootImage("Imp/imp_run_anim_f3_red.png")
+    };
+    
     private Pair target; // target coords
     private GameWorld gw;
-    
+    private int damageTimer; // damage timer for red animation
     /**
      * Act - do whatever the Imp wants to do. This method is called whenever
      * the 'Act' or 'Run' button gets pressed in the environment.
@@ -98,6 +107,13 @@ public class Imp extends Enemy
                 }
             }
         }
+        if (tookDamage) { // switch to a red version of Imp if damaged
+            if (damageTimer == 0) damageTimer = actNum;
+            if (damageTimer != 0 && Math.abs(actNum - damageTimer) > 20) {
+                tookDamage = false;
+                damageTimer = 0;
+            }
+        }
         animate();
         actNum++;
         super.act();
@@ -113,10 +129,17 @@ public class Imp extends Enemy
         for (GreenfootImage img: runFrames) {
             img.scale(40, 40);
         }
+        for (GreenfootImage img: redIdleFrames) {
+            img.scale(40, 40);
+        }
+        for (GreenfootImage img: redRunFrames) {
+            img.scale(40, 40);
+        }
         setImage(idleFrames[0]);
         // Initialize variables
         actNum = 0;
         frameNum = 0;
+        damageTimer = 0;
         tookDamage = false;
         hitbox = new SimpleHitbox(this, getImage().getWidth()/2-6, getImage().getHeight()/2-8, 5, 2); // init hitbox
         //overlay = new Overlay(this, hitbox);
@@ -135,10 +158,12 @@ public class Imp extends Enemy
             } else {
                 frameNum++;
             }
-            if (isMoving) { // set run and idle frames depending on the state
-                setImage(runFrames[frameNum]);
+            if (isMoving) { // if took damage set to red version, otherwise, use either idle image or running image based on isMoving
+                if (tookDamage) setImage(redRunFrames[frameNum]);
+                else setImage(runFrames[frameNum]);
             } else {
-                setImage(idleFrames[frameNum]);
+                if (tookDamage) setImage(redIdleFrames[frameNum]);
+                else setImage(idleFrames[frameNum]);
             }
         }
     }

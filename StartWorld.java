@@ -33,7 +33,7 @@ public class StartWorld extends World
     private SuperTextBox instructions = new SuperTextBox("Instructions", new Color(150,75,0), Color.WHITE, new Font(30), true, 400, 0, Color.WHITE);
     private SuperTextBox start = new SuperTextBox("Start", new Color(150,75,0), Color.WHITE, new Font(30), true, 400, 0, Color.WHITE);
     private SuperTextBox continueGame = new SuperTextBox("Continue Game", new Color(150,75,0), Color.WHITE, new Font(30), true, 400, 0, Color.WHITE);
-    private int floor;
+    private int floor, health, energy, slot1, slot2; ;// 0 for sword, 1 for bow, 2 for wand
     
     /**
      * Constructor for objects of class StartWorld.
@@ -54,14 +54,22 @@ public class StartWorld extends World
         addObject(continueGame, 600, 620);
         
         ArrayList<String> al = readData();
-        if (al.size() > 0) {
+        if (al.size() > 4) {
             floor = Integer.parseInt(al.get(0));
+            health = Integer.parseInt(al.get(1));
+            energy = Integer.parseInt(al.get(2));
+            slot1 = Integer.parseInt(al.get(3));
+            slot2 = Integer.parseInt(al.get(4));
         } else {
             floor = 1;
+            health = 10;
+            energy = 100;
+            slot1 = 0;
+            slot2 = 3; // no weapon
         }
     }
     
-    public StartWorld(int floor) {
+    public StartWorld(int floor, int health, int energy, int slot1, int slot2) { // constructor to load past game
         super(1200, 720, 1);
         setBackground(cover);
         
@@ -71,9 +79,18 @@ public class StartWorld extends World
         //Add instruction and start boxes
         addObject(instructions, 600, 420);
         addObject(start, 600, 520);
+        addObject(continueGame, 600, 620);
         this.floor = floor;
+        this.health = health;
+        this.energy = energy;
+        this.slot1 = slot1;
+        this.slot2 = slot2;
         ArrayList<String> data = new ArrayList<String>();
         data.add(Integer.toString(floor));
+        data.add(Integer.toString(health));
+        data.add(Integer.toString(energy));
+        data.add(Integer.toString(slot1));
+        data.add(Integer.toString(slot2));
         try {
             FileWriter out = new FileWriter("Data.txt");
             PrintWriter output = new PrintWriter (out);
@@ -84,8 +101,6 @@ public class StartWorld extends World
         } catch(IOException e) {
             System.out.println("Error: " + e); // otherwise, if there is an IOException, let the user know
         }
-        data = readData(); // read data
-        floor = Integer.parseInt(data.get(0));  // set floor to saved floor      
     }
     
     static {
@@ -116,11 +131,11 @@ public class StartWorld extends World
         }
         if(Greenfoot.mousePressed(start)) {
             BuffWorld.resetUnselectedList();
-            gWorld = new GameWorld(1);
+            gWorld = new GameWorld(1, 10, 100, 0, 3);
             Greenfoot.setWorld(gWorld);
         }
-        if (Greenfoot.mousePressed(continueGame) && floor != 1) {
-            gWorld = new GameWorld(floor);
+        if (Greenfoot.mousePressed(continueGame) && (floor != 1 || energy != 100 || slot1 != 0 || slot2 != 3)) {
+            gWorld = new GameWorld(floor, health, energy, slot1, slot2);
             Greenfoot.setWorld(gWorld);
         }
     }
@@ -149,4 +164,21 @@ public class StartWorld extends World
     public int getFloor(){
         return floor;
     }
+    
+    public int getHealth(){
+        return health;
+    }
+    
+    public int getEnergy(){
+        return energy;
+    }
+    
+    public int getFirstSlot(){
+        return slot1;
+    }
+    public int getSecondSlot(){
+        return slot2;
+    }
+
+
 }
