@@ -137,4 +137,20 @@ public class BuffWorld extends World
         "Life Steal"
     ));
     }
+    
+    /**
+     * When the world is stopped, stop the music
+     *
+     */
+    public void stopped() {
+        GameWorld.pauseMusic();
+    }
+    
+    /**
+     * When the world is started again, play the music
+     *
+     */
+    public void started() {
+        GameWorld.playMusic();
+    }
 }

@@ -428,6 +428,7 @@ public class GameWorld extends World
             } catch (IOException e) {
                 System.out.println("Error: " + e); // otherwise, if there is an IOException, let the user know
             } finally {
+                GameWorld.stopMusic();
                 Greenfoot.setWorld(new EndWorld(1));
             }
             return;
@@ -478,6 +479,9 @@ public class GameWorld extends World
     
     public void act() {
         mouse = Greenfoot.getMouseInfo();
+        if (Greenfoot.isKeyDown("escape")) {
+            Greenfoot.setWorld(new PauseWorld(this, (ArrayList<Actor>)getObjects(Actor.class)));
+        }
     }
     
     public static int getMouseX() {
@@ -527,11 +531,19 @@ public class GameWorld extends World
     }
     
     /**
-     * Stops the music
+     * Stops the music and restarts it
      *
      */
     public static void stopMusic() {
         gameplayMusic.stop();
+    }
+    
+    /**
+     * Pauses the music
+     *
+     */
+    public static void pauseMusic() {
+        gameplayMusic.pause();
     }
     
     /**
@@ -549,4 +561,6 @@ public class GameWorld extends World
     public void started() {
         gameplayMusic.playLoop();
     }
+    
+     
 }

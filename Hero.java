@@ -451,6 +451,7 @@ public abstract class Hero extends SuperSmoothMover
         
         if(hp <= 0){
             //game over
+            GameWorld.stopMusic();
             Greenfoot.setWorld(new EndWorld(0));
             getWorld().removeObject(this);
             return;
@@ -655,6 +656,7 @@ public abstract class Hero extends SuperSmoothMover
         if (portal != null) {
             if (Greenfoot.isKeyDown("e")) {
                 // Interact with portal (e.g., transition to next map)
+                portal.interact();
                 getWorldOfType(GameWorld.class).nextMap(this);
             }
         }
@@ -756,6 +758,7 @@ public abstract class Hero extends SuperSmoothMover
         damageSounds = new GreenfootSound[5]; 
         for (int i = 0; i < damageSounds.length; i++){
             damageSounds[i] = new GreenfootSound("heroTakeDamage.mp3");
+            damageSounds[i].setVolume(70);
             damageSounds[i].play();
             Greenfoot.delay(1);
             damageSounds[i].stop();

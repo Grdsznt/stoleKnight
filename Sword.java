@@ -39,7 +39,7 @@ public class Sword extends Weapon {
         setImage(swordRightFrames[0]); // Set initial image
         recoverCounter = 0; // Initialize recover counter
         swordSwing = new GreenfootSound("sounds/swordSwing.mp3");
-        swordSwing.setVolume(35);
+        swordSwing.setVolume(30);
         
         // Initialize hitbox for collision detection
         hitbox = new SimpleHitbox(this, getImage().getWidth() / 2 - 4, getImage().getHeight() / 2, 0, 0);

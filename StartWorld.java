@@ -29,7 +29,7 @@ public class StartWorld extends World
     private int titleX = (getWidth() - title.getWidth())/2;
     private int titleY = 140;
     
-    //Two boxes
+    // three boxes
     private SuperTextBox instructions = new SuperTextBox("Instructions", new Color(150,75,0), Color.WHITE, new Font(30), true, 400, 0, Color.WHITE);
     private SuperTextBox start = new SuperTextBox("Start", new Color(150,75,0), Color.WHITE, new Font(30), true, 400, 0, Color.WHITE);
     private SuperTextBox continueGame = new SuperTextBox("Continue Game", new Color(150,75,0), Color.WHITE, new Font(30), true, 400, 0, Color.WHITE);

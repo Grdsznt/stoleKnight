@@ -52,7 +52,7 @@ public class Chest extends Tile
             return;
         }
         opened = true;
-        if (Greenfoot.getRandomNumber(3) == 0) {
+        if (Greenfoot.getRandomNumber(2) == 0) {
             int choice = Greenfoot.getRandomNumber(3);
             Weapon newWeapon = new Sword();
             switch (choice) {
