@@ -21,6 +21,11 @@ public class BuffWorld extends World
         put("Longer Immunity", "Invincibility frames last longer");
         put("Swiftness", "Extra Speed");
         put("Better Loot", "Get more gold everywhere");
+        put("Effective Potions", "Potions are more effective");
+        put("More Energy", "Have 100 more Energy");
+        put("More Attack Speed", "The time between attacks decreases");
+        put("Energy Steal", "Steal energy from killing enemies");
+        put("Life Steal", "Small chance to gain life from killing enemies");
     }};
     private static ArrayList<String> unselectedPowers = new ArrayList<String>(Arrays.asList(
         "Extra HP",
@@ -28,7 +33,12 @@ public class BuffWorld extends World
         "More Shield",
         "Longer Immunity",
         "Swiftness",
-        "Better Loot"
+        "Better Loot",
+        "Effective Potions",
+        "More Energy",
+        "More Attack Speed",
+        "Energy Steal",
+        "Life Steal"
     ));
     private ArrayList<BuffSelection> buffList;
     private Label continueButton;
@@ -51,7 +61,7 @@ public class BuffWorld extends World
         setBackground(background);
         gameWorld = world;
         this.hero = hero;
-        if (gameWorld.getFloor() % 3 == 0) {
+        if (gameWorld.getFloor() % 2 == 0) {
             addObject(new Label("Select a Buff", 32), 600, 350);
             buffList = new ArrayList<BuffSelection>();
             Label buffName = new Label("", 32);
@@ -93,7 +103,7 @@ public class BuffWorld extends World
         }
         
         if (Greenfoot.mouseClicked(continueButton)) {
-            if (gameWorld.getFloor() % 3 == 0) {
+            if (gameWorld.getFloor() % 2 == 0) {
                 for (BuffSelection buff : buffList) {
                     if (buff.isSelected()) {
                         Greenfoot.setWorld(gameWorld);
@@ -106,5 +116,25 @@ public class BuffWorld extends World
             }
             
         }
+    }
+    
+    /**
+     * Resets the unselected list
+     *
+     */
+    public static void resetUnselectedList() {
+        unselectedPowers = new ArrayList<String>(Arrays.asList(
+        "Extra HP",
+        "Faster Shield Recover",
+        "More Shield",
+        "Longer Immunity",
+        "Swiftness",
+        "Better Loot",
+        "Effective Potions",
+        "More Energy",
+        "More Attack Speed",
+        "Energy Steal",
+        "Life Steal"
+    ));
     }
 }

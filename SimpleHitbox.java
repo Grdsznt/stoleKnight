@@ -6,8 +6,9 @@ import java.util.ArrayList;
  * This class represents an oval-shaped hitbox attached to an actor.
  * It provides methods for collision detection and hitbox rotation.
  * 
- * Authors: Edwin Dong, Andy Feng
- * Version: 1
+ * @author Edwin Dong
+ * @author Andy Feng
+ * @version 0.1
  */
 public class SimpleHitbox  
 {

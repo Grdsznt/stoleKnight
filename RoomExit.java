@@ -9,6 +9,8 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class RoomExit extends Tile
 {
+    private static final GreenfootImage notInBattleImage = new GreenfootImage("Tiles/notinbattle.png");
+    private static final GreenfootImage InBattleImage = new GreenfootImage("Tiles/inbattle.png");
     private String direction;
     /**
      * Creates a tile that can change rooms
@@ -20,10 +22,10 @@ public class RoomExit extends Tile
      */
     public RoomExit(RoomData parent, int row, int col, String direction) {
         super(parent, row, col);
-        GreenfootImage image = new GreenfootImage("Tiles/notinbattle.png");
-        image.scale(48, 48);
         
-        setImage(image);
+        notInBattleImage.scale(48, 48);
+        
+        setImage(notInBattleImage);
         this.direction = direction;
     }
     
@@ -35,15 +37,14 @@ public class RoomExit extends Tile
      */
     public void setState(boolean isInBattle) {
         if (!isInBattle) {
-            GreenfootImage image = new GreenfootImage("Tiles/notinbattle.png");
-            image.scale(48, 48);
             
-            setImage(image);
+            
+            setImage(notInBattleImage);
         } else {
-            GreenfootImage image = new GreenfootImage("Tiles/inbattle.png");
-            image.scale(48, 48);
             
-            setImage(image);
+            InBattleImage.scale(48, 48);
+            
+            setImage(InBattleImage);
         }
     }
     

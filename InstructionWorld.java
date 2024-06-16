@@ -26,10 +26,11 @@ public class InstructionWorld extends World
     private SuperTextBox d = new SuperTextBox("<d>: move right", new Color(150,75,0,0), Color.WHITE, new Font(20), false, 1000, 0, Color.WHITE);
     private SuperTextBox w = new SuperTextBox("<w>: move up", new Color(150,75,0,0), Color.WHITE, new Font(20), false, 1000, 0, Color.WHITE);
     private SuperTextBox s = new SuperTextBox("<s>: move down", new Color(150,75,0,0), Color.WHITE, new Font(20), false, 1000, 0, Color.WHITE);
+    private SuperTextBox space = new SuperTextBox("<space>: dash in the direction you are moving", new Color(150,75,0,0), Color.WHITE, new Font(20), false, 1000, 0, Color.WHITE);
     
-    private SuperTextBox e = new SuperTextBox("<e>: pick weapon up", new Color(150,75,0,0), Color.WHITE, new Font(20), false, 1000, 0, Color.WHITE);
+    private SuperTextBox e = new SuperTextBox("<e>: pick weapon up & interact with things", new Color(150,75,0,0), Color.WHITE, new Font(20), false, 1000, 0, Color.WHITE);
     private SuperTextBox num = new SuperTextBox("1 & 2: switch weapon shown on the left in the 2 boxes", new Color(150,75,0,0), Color.WHITE, new Font(20), false, 1000, 0, Color.WHITE);
-    private SuperTextBox click = new SuperTextBox("Click screen: attack", new Color(150,75,0,0), Color.WHITE, new Font(20), false, 1000, 0, Color.WHITE);
+    private SuperTextBox click = new SuperTextBox("Click/hold screen: attack", new Color(150,75,0,0), Color.WHITE, new Font(20), false, 1000, 0, Color.WHITE);
     
     
     //Two boxes
@@ -60,10 +61,11 @@ public class InstructionWorld extends World
         addObject(d, 600, 280);
         addObject(w, 600, 310);
         addObject(s, 600, 340);
+        addObject(space, 600, 370);
         
-        addObject(e, 600, 390);
-        addObject(num, 600, 420);
-        addObject(click, 600, 450);
+        addObject(e, 600, 420);
+        addObject(num, 600, 450);
+        addObject(click, 600, 480);
         
         //Add back and start boxes
         addObject(back, 100, 650);

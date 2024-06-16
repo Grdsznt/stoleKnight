@@ -67,7 +67,8 @@ public class RoomData
         } else if ((roomType & 64) != 0) {
             roomGrid[7][10] = new Chest(this, 7, 10);
         } else if ((roomType & 128) != 0) {
-            roomGrid[7][10] = new Shop(this, 7, 10);
+            roomGrid[7][8] = new Shop(this, 7, 8, 0);
+            roomGrid[7][12] = new Shop(this, 7, 12, 1);
         }
         String[][] innerTiles = getRandomRoom(roomType);
         // (r, c) pairs

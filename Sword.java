@@ -6,8 +6,11 @@ import java.util.ArrayList;
  * including animation of attacks and damage calculation upon hitting enemies.
  * Extends from Weapon class.
  * 
- * Author: Andy Feng
- * Version: June 10th, 2024
+ * Edited by Felix Zhao<br>
+ * Sword swing sound from: https://mixkit.co/free-sound-effects/sword/
+ * 
+ * @author Andy Feng
+ * @version June 10th, 2024
  */
 public class Sword extends Weapon {
     private static final String IMAGE_PATH = "images/sword/sword"; // Path to sword images
@@ -24,6 +27,7 @@ public class Sword extends Weapon {
     private SimpleTimer animationTimer = new SimpleTimer(); // Timer for animation timing
     private SimpleHitbox hitbox; // Hitbox for sword collision detection
     // private Overlay overlay; // Overlay object for visual effects
+    private GreenfootSound swordSwing;
     
     /**
      * Constructor for Sword class. Initializes images, flags, and hitbox.
@@ -34,6 +38,8 @@ public class Sword extends Weapon {
         isSwinging = false; // Initially, sword is not swinging
         setImage(swordRightFrames[0]); // Set initial image
         recoverCounter = 0; // Initialize recover counter
+        swordSwing = new GreenfootSound("sounds/swordSwing.mp3");
+        swordSwing.setVolume(35);
         
         // Initialize hitbox for collision detection
         hitbox = new SimpleHitbox(this, getImage().getWidth() / 2 - 4, getImage().getHeight() / 2, 0, 0);
@@ -83,6 +89,8 @@ public class Sword extends Weapon {
             boolean right = holder instanceof Hero ? ((Hero) holder).right : ((Enemy) holder).right;
             attack(); // Perform attack logic if sword is swinging
             swing(right ? swordRightFrames : swordLeftFrames); // Swing sword frames based on direction
+            swordSwing.play();
+            
         }
     }
 
@@ -110,7 +118,7 @@ public class Sword extends Weapon {
      * @param swingFrames Array of frames for swinging animation.
      */
     private void swing(GreenfootImage[] swingFrames) {
-        if(animationTimer.millisElapsed() > 15) { // Control animation speed
+        if(animationTimer.millisElapsed() > 10) { // Control animation speed
             setImage(swingFrames[frameNumber]); // Set current animation frame
             frameNumber++; // Move to next frame
             animationTimer.mark(); // Reset animation timer
@@ -118,6 +126,11 @@ public class Sword extends Weapon {
         if (frameNumber >= swingFrames.length) { // Check if end of animation frames
             frameNumber = 0; // Reset frame number for next swing
             recoverCounter = RECOVER_TIME; // Set recovery time
+            // checks for the buff
+            if (getHolder() instanceof Hero && ((Hero)getHolder()).getPowerList().contains("More Attack Speed")) {
+                recoverCounter /= 2;
+            }
+            
             isSwinging = false; // Stop swinging flag
         }
     }

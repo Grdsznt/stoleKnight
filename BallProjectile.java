@@ -3,8 +3,9 @@ import java.util.ArrayList;
 /**
  * Red glowing projectile
  * 
- * @author Edwin Dong, Andy Feng
- * @version (a version number or a date)
+ * @author Edwin Dong
+ * @author Andy Feng
+ * @version 0.1
  */
 public class BallProjectile extends SuperSmoothMover
 {
