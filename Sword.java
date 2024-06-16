@@ -13,6 +13,7 @@ import java.util.ArrayList;
  * @version June 10th, 2024
  */
 public class Sword extends Weapon {
+    public final int ID = 0;
     private static final String IMAGE_PATH = "images/sword/sword"; // Path to sword images
     private static final int DAMAGE = 15; // Damage inflicted by sword
     private static final int RECOVER_TIME = 40; // Recovery time after swinging
@@ -44,6 +45,8 @@ public class Sword extends Weapon {
         // Initialize hitbox for collision detection
         hitbox = new SimpleHitbox(this, getImage().getWidth() / 2 - 4, getImage().getHeight() / 2, 0, 0);
         // overlay = new Overlay(this, hitbox); // Initialize overlay (if used)
+        
+        id = 0;
     }
     
     /**

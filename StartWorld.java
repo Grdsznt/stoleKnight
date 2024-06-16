@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.StringTokenizer;
+import java.util.HashSet;
 /**
  * This is the StartWorld where the user will see first.
  * 
@@ -31,9 +32,10 @@ public class StartWorld extends World
     
     // three boxes
     private SuperTextBox instructions = new SuperTextBox("Instructions", new Color(150,75,0), Color.WHITE, new Font(30), true, 400, 0, Color.WHITE);
-    private SuperTextBox start = new SuperTextBox("Start", new Color(150,75,0), Color.WHITE, new Font(30), true, 400, 0, Color.WHITE);
+    private SuperTextBox start = new SuperTextBox("New Game", new Color(150,75,0), Color.WHITE, new Font(30), true, 400, 0, Color.WHITE);
     private SuperTextBox continueGame = new SuperTextBox("Continue Game", new Color(150,75,0), Color.WHITE, new Font(30), true, 400, 0, Color.WHITE);
-    private int floor, health, energy, slot1, slot2; ;// 0 for sword, 1 for bow, 2 for wand
+    private int floor, health, energy, slot1, slot2, gold;// 0 for sword, 1 for bow, 2 for wand
+    private ArrayList<String> buffs;
     
     /**
      * Constructor for objects of class StartWorld.
@@ -47,29 +49,40 @@ public class StartWorld extends World
         
         //Add title
         getBackground().drawImage(title, titleX, titleY);
-        
+        boolean hasGameData = false;
         //Add instruction and start boxes
         addObject(instructions, 600, 420);
         addObject(start, 600, 520);
-        addObject(continueGame, 600, 620);
+        
         
         ArrayList<String> al = readData();
-        if (al.size() > 4) {
+        buffs = new ArrayList<String>();
+        if (al.size() > 5) {
             floor = Integer.parseInt(al.get(0));
             health = Integer.parseInt(al.get(1));
             energy = Integer.parseInt(al.get(2));
             slot1 = Integer.parseInt(al.get(3));
             slot2 = Integer.parseInt(al.get(4));
+            gold = Integer.parseInt(al.get(5));
+            for (int i = 6; i < al.size(); i++) {
+                buffs.add(al.get(i));
+            }
+            hasGameData = true;
         } else {
             floor = 1;
             health = 10;
             energy = 100;
             slot1 = 0;
             slot2 = 3; // no weapon
+            gold = 10;
+        }
+        
+        if (hasGameData) {
+            addObject(continueGame, 600, 620);
         }
     }
     
-    public StartWorld(int floor, int health, int energy, int slot1, int slot2) { // constructor to load past game
+    public StartWorld(ArrayList<String> saveData) { // constructor to load past game
         super(1200, 720, 1);
         setBackground(cover);
         
@@ -80,17 +93,26 @@ public class StartWorld extends World
         addObject(instructions, 600, 420);
         addObject(start, 600, 520);
         addObject(continueGame, 600, 620);
-        this.floor = floor;
-        this.health = health;
-        this.energy = energy;
-        this.slot1 = slot1;
-        this.slot2 = slot2;
+        this.floor = Integer.parseInt(saveData.get(0));
+        this.health = Integer.parseInt(saveData.get(1));
+        this.energy = Integer.parseInt(saveData.get(2));
+        this.slot1 = Integer.parseInt(saveData.get(3));
+        this.slot2 = Integer.parseInt(saveData.get(4));
+        this.gold = Integer.parseInt(saveData.get(5));
+        this.buffs = new ArrayList<String>();
         ArrayList<String> data = new ArrayList<String>();
-        data.add(Integer.toString(floor));
-        data.add(Integer.toString(health));
-        data.add(Integer.toString(energy));
-        data.add(Integer.toString(slot1));
-        data.add(Integer.toString(slot2));
+        data.add(saveData.get(0));
+        data.add(saveData.get(1));
+        data.add(saveData.get(2));
+        data.add(saveData.get(3));
+        data.add(saveData.get(4));
+        data.add(saveData.get(5));
+        for (int i = 6; i < saveData.size() ; i++) {
+            buffs.add(saveData.get(i));
+        }
+        for (String buff : buffs) {
+            data.add(buff);
+        }
         try {
             FileWriter out = new FileWriter("Data.txt");
             PrintWriter output = new PrintWriter (out);
@@ -131,11 +153,12 @@ public class StartWorld extends World
         }
         if(Greenfoot.mousePressed(start)) {
             BuffWorld.resetUnselectedList();
-            gWorld = new GameWorld(1, 10, 100, 0, 3);
+            gWorld = new GameWorld();
             Greenfoot.setWorld(gWorld);
         }
         if (Greenfoot.mousePressed(continueGame) && (floor != 1 || energy != 100 || slot1 != 0 || slot2 != 3)) {
-            gWorld = new GameWorld(floor, health, energy, slot1, slot2);
+            BuffWorld.removeUnselectedList(buffs);
+            gWorld = new GameWorld(floor, health, energy, slot1, slot2, gold, buffs);
             Greenfoot.setWorld(gWorld);
         }
     }
@@ -178,6 +201,24 @@ public class StartWorld extends World
     }
     public int getSecondSlot(){
         return slot2;
+    }
+    
+    /**
+     * Returns gold
+     *
+     * @return Returns the amount of gold
+     */
+    public int getGold() {
+        return gold;
+    }
+    
+    /**
+     * Returns buffs
+     *
+     * @return Returns all the saved buffs of the player
+     */
+    public ArrayList<String> getBuffs() {
+        return buffs;
     }
 
 

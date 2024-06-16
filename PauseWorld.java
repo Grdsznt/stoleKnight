@@ -83,10 +83,24 @@ public class PauseWorld extends World
         if(Greenfoot.mousePressed(resume)) {
             Greenfoot.setWorld(gameWorld);
         }
+        
         if(Greenfoot.mousePressed(saveAndQuit)) {
-            // implemnt saving here - you can get the hero data by doing gameWorld.getObjects(Hero.class). 
             GameWorld.stopMusic();
-            Greenfoot.setWorld(new StartWorld());
+            
+            if (gameWorld.getFloor() == 1) {
+                Greenfoot.setWorld(new StartWorld());
+                return;
+            }
+            // implemnt saving here - you can get the hero data by doing gameWorld.getObjects(Hero.class). 
+            
+            Hero hero = gameWorld.getObjects(Hero.class).get(0);
+            ArrayList<Weapon> weapons = hero.getWeapons();
+            int weapon = weapons.get(0).getID();
+            int weapon2 = 3;
+            if (weapons.size() > 1) {
+                weapon2 = weapons.get(1).getID();
+            }
+            Greenfoot.setWorld(new StartWorld(gameWorld.getCurrentSaveData()));
         }
     }
     

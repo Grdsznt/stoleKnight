@@ -1,4 +1,5 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
+import java.util.ArrayList;
 /**
  * One of the heroes.
  * 
@@ -10,29 +11,33 @@ import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
  */
 public class Hero1 extends Hero
 {
-    private static int Hp = 10; //To test
-    private static int shield = 10; //To test
-    private static int speed = 5; //To test
-    protected static int energy = 100; //To test
+    private static int characterHP = 10; //To test
+    private static int characterShield = 10; //To test
+    private static int characterSpeed = 5; //To test
+    protected static int characterEnergy = 100; //To test
     protected static GreenfootImage[] idleFramesRight = new GreenfootImage[4];
     protected static GreenfootImage[] idleFramesLeft = new GreenfootImage[4];
     private SimpleTimer animationTimer = new SimpleTimer();
     
     public Hero1() {
-        super(Hp, shield, speed, energy, 0, 3);
+        super(characterHP, characterShield, characterSpeed, 100, 0, 3);
         loadIdleFrames();
         setImage(idleFramesRight[0]);
         hitbox = new SimpleHitbox(this, getImage().getWidth()/2-3, getImage().getHeight()/2-2, 3, 0);
+        
         // overlay = new Overlay(this, hitbox);
     }
     
-    public Hero1(int health, int energy, int slot1, int slot2) {
-        super(health, shield, speed, energy, slot1, slot2);
-        Hp = health;
+    public Hero1(int health, int energy, int slot1, int slot2, int gold, ArrayList<String> buffs) {
+        super(health, characterShield, characterSpeed, energy, slot1, slot2);
+        hp = health;
         this.energy = energy;
         loadIdleFrames();
         setImage(idleFramesRight[0]);
         hitbox = new SimpleHitbox(this, getImage().getWidth()/2-3, getImage().getHeight()/2-2, 3, 0);
+        this.gold = gold;
+        goldLabel.setValue(gold);
+        startingBuffs = buffs;
     }
     
     public void addedToWorld(World w) {

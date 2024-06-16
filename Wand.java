@@ -11,6 +11,7 @@ import greenfoot.*;  // Greenfoot classes
  */
 public class Wand extends Weapon
 {
+    public final int ID = 2;
     GreenfootImage wand = new GreenfootImage("weapon_red_magic_staff.png"); // Image of the wand
     private int damage, actNum; // Damage value and action number for timing
     private BallProjectile proj; // Projectile object
@@ -30,6 +31,8 @@ public class Wand extends Weapon
         actNum = 0; // Initialize action number
         
         energyUsage = 1;
+        
+        id = 2;
     }
     
     /**

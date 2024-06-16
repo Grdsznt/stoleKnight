@@ -47,7 +47,6 @@ import java.util.Scanner;
  * <h2> Bugs </h2>
  * <ul>
  *  <li> Sometimes enemies can get stuck on walls</li>
- *  <li> Enemies won't properly target somtimes,  it's due to the line of sight</li>
  * </ul>
  * 
  * Edited by Andy Feng
@@ -82,28 +81,23 @@ public class GameWorld extends World
     
     private static boolean mouseHold;
     private static MouseInfo mouse;
+    // saves at the start of every floor - this prevents save abusing
+    private ArrayList<String> saveData = new ArrayList<String>();
     /**
      * Constructor for objects of class GameWorld.
      * 
      * @param floor The floor
      */
-    
-    public GameWorld(int floor, int health, int energy, int slot1, int slot2)
+    public GameWorld(int floor, int health, int energy, int slot1, int slot2, int gold, ArrayList<String> buffs)
     {    
-        // Create a new world with 600x400 cells with a cell size of 1x1 pixels.
         super(1200, 720, 1); 
                 
-        
-        
-        // int spawnRow = Greenfoot.getRandomNumber(2)+1;
-        // int spawnCol = Greenfoot.getRandomNumber(2)+1;
         map = new Map();
         
         addObject(map, 104, 590);
         // generate the floor
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 21; j++) {
-                
                 // add 192 because there's 4 tiles of extra size to the left
                 addObject(new Floor(null, i, j), j*BLOCK_SIZE+BLOCK_SIZE/2+192, i*BLOCK_SIZE+BLOCK_SIZE/2);
             }
@@ -112,7 +106,7 @@ public class GameWorld extends World
         setActOrder(Hero.class);
         // setPaintOrder(Wall.class, Chest.class, Weapon.class, Hero.class);
     
-        addObject(new Hero1(health, energy, slot1, slot2), 800, 600);
+        addObject(new Hero1(health, energy, slot1, slot2, gold, buffs), 800, 600);
         
         mouseHold = false;
         setPaintOrder(Weapon.class, Hero.class, Overlay.class, Projectile.class, BallProjectile.class, Enemy.class);
@@ -131,8 +125,54 @@ public class GameWorld extends World
         addObject(floorLabel, 104, 690);
         playMusic();
         
+        saveData.add(Integer.toString(floor));
+        saveData.add(Integer.toString(health));
+        saveData.add(Integer.toString(energy));
+        saveData.add(Integer.toString(slot1));
+        saveData.add(Integer.toString(slot2));
+        saveData.add(Integer.toString(gold));
+        for (String buff : buffs) {
+            saveData.add(buff);
+        }
     }
     
+    public GameWorld()
+    {    
+        super(1200, 720, 1); 
+                
+        map = new Map();
+        
+        addObject(map, 104, 590);
+        // generate the floor
+        for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 21; j++) {
+                // add 192 because there's 4 tiles of extra size to the left
+                addObject(new Floor(null, i, j), j*BLOCK_SIZE+BLOCK_SIZE/2+192, i*BLOCK_SIZE+BLOCK_SIZE/2);
+            }
+        }
+        generateRooms(2, 2);
+        setActOrder(Hero.class);
+    
+        addObject(new Hero1(), 800, 600);
+        
+        mouseHold = false;
+        setPaintOrder(Weapon.class, Hero.class, Overlay.class, Projectile.class, BallProjectile.class, Enemy.class);
+        // background stuff
+        GreenfootImage background = new GreenfootImage(1200, 720);
+        background.setColor(new Color(34, 34, 34));
+        background.fillRect(0, 0, 1200, 720);
+        GreenfootImage stats = new GreenfootImage("statbar.png");
+        stats.scale(183, 123);
+        background.setColor(Color.WHITE);
+        
+        background.drawImage(stats, 15, 15);
+        setBackground(background);
+        this.floor = 1;
+        floorLabel = new Label("Floor " + floor, 30);
+        addObject(floorLabel, 104, 690);
+        playMusic();
+        
+    }
     
     
     /**
@@ -435,13 +475,32 @@ public class GameWorld extends World
         currentRoomRow = 2;
         currentRoomCol = 2;
         generateRooms(2, 2);
-        // 500, 500 temp numbers - change later
-        hero.setLocation(500, 500);
-        
         floor++;
         
+        
+        // 500, 500 temp numbers - change later
+        hero.setLocation(500, 500);
         floorLabel.setValue("Floor " + floor);
         Greenfoot.setWorld(new BuffWorld(this, hero));
+    }
+    
+    public void buffWorldFinished(Hero hero) {
+        saveData.clear();
+        saveData.add(Integer.toString(floor));
+        saveData.add(Integer.toString(hero.getHP()));
+        saveData.add(Integer.toString(hero.getEnergyAmount()));
+        ArrayList<Weapon> weapons = hero.getWeapons();
+        int weapon = weapons.get(0).getID();
+        int weapon2 = 3;
+        if (weapons.size() > 1) {
+            weapon2 = weapons.get(1).getID();
+        }
+        saveData.add(Integer.toString(weapon));
+        saveData.add(Integer.toString(weapon2));
+        saveData.add(Integer.toString(hero.getAmountOfGold()));
+        for (String buff : hero.getPowerList()) {
+            saveData.add(buff);
+        }
     }
     
     /**
@@ -557,5 +616,12 @@ public class GameWorld extends World
         gameplayMusic.playLoop();
     }
     
-     
+    /**
+     * Returns the save data
+     *
+     * @return Returns save data
+     */
+    public ArrayList<String> getCurrentSaveData() {
+        return saveData;
+    }
 }

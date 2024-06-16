@@ -48,11 +48,7 @@ public class EndWorld extends World
             returnButton.setFillColor(new Color(255, 255, 255));
         }
         if (Greenfoot.mouseClicked(returnButton)) {
-            if (state == 0) {
-                Greenfoot.setWorld(new StartWorld(floor, health, energy, slot1, slot2));
-            } else {
-                Greenfoot.setWorld(new StartWorld());
-            }
+            Greenfoot.setWorld(new StartWorld());
             
         }
     }
