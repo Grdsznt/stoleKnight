@@ -605,7 +605,7 @@ public abstract class Hero extends SuperSmoothMover
                 offsetY = currentWeapon instanceof Sword ? 5 : 5;
                 currentWeapon.setRotation(0);
             } else {
-                offsetX = currentWeapon instanceof Sword ? -10 : -5; // Adjusted offset
+                offsetX = currentWeapon instanceof Sword ? -15 : -5; // Adjusted offset
                 offsetY = currentWeapon instanceof Sword ? 5 : 5;
                 currentWeapon.setRotation(0);
             }

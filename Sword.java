@@ -44,7 +44,7 @@ public class Sword extends Weapon {
         
         // Initialize hitbox for collision detection
         hitbox = new SimpleHitbox(this, getImage().getWidth() / 2 - 4, getImage().getHeight() / 2, 0, 0);
-        overlay = new Overlay(this, hitbox); // Initialize overlay (if used)
+        //overlay = new Overlay(this, hitbox); // Initialize overlay (if used)
         
         id = 0;
     }
@@ -55,7 +55,7 @@ public class Sword extends Weapon {
      */
     public void addedToWorld(World w) {
         SimpleHitbox.allHitboxesInWorld.add(hitbox); // Add hitbox to world's hitboxes list
-        getWorld().addObject(overlay, getX(), getY());
+        
     }
 
     /**
