@@ -157,6 +157,7 @@ public class StartWorld extends World
             Greenfoot.setWorld(gWorld);
         }
         if (Greenfoot.mousePressed(continueGame) && (floor != 1 || energy != 100 || slot1 != 0 || slot2 != 3)) {
+            BuffWorld.resetUnselectedList();
             BuffWorld.removeUnselectedList(buffs);
             gWorld = new GameWorld(floor, health, energy, slot1, slot2, gold, buffs);
             Greenfoot.setWorld(gWorld);

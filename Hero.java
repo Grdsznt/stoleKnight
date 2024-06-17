@@ -1,6 +1,12 @@
 import greenfoot.*;  // (World, Actor, GreenfootImage, Greenfoot and MouseInfo)
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Scanner;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Scanner;
 /**
  * <p>
  * This is the superclass of the actors the player takes contorl of. The player can attack, move and also dash
@@ -510,7 +516,17 @@ public abstract class Hero extends SuperSmoothMover
         if(hp <= 0){
             //game over
             GameWorld.stopMusic();
-            Greenfoot.setWorld(new EndWorld(0, 1, 10, 100, 0, 3));
+            try {
+                FileWriter out = new FileWriter("Data.txt");
+                PrintWriter output = new PrintWriter(out);
+                output.println("1");
+                output.close();
+            } catch (IOException e) {
+                System.out.println("Error: " + e); // otherwise, if there is an IOException, let the user know
+            } finally {
+                GameWorld.stopMusic();
+                Greenfoot.setWorld(new EndWorld(0, 1, 10, 100, 0, 3));
+            }
             
             getWorld().removeObject(this);
             return;

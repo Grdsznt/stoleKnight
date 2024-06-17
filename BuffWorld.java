@@ -110,13 +110,13 @@ public class BuffWorld extends World
                         Greenfoot.setWorld(gameWorld);
                         hero.addPower(buff.getPowerName());
                         unselectedPowers.remove(buff.getPowerName());
-                        gameWorld.buffWorldFinished(hero);
+                        
                     }
                 }
             } else {
                 Greenfoot.setWorld(gameWorld);
             }
-            
+            gameWorld.buffWorldFinished(hero);
         }
     }
     
