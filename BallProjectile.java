@@ -16,7 +16,8 @@ public class BallProjectile extends SuperSmoothMover
     private int rotation;
     private SimpleHitbox hitbox;
     private boolean attackOnce;
-    private Actor intial;
+    protected Class<?> target;
+    
     
     /**
      * Constructor for objects of class BallProjectile
@@ -31,6 +32,8 @@ public class BallProjectile extends SuperSmoothMover
         setImage(img);
         setRotation(rotation);
         hitbox = new SimpleHitbox(this, getImage().getWidth()/2-2, getImage().getHeight()/2-2, 0, 0);
+        
+        target = Hero.class;
     }
     
     public void addedToWorld(World world) {
@@ -40,7 +43,15 @@ public class BallProjectile extends SuperSmoothMover
     
     public void act() {
         if (getWorld().getObjects(Hero.class).size() != 0) {
-            if (hitbox.intersectsOval(getWorld().getObjects(Hero.class).get(0))) {
+            if (hitbox.intersectsOval(getWorld().getObjects(Hero.class).get(0)) && target == Hero.class) {
+                causeDamage();
+                getWorld().removeObject(this);
+                return;
+            }
+        }
+        
+        if(getWorld().getObjects(Enemy.class).size() != 0) {
+            if(hitbox.intersectsOval(getWorld().getObjects(Enemy.class).get(0)) && target == Enemy.class) {
                 causeDamage();
                 getWorld().removeObject(this);
                 return;
@@ -57,10 +68,14 @@ public class BallProjectile extends SuperSmoothMover
         }
     }
     
-    public void causeDamage() {
+    private void causeDamage() {
         ArrayList<Hero> heroes = (ArrayList<Hero>) getIntersectingObjects(Hero.class);
-        if (heroes.size() != 0) {
+        ArrayList<Enemy> enemies = (ArrayList<Enemy>) getIntersectingObjects(Enemy.class);
+        if (heroes.size() != 0 && target == Hero.class) {
             if (heroes.get(0).getWorld() != null) heroes.get(0).takeDamage(damage);
+        }
+        if (enemies.size() != 0 && target == Enemy.class) {
+            if (enemies.get(0).getWorld() != null) enemies.get(0).takeDamage(damage);
         }
     }
 }
