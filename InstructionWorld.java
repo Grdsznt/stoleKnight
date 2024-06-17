@@ -35,7 +35,7 @@ public class InstructionWorld extends World
     
     //Two boxes
     private SuperTextBox back = new SuperTextBox("Back", new Color(150,75,0), Color.WHITE, new Font(20), true, 80, 0, Color.WHITE);
-    private SuperTextBox start = new SuperTextBox("Start", new Color(150,75,0), Color.WHITE, new Font(20), true, 80, 0, Color.WHITE);
+    private SuperTextBox start = new SuperTextBox("Start New Game", new Color(150,75,0), Color.WHITE, new Font(20), true, 180, 0, Color.WHITE);
     
     /**
      * Constructor for objects of class InstructionWorld.
@@ -69,7 +69,7 @@ public class InstructionWorld extends World
         
         //Add back and start boxes
         addObject(back, 100, 650);
-        addObject(start, 1100, 650);
+        addObject(start, 1050, 650);
     }
     
     public void act(){
@@ -77,13 +77,13 @@ public class InstructionWorld extends World
         if(Greenfoot.mouseMoved(back)) {
             back.updateFont(new Font(25), 100);
         } else if(Greenfoot.mouseMoved(start)) {
-            start.updateFont(new Font(25), 100);
+            start.updateFont(new Font(25), 200);
         }
         
         //Return to normal if not hovering on them
         if(Greenfoot.mouseMoved(this)) {
             back.updateFont(new Font(20), 80);
-            start.updateFont(new Font(20), 80);
+            start.updateFont(new Font(20), 180);
         }
         
         //Go to each world if pressed
@@ -91,8 +91,8 @@ public class InstructionWorld extends World
             Greenfoot.setWorld(sw);
         }
         if(Greenfoot.mousePressed(start)) {
-            gw = new GameWorld(sw.getFloor(), sw.getHealth(), sw.getEnergy(), sw.getFirstSlot(), sw.getSecondSlot());
-            Greenfoot.setWorld(gw);
+            //gw = new GameWorld(sw.getFloor(), sw.getHealth(), sw.getEnergy(), sw.getFirstSlot(), sw.getSecondSlot(), sw.getGold(), sw.getBuffs());
+            Greenfoot.setWorld(new GameWorld());
         }
     }
 }

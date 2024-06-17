@@ -13,6 +13,7 @@ import java.util.ArrayList;
  * @version June 10th, 2024
  */
 public class Sword extends Weapon {
+    public final int ID = 0;
     private static final String IMAGE_PATH = "images/sword/sword"; // Path to sword images
     private static final int DAMAGE = 15; // Damage inflicted by sword
     private static final int RECOVER_TIME = 40; // Recovery time after swinging
@@ -26,7 +27,7 @@ public class Sword extends Weapon {
     private int recoverCounter; // Counter for recovery time after swinging
     private SimpleTimer animationTimer = new SimpleTimer(); // Timer for animation timing
     private SimpleHitbox hitbox; // Hitbox for sword collision detection
-    // private Overlay overlay; // Overlay object for visual effects
+    private Overlay overlay; // Overlay object for visual effects
     private GreenfootSound swordSwing;
     
     /**
@@ -39,11 +40,13 @@ public class Sword extends Weapon {
         setImage(swordRightFrames[0]); // Set initial image
         recoverCounter = 0; // Initialize recover counter
         swordSwing = new GreenfootSound("sounds/swordSwing.mp3");
-        swordSwing.setVolume(35);
+        swordSwing.setVolume(30);
         
         // Initialize hitbox for collision detection
         hitbox = new SimpleHitbox(this, getImage().getWidth() / 2 - 4, getImage().getHeight() / 2, 0, 0);
-        // overlay = new Overlay(this, hitbox); // Initialize overlay (if used)
+        //overlay = new Overlay(this, hitbox); // Initialize overlay (if used)
+        
+        id = 0;
     }
     
     /**
@@ -52,6 +55,7 @@ public class Sword extends Weapon {
      */
     public void addedToWorld(World w) {
         SimpleHitbox.allHitboxesInWorld.add(hitbox); // Add hitbox to world's hitboxes list
+        
     }
 
     /**
@@ -144,13 +148,19 @@ public class Sword extends Weapon {
         
         if (getHolder() instanceof Hero) { // If held by Hero
             for (SimpleHitbox hit : hitboxes) {
+                if(hit.getActor().getWorld() == null) continue; // Check if actor is still in the world
                 if (hit.getActor() instanceof Enemy && hitbox.isHitBoxesIntersecting(hit)) {
                     Enemy e = (Enemy) hit.getActor(); // Get intersecting Enemy
                     e.takeDamage(DAMAGE); // Deal damage to enemy
                 }
+                if(hit.getActor() instanceof BallProjectile && hitbox.isHitBoxesIntersecting(hit)) {
+                    BallProjectile bullet = (BallProjectile) hit.getActor();
+                    getWorld().removeObject(bullet);
+                }
             }
         } else if (getHolder() instanceof Enemy) { // If held by Enemy
             for (SimpleHitbox hit : hitboxes) {
+                if(hit.getActor().getWorld() == null) continue; // Check if actor is still in the world
                 if (hit.getActor() instanceof Hero && hitbox.isHitBoxesIntersecting(hit)) {
                     Hero h = (Hero) hit.getActor(); // Get intersecting Hero
                     h.takeDamage(DAMAGE); // Deal damage to hero

@@ -14,6 +14,7 @@ public abstract class Weapon extends Actor {
     protected boolean beingUsed;
     protected Hero hero;
     protected int energyUsage;
+    protected int id;
 
     public Weapon(int damage) {
         isAttacking = false;
@@ -73,6 +74,24 @@ public abstract class Weapon extends Actor {
      */
     public int getEnergyUsage() {
         return energyUsage;
+    }
+    
+    /**
+     * Sets the state if the weapon is being used or not
+     *
+     * @param state The state of being used or not
+     */
+    public void setBeingUsed(boolean state) {
+        beingUsed = state;
+    }
+    
+    /**
+     * Returns the id number of the weapon
+     *
+     * @return Returns the id number of the weapon
+     */
+    public int getID() {
+        return id;
     }
 }
 

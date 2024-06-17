@@ -15,7 +15,7 @@ public class BuffWorld extends World
     private GameWorld gameWorld;
     private Hero hero;
     private static HashMap<String, String> descriptions = new HashMap<String, String>() {{
-        put("Extra HP", "Gain Extra 2 HP");
+        put("Extra HP", "Gain Extra 5 HP");
         put("Faster Shield Recover", "Shield Starts recovering in less time");
         put("More Shield", "Gain Extra 2 Shield");
         put("Longer Immunity", "Invincibility frames last longer");
@@ -106,15 +106,17 @@ public class BuffWorld extends World
             if (gameWorld.getFloor() % 2 == 0) {
                 for (BuffSelection buff : buffList) {
                     if (buff.isSelected()) {
+
                         Greenfoot.setWorld(gameWorld);
                         hero.addPower(buff.getPowerName());
                         unselectedPowers.remove(buff.getPowerName());
+                        
                     }
                 }
             } else {
                 Greenfoot.setWorld(gameWorld);
             }
-            
+            gameWorld.buffWorldFinished(hero);
         }
     }
     
@@ -136,5 +138,32 @@ public class BuffWorld extends World
         "Energy Steal",
         "Life Steal"
     ));
+    }
+    
+    /**
+     * Removes buffs from the unselected list
+     *
+     *@param buffs The buff to remove from the list
+     */
+    public static void removeUnselectedList(ArrayList<String> buffs) {
+        for (String buff : buffs) {
+            unselectedPowers.remove(buff);
+        }
+    }
+    
+    /**
+     * When the world is stopped, stop the music
+     *
+     */
+    public void stopped() {
+        GameWorld.pauseMusic();
+    }
+    
+    /**
+     * When the world is started again, play the music
+     *
+     */
+    public void started() {
+        GameWorld.playMusic();
     }
 }

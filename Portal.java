@@ -48,6 +48,14 @@ public class Portal extends Tile
         
     }
     
+    /**
+     * Removes the label when interacted with
+     *
+     */
+    public void interact() {
+        getWorld().removeObject(interactionLabel);
+    }
+    
     
     private void animate() {
         if(animationTimer.millisElapsed() < 100) return;

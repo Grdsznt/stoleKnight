@@ -44,6 +44,8 @@ public class Bow extends Weapon
             bowLeftFrames[i].mirrorHorizontally();
         }
         energyUsage = 3;
+        
+        id = 1;
     }
 
     /**
