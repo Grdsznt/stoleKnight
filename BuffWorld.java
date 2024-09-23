@@ -46,8 +46,8 @@ public class BuffWorld extends World
     /**
      * Constructor for objects of class BuffWorld.
      * 
-     * @param world The GameWorld that created this world
-     * @param hero The hero actor
+     * @param world the GameWorld that created this world
+     * @param hero the hero actor
      */
     public BuffWorld(GameWorld world, Hero hero)
     {    
